@@ -201,9 +201,11 @@ namespace OsmSharp.UI.Renderer.Primitives
 
             // Release the unmanaged resource in any case as they will not be 
             // released by GC
-            if(this._nativeImage != null)
+            if (this._nativeImage != null)
             { // dispose of the native image.
-                this._nativeImage.Dispose();
+                // this._nativeImage.Dispose();
+                this._nativeImage = null;
+                OsmSharp.Logging.Log.TraceEvent("Image2D", Logging.TraceEventType.Information, "Disposing Image2D");
             }
         }        
 

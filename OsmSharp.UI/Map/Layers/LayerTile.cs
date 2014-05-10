@@ -21,6 +21,7 @@ using OsmSharp.Collections.Cache;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Osm.Tiles;
+using OsmSharp.UI.Map.Layers.HttpClients;
 using OsmSharp.UI.Renderer;
 using OsmSharp.UI.Renderer.Images;
 using OsmSharp.UI.Renderer.Primitives;
@@ -132,18 +133,24 @@ namespace OsmSharp.UI.Map.Layers
         /// <param name="status">Status.</param>
         private void LoadQueuedTiles(object status)
         {
+            var tilesToLoad = new List<Tile>();
             lock (_stack)
             { // make sure that access to the queue is synchronized.
                 int queue = _stack.Count;
                 while (_stack.Count > queue + _loading.Count - _maxThreads && _stack.Count > 0)
                 { // there are queued items.
-                    LoadTile(_stack.Pop());
+                    tilesToLoad.Add(_stack.Pop());
                 }
 
                 if (_stack.Count == 0)
                 { // dispose of timer.
                     _timer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
                 }
+            }
+
+            foreach(var tile in tilesToLoad)
+            {
+                this.LoadTile(tile);
             }
         }
 
@@ -155,10 +162,10 @@ namespace OsmSharp.UI.Map.Layers
         /// <summary>
         /// Loads one tile.
         /// </summary>
-        private void LoadTile(object state)
+        private void LoadTile(Tile state)
         {
             // a tile was found to load.
-            Tile tile = state as Tile;
+            Tile tile = state;
 
             // only load tiles from the same zoom-level.
             if (tile.Zoom != _currentZoom)
@@ -183,120 +190,91 @@ namespace OsmSharp.UI.Map.Layers
                              tile.Zoom,
                              tile.X,
                              tile.Y);
-            var request = (HttpWebRequest)HttpWebRequest.Create(
-                              url);
-            request.Accept = "text/html, image/png, image/jpeg, image/gif, */*";
-            //request.Headers[HttpRequestHeader.UserAgent] = "OsmSharp/4.0";
-
             OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Information, "Request tile@" + url);
-
-            try
+            using (var client = HttpClientCacheFactory.Create())
             {
-                Action<HttpWebResponse> responseAction = ((HttpWebResponse obj) =>
-                { 
-                    this.Response(obj, tile);
+                // add proper accept headers.
+                client.AddAcceptHeader("image/png");
+                client.AddAcceptHeader("image/jpeg");
+                client.AddAcceptHeader("image/gif");
 
-                    _loading.Remove(tile);
-                });
-                Action wrapperAction = () =>
+                // add the proper useragent.
+                client.SetUserAgent("OsmSharp");
+
+                try
                 {
-                    request.BeginGetResponse(new AsyncCallback((iar) =>
+                    using(Stream stream = client.GetStream(url))
                     {
-                        try
+                        _loading.Remove(tile);
+                        byte[] image = null;
+                        if (stream != null)
                         {
-                            var response = (HttpWebResponse)((HttpWebRequest)iar.AsyncState).EndGetResponse(iar);
-                            responseAction(response);
-                        }
-                        catch (WebException ex)
-                        { // catch webexceptions.
-                            if (ex.Response is HttpWebResponse &&
-                                ((ex.Response as HttpWebResponse).StatusCode == HttpStatusCode.NotFound ||
-                                (ex.Response as HttpWebResponse).StatusCode == HttpStatusCode.Forbidden))
-                            { // do not retry loading tile.
-                                return;
+                            // there is data: read it.
+                            using (var memoryStream = new MemoryStream())
+                            {
+                                stream.CopyTo(memoryStream);
+
+                                image = memoryStream.ToArray();
                             }
-                            else
-                            { // retry loading tile here.
-                                _loading.Remove(tile);
 
-                                lock (_attempts)
-                                {
-                                    int count;
-                                    if (!_attempts.TryGetValue(tile, out count))
-                                    { // first attempt.
-                                        count = 1;
-                                        _attempts.Add(tile, count);
-                                    }
-                                    else
-                                    { // increase attempt count.
-                                        _attempts[tile] = count++;
-                                    }
-                                    if (count < 3)
-                                    { // not yet reached maximum. 
-                                        lock (_stack)
-                                        {
-                                            _stack.Push(tile);
-                                            _timer.Change(0, 150);
-                                        }
-                                    }
-                                }
+                            var box = tile.ToBox(_projection);
+                            var nativeImage = _nativeImageCache.Obtain(image);
+                            image2D = new Image2D(box.Min[0], box.Min[1], box.Max[1], box.Max[0], nativeImage);
+                            image2D.Layer = (uint)(_maxZoomLevel - tile.Zoom);
+
+                            lock (_cache)
+                            { // add the result to the cache.
+                                _cache.Add(tile, image2D);
                             }
+
+                            // raise the layer changed event.
+                            this.RaiseLayerChanged();
                         }
-                        catch (Exception ex)
-                        { // oops, exceptions that are not webexceptions!?
-                            OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Error, ex.Message);
+                        else
+                        {
+                            OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Error, "No response stream!");
                         }
-                    }), request);
-                };
-                wrapperAction.BeginInvoke(new AsyncCallback((iar) =>
-                {
-                    var action = (Action)iar.AsyncState;
-                    action.EndInvoke(iar);
-                }), wrapperAction);
-            }
-            catch (Exception ex)
-            { // don't worry about exceptions here.
-                OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Error, ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// Response the specified myResp and tile.
-        /// </summary>
-        /// <param name="myResp">My resp.</param>
-        /// <param name="tile">Tile.</param>
-        private void Response(WebResponse myResp, Tile tile)
-        {
-            Stream stream = myResp.GetResponseStream();
-            byte[] image = null;
-            if (stream != null)
-            {
-                using (stream)
-                {
-                    // there is data: read it.
-                    var memoryStream = new MemoryStream();
-                    stream.CopyTo(memoryStream);
-
-                    image = memoryStream.ToArray();
-                    memoryStream.Dispose();
-
-                    var box = tile.ToBox(_projection);
-                    var nativeImage = _nativeImageCache.Obtain(image);
-                    var image2D = new Image2D(box.Min[0], box.Min[1], box.Max[1], box.Max[0], nativeImage);
-                    image2D.Layer = (uint)(_maxZoomLevel - tile.Zoom);
-
-                    lock (_cache)
-                    { // add the result to the cache.
-                        _cache.Add(tile, image2D);
                     }
                 }
+                catch (WebException ex)
+                { // catch webexceptions.
+                    if (ex.Response is HttpWebResponse &&
+                        ((ex.Response as HttpWebResponse).StatusCode == HttpStatusCode.NotFound ||
+                        (ex.Response as HttpWebResponse).StatusCode == HttpStatusCode.Forbidden))
+                    { // do not retry loading tile.
+                        return;
+                    }
+                    else
+                    { // retry loading tile here.
+                        _loading.Remove(tile);
 
-                // raise the layer changed event.
-                this.RaiseLayerChanged();
-            }
-            else
-            {
-                OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Error, "No response stream!");
+                        lock (_attempts)
+                        {
+                            int count;
+                            if (!_attempts.TryGetValue(tile, out count))
+                            { // first attempt.
+                                count = 1;
+                                _attempts.Add(tile, count);
+                            }
+                            else
+                            { // increase attempt count.
+                                _attempts[tile] = count++;
+                            }
+                            if (count < 3)
+                            { // not yet reached maximum. 
+                                lock (_stack)
+                                {
+                                    _stack.Push(tile);
+                                }
+                                _timer.Change(0, 150);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                { // oops, exceptions that are not webexceptions!?
+                    OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Error, ex.Message);
+                }
             }
         }
 
@@ -408,7 +386,6 @@ namespace OsmSharp.UI.Map.Layers
                                 }
                             }
                         }
-                        _timer.Change(0, 250);
                     }
 
                     if (_stack.Count > 0)
@@ -417,6 +394,7 @@ namespace OsmSharp.UI.Map.Layers
                         {
                             _attempts.Clear();
                         }
+                        _timer.Change(0, 250);
                     }
                 }
             }

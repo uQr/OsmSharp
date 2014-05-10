@@ -88,9 +88,9 @@ namespace OsmSharp.Collections.Cache
             {
                 _id++;
                 _data[key] = entry;
-            }
 
-            this.ResizeCache();
+                this.ResizeCache();
+            }
         }
 
         /// <summary>

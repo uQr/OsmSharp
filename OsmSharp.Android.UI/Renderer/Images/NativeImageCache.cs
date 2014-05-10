@@ -73,6 +73,8 @@ namespace OsmSharp.Android.UI.Renderer.Images
             OsmSharp.Logging.Log.TraceEvent("NativeImageCache",
                 Logging.TraceEventType.Information, "Bitmap obtain: {0} {1}", _unusedImages.Count, _usedImages.Count);
 
+            if (data == null || data.Length == 0) { throw new ArgumentOutOfRangeException("Cannot obtain an image for an empty or null byte array."); }
+
             lock (_usedImages)
             { // synchronize access to this cache.
                 if(_unusedImages.Count > 0)

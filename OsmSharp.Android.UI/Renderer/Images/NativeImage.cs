@@ -53,6 +53,8 @@ namespace OsmSharp.Android.UI.Renderer.Images
             }
             set
             {
+                if (value == null) { throw new ArgumentNullException("Cannot have a native image wrapper around null"); }
+
                 _image = value;
             }
         }
@@ -91,7 +93,7 @@ namespace OsmSharp.Android.UI.Renderer.Images
             // released by GC
             if(this._image != null)
             { // dispose of the native image.
-                OsmSharp.Logging.Log.TraceEvent("NativeImage", Logging.TraceEventType.Information, "NativeImage");
+                OsmSharp.Logging.Log.TraceEvent("NativeImage", Logging.TraceEventType.Information, "Disposing native image.");
                 this._image.Recycle();
                 this._image.Dispose();
                 this._image = null;
@@ -133,8 +135,12 @@ namespace OsmSharp.Android.UI.Renderer.Images
         /// <returns></returns>
         public override int GetHashCode()
         {
-            return 1332480824 ^
-                this._image.GetHashCode();
+            //if(this._image != null)
+            //{
+                return 1332480824 ^
+                    this._image.GetHashCode();
+            //}
+            //return 1332480824;
         }
     }
 }

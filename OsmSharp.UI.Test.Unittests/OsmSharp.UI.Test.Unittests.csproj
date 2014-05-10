@@ -109,6 +109,7 @@
     <EmbeddedResource Include="Data\MapCSS\color.mapcss" />
     <EmbeddedResource Include="Data\MapCSS\test.mapcss" />
     <EmbeddedResource Include="Data\test.osm" />
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

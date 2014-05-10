@@ -408,6 +408,10 @@ namespace OsmSharp.Android.UI
         protected override void DrawImage(Target2DWrapper<Canvas> target, RectangleF2D bounds, INativeImage nativeImage)
 		{
             var nativeAndroidImage = (nativeImage as NativeImage);
+            if(nativeAndroidImage == null)
+            { // make sure there is an image and the renderer does no crash.
+                return;
+            }
             global::Android.Graphics.Bitmap image = nativeAndroidImage.Image;
 			this.Transform (bounds.BottomLeft [0], bounds.BottomLeft [1], _transformed1);
 			PointF2D bottomLeft = new PointF2D(_transformed1[0], _transformed1[1]);

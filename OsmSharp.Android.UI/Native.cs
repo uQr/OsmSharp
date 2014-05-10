@@ -18,6 +18,8 @@
 
 using System;
 using OsmSharp.Android.UI.Renderer.Images;
+using OsmSharp.Android.UI.Net;
+using ModernHttpClient;
 
 namespace OsmSharp.Android.UI
 {
@@ -37,6 +39,14 @@ namespace OsmSharp.Android.UI
             {
                 return new NativeImageCache();
             });
+
+            // initialize the native http client factory.
+            OsmSharp.UI.Map.Layers.HttpClients.HttpClientCacheFactory.SetDelegate(
+                () =>
+                {
+                    //return new HttpClient(new System.Net.Http.HttpClient(new OkHttpNetworkHandler()));
+                    return new HttpClient(new OkHttp.OkHttpClient());
+                });
         }
     }
 }
