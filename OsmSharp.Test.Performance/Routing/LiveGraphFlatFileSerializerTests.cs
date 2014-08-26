@@ -21,6 +21,7 @@ using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.IO.MemoryMappedFiles;
 using OsmSharp.Osm.PBF.Streams;
+using OsmSharp.Osm.Streams.Buffer;
 using OsmSharp.Osm.Streams.Filters;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Graphs;
@@ -59,8 +60,10 @@ namespace OsmSharp.Test.Performance.Routing
 
             var stream = testFile.OpenRead();
             var source = new PBFOsmStreamSource(stream);
+            var buffer = new OsmStreamBuffer();
+            buffer.RegisterSource(source);
             var progress = new OsmStreamFilterProgress();
-            progress.RegisterSource(source);
+            progress.RegisterSource(buffer);
 
             var testOutputFile = new FileInfo(@"test.routing");
             testOutputFile.Delete();
