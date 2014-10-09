@@ -250,10 +250,10 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                         arcs[idx] = new KeyValuePair<uint, LiveEdge>(
                             vertex.Arcs[idx].Item1, vertex.Arcs[idx].Item2);
                     }
-                    return new EdgeEnumerator(arcs);
+                    return new EdgeEnumerator(vertexId, arcs);
                 }
             }
-            return new EdgeEnumerator(new KeyValuePair<uint, LiveEdge>[0]);
+            return new EdgeEnumerator(vertexId, new KeyValuePair<uint, LiveEdge>[0]);
         }
 
         /// <summary>
@@ -564,6 +564,11 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             private KeyValuePair<uint, LiveEdge>[] _edges;
 
             /// <summary>
+            /// Holds the from vertex.
+            /// </summary>
+            private uint _fromVertex;
+
+            /// <summary>
             /// Holds the current position.
             /// </summary>
             private int _current = -1;
@@ -571,9 +576,11 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             /// <summary>
             /// Creates a new enumerator.
             /// </summary>
+            /// <param name="fromVertex"></param>
             /// <param name="edges"></param>
-            public EdgeEnumerator(KeyValuePair<uint, LiveEdge>[] edges)
+            public EdgeEnumerator(uint fromVertex, KeyValuePair<uint, LiveEdge>[] edges)
             {
+                _fromVertex = fromVertex;
                 _edges = edges;
             }
 
@@ -581,6 +588,21 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             {
                 _current++;
                 return _edges.Length > _current;
+            }
+
+            /// <summary>
+            /// Returns the id of this edge.
+            /// </summary>
+            public long Id
+            {
+                get
+                {
+                    if(_fromVertex < this.Neighbour)
+                    {
+                        return (long)_fromVertex * (long)int.MaxValue + this.Neighbour;
+                    }
+                    return (long)this.Neighbour * (long)int.MaxValue + _fromVertex;
+                }
             }
 
             /// <summary>

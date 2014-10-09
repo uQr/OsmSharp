@@ -161,7 +161,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <returns></returns>
         public IEdgeEnumerator<CHEdgeData> GetEdges(uint vertexId)
         {
-            return new EdgeEnumerator(this.GetEdgePairs(vertexId));
+            return new EdgeEnumerator(vertexId, this.GetEdgePairs(vertexId));
         }
 
         /// <summary>
@@ -564,11 +564,17 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             private int _current = -1;
 
             /// <summary>
+            /// Holds the from vertex.
+            /// </summary>
+            private long _fromVertex;
+
+            /// <summary>
             /// Creates a new enumerator.
             /// </summary>
             /// <param name="edges"></param>
-            public EdgeEnumerator(KeyValuePair<uint, CHEdgeData>[] edges)
+            public EdgeEnumerator(uint fromVertex, KeyValuePair<uint, CHEdgeData>[] edges)
             {
+                _fromVertex = fromVertex;
                 _edges = edges;
             }
 
@@ -580,6 +586,21 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             {
                 _current++;
                 return _edges.Length > _current;
+            }
+
+            /// <summary>
+            /// Returns the id of this edge.
+            /// </summary>
+            public long Id
+            {
+                get
+                {
+                    if (_fromVertex < this.Neighbour)
+                    {
+                        return (long)_fromVertex * (long)int.MaxValue + this.Neighbour;
+                    }
+                    return (long)this.Neighbour * (long)int.MaxValue + _fromVertex;
+                }
             }
 
             /// <summary>

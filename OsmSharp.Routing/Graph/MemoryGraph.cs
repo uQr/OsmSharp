@@ -861,12 +861,14 @@ namespace OsmSharp.Routing.Graph
                     _currentEdgeId = _nextEdgeId;
                     if (_graph._edges[_nextEdgeId + NODEA] == _vertex)
                     {
+                        _id = _nextEdgeId + NODEB;
                         _neighbour = _graph._edges[_nextEdgeId + NODEB];
                         _nextEdgeId = _graph._edges[_nextEdgeId + NEXTNODEA];
                         _currentEdgeInverted = false;
                     }
                     else
                     {
+                        _id = _nextEdgeId + NODEA;
                         _neighbour = _graph._edges[_nextEdgeId + NODEA];
                         _nextEdgeId = _graph._edges[_nextEdgeId + NEXTNODEB];
                         _currentEdgeInverted = true;
@@ -874,6 +876,19 @@ namespace OsmSharp.Routing.Graph
                     return true;
                 }
                 return false;
+            }
+
+            /// <summary>
+            /// Holds the id of this edge.
+            /// </summary>
+            private long _id;
+
+            /// <summary>
+            /// Returns the id of this edge.
+            /// </summary>
+            public long Id
+            {
+                get { return _id; }
             }
 
             /// <summary>

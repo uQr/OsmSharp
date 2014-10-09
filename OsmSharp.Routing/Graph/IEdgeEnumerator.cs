@@ -28,6 +28,14 @@ namespace OsmSharp.Routing.Graph
         where TEdgeData : IGraphEdgeData
     {
         /// <summary>
+        /// Returns the current edge id.
+        /// </summary>
+        long Id
+        {
+            get;
+        }
+
+        /// <summary>
         /// Returns the current neighbour.
         /// </summary>
         uint Neighbour
@@ -86,6 +94,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="edge"></param>
         public Edge(Edge<TEdgeData> edge)
         {
+            this.Id = edge.Id;
             this.Neighbour = edge.Neighbour;
             this.EdgeData = edge.EdgeData;
             this.Intermediates = edge.Intermediates;
@@ -97,9 +106,19 @@ namespace OsmSharp.Routing.Graph
         /// <param name="enumerator"></param>
         public Edge(IEdgeEnumerator<TEdgeData> enumerator)
         {
+            this.Id = enumerator.Id;
             this.Neighbour = enumerator.Neighbour;
             this.EdgeData = enumerator.EdgeData;
             this.Intermediates = enumerator.Intermediates;
+        }
+
+        /// <summary>
+        /// Returns the current edge id.
+        /// </summary>
+        public long Id
+        {
+            get;
+            set;
         }
 
         /// <summary>
