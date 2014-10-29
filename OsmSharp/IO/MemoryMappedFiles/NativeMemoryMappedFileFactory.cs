@@ -16,7 +16,9 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Math.Geo.Simple;
 using System;
+using System.IO;
 
 namespace OsmSharp.IO.MemoryMappedFiles
 {
@@ -114,6 +116,101 @@ namespace OsmSharp.IO.MemoryMappedFiles
             _nativeMemoryMappedFileDelegate = createMemoryMappedFile;
             _nativeMemoryMappedFileSharedDelegate = createMemoryMappedSharedFile;
             _getSizeDelegate = getSizeDelegate;
+        }
+
+        /// <summary>
+        /// Holds the read buffer.
+        /// </summary>
+        private static byte[] _readBuffer = new byte[32];
+
+        /// <summary>
+        /// Reads an object of the given type from the stream at the current position.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="stream"></param>
+        /// <returns></returns>
+        public static object Read(Type type, Stream stream)
+        {
+            if (typeof(uint) == type)
+            {
+                stream.Read(_readBuffer, 0, 4);
+                return BitConverter.ToUInt32(_readBuffer, 0);
+            }
+            else if (typeof(long) == type)
+            {
+                stream.Read(_readBuffer, 0, 8);
+                return BitConverter.ToInt64(_readBuffer, 0);
+            }
+            else if (typeof(GeoCoordinateSimple) == type)
+            {
+                stream.Read(_readBuffer, 0, 8);
+                return new GeoCoordinateSimple()
+                {
+                    Latitude = BitConverter.ToSingle(_readBuffer, 0),
+                    Longitude = BitConverter.ToSingle(_readBuffer, 4)
+                };
+            }
+            else if (typeof(float) == type)
+            {
+                stream.Read(_readBuffer, 0, 4);
+                return BitConverter.ToSingle(_readBuffer, 0);
+            }
+            throw new NotSupportedException(string.Format("Type {0} not supported for memory mapping.", type.ToInvariantString()));
+        }
+
+        /// <summary>
+        /// Writes an object of the given type to the stream at the current position.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="stream"></param>
+        /// <param name="structure"></param>
+        public static void Write(Type type, Stream stream, ref object structure)
+        {
+            if (typeof(uint) == type)
+            {
+                stream.Write(BitConverter.GetBytes((uint)structure), 0, 4);
+            }
+            else if (typeof(long) == type)
+            {
+                stream.Write(BitConverter.GetBytes((long)structure), 0, 8);
+            }
+            else if (typeof(GeoCoordinateSimple) == type)
+            {
+                var coordinate = (GeoCoordinateSimple)structure;
+                stream.Write(BitConverter.GetBytes(coordinate.Latitude), 0, 4);
+                stream.Write(BitConverter.GetBytes(coordinate.Longitude), 0, 4);
+            }
+            else if (typeof(float) == type)
+            {
+                stream.Write(BitConverter.GetBytes((float)structure), 0, 4);
+            }
+            throw new NotSupportedException(string.Format("Type {0} not supported for memory mapping.", type.ToInvariantString()));
+        }
+
+        /// <summary>
+        /// Returns the size of a structure of the given type on disk.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static int SizeOf(Type type)
+        {
+            if(typeof(uint) == type)
+            {
+                return 4;
+            }
+            else if (typeof(long) == type)
+            {
+                return 8;
+            }
+            else if (typeof(GeoCoordinateSimple) == type)
+            {
+                return 8;
+            }
+            else if (typeof(float) == type)
+            {
+                return 4;
+            }
+            throw new NotSupportedException(string.Format("Type {0} not supported for memory mapping.", type.ToInvariantString()));
         }
     }
 }
