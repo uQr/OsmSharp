@@ -124,6 +124,20 @@ namespace OsmSharp.IO.MemoryMappedFiles
         private static byte[] _readBuffer = new byte[32];
 
         /// <summary>
+        /// A delegate to read a structure of a given type to a stream.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="stream"></param>
+        /// <param name="structure"></param>
+        /// <returns></returns>
+        public delegate object ReadStructureDelegate(Type type, Stream stream);
+
+        /// <summary>
+        /// Holds a delegate to read a structure of a given type to a stream.
+        /// </summary>
+        public static ReadStructureDelegate DoReadStructure;
+
+        /// <summary>
         /// Reads an object of the given type from the stream at the current position.
         /// </summary>
         /// <param name="type"></param>
@@ -136,10 +150,20 @@ namespace OsmSharp.IO.MemoryMappedFiles
                 stream.Read(_readBuffer, 0, 4);
                 return BitConverter.ToUInt32(_readBuffer, 0);
             }
+            else if (typeof(int) == type)
+            {
+                stream.Read(_readBuffer, 0, 8);
+                return BitConverter.ToInt32(_readBuffer, 0);
+            }
             else if (typeof(long) == type)
             {
                 stream.Read(_readBuffer, 0, 8);
                 return BitConverter.ToInt64(_readBuffer, 0);
+            }
+            else if (typeof(ulong) == type)
+            {
+                stream.Read(_readBuffer, 0, 8);
+                return BitConverter.ToUInt64(_readBuffer, 0);
             }
             else if (typeof(GeoCoordinateSimple) == type)
             {
@@ -155,8 +179,26 @@ namespace OsmSharp.IO.MemoryMappedFiles
                 stream.Read(_readBuffer, 0, 4);
                 return BitConverter.ToSingle(_readBuffer, 0);
             }
+            else if (DoReadStructure != null)
+            {
+                return DoReadStructure(type, stream);
+            }
             throw new NotSupportedException(string.Format("Type {0} not supported for memory mapping.", type.ToInvariantString()));
         }
+
+        /// <summary>
+        /// A delegate to write a structure of a given type to a stream.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="stream"></param>
+        /// <param name="structure"></param>
+        /// <returns></returns>
+        public delegate void WriteStructureDelegate(Type type, Stream stream, ref object structure);
+
+        /// <summary>
+        /// Holds a delegate to write a structure of a given type to a stream.
+        /// </summary>
+        public static WriteStructureDelegate DoWriteStructure;
 
         /// <summary>
         /// Writes an object of the given type to the stream at the current position.
@@ -170,9 +212,17 @@ namespace OsmSharp.IO.MemoryMappedFiles
             {
                 stream.Write(BitConverter.GetBytes((uint)structure), 0, 4);
             }
+            else if (typeof(int) == type)
+            {
+                stream.Write(BitConverter.GetBytes((int)structure), 0, 4);
+            }
             else if (typeof(long) == type)
             {
                 stream.Write(BitConverter.GetBytes((long)structure), 0, 8);
+            }
+            else if (typeof(ulong) == type)
+            {
+                stream.Write(BitConverter.GetBytes((ulong)structure), 0, 8);
             }
             else if (typeof(GeoCoordinateSimple) == type)
             {
@@ -184,8 +234,27 @@ namespace OsmSharp.IO.MemoryMappedFiles
             {
                 stream.Write(BitConverter.GetBytes((float)structure), 0, 4);
             }
-            throw new NotSupportedException(string.Format("Type {0} not supported for memory mapping.", type.ToInvariantString()));
+            else
+            {
+                if (DoWriteStructure == null)
+                {
+                    throw new NotSupportedException(string.Format("Type {0} not supported for memory mapping.", type.ToInvariantString()));
+                }
+                DoWriteStructure(type, stream, ref structure);
+            }            
         }
+
+        /// <summary>
+        /// A delegate to get the size a structure.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public delegate int SizeOfDelegate(Type type);
+
+        /// <summary>
+        /// Holds a delegate to get the size a structure.
+        /// </summary>
+        public static SizeOfDelegate DoSizeOf;
 
         /// <summary>
         /// Returns the size of a structure of the given type on disk.
@@ -198,7 +267,15 @@ namespace OsmSharp.IO.MemoryMappedFiles
             {
                 return 4;
             }
+            else if (typeof(int) == type)
+            {
+                return 4;
+            }
             else if (typeof(long) == type)
+            {
+                return 8;
+            }
+            else if (typeof(ulong) == type)
             {
                 return 8;
             }
@@ -210,7 +287,14 @@ namespace OsmSharp.IO.MemoryMappedFiles
             {
                 return 4;
             }
-            throw new NotSupportedException(string.Format("Type {0} not supported for memory mapping.", type.ToInvariantString()));
+            else
+            {
+                if (DoSizeOf != null)
+                {
+                    return DoSizeOf(type);
+                }
+                throw new NotSupportedException(string.Format("Type {0} not supported for memory mapping.", type.ToInvariantString()));
+            }
         }
     }
 }

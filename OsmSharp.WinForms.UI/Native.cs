@@ -17,6 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.IO.MemoryMappedFiles;
+using OsmSharp.Routing.Graph.MemoryMapping;
 using OsmSharp.WinForms.UI.IO.MemoryMappedFiles;
 using OsmSharp.WinForms.UI.IO.MemoryMappedFiles.Streamed;
 using OsmSharp.WinForms.UI.Renderer.Images;
@@ -36,6 +37,11 @@ namespace OsmSharp.WinForms.UI
         /// </summary>
         public static void Initialize()
         {
+            // enable edge read/writing.
+            NativeMemoryMappedFileFactory.DoSizeOf = MemoryMappedStructures.SizeOf;
+            NativeMemoryMappedFileFactory.DoReadStructure = MemoryMappedStructures.Read;
+            NativeMemoryMappedFileFactory.DoWriteStructure = MemoryMappedStructures.Write;
+            
             // intialize the native image cache factory.
             OsmSharp.UI.Renderer.Images.NativeImageCacheFactory.SetDelegate(
                 () =>

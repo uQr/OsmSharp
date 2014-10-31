@@ -221,8 +221,9 @@ namespace OsmSharp.Routing.Graph
         {
             if (_nextVertexId > id)
             {
-                latitude = _coordinates[id].Latitude;
-                longitude = _coordinates[id].Longitude;
+                var coordinates = _coordinates[id];
+                latitude = coordinates.Latitude;
+                longitude = coordinates.Longitude;
                 return true;
             }
             latitude = float.MaxValue;

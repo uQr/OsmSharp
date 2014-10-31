@@ -67,6 +67,7 @@
     <Compile Include="Graph\IGraphWriteOnly.cs" />
     <Compile Include="Graph\MemoryGraph.cs" />
     <Compile Include="Graph\MemoryMappedFileDynamicGraph.cs" />
+    <Compile Include="Graph\MemoryMapping\MemoryMappedStructures.cs" />
     <Compile Include="Graph\PreProcessor\IPreProcessor.cs" />
     <Compile Include="Graph\Restrictions\GraphRestriction.cs" />
     <Compile Include="Graph\Router\Dykstra\DykstraRoutingBase.cs" />

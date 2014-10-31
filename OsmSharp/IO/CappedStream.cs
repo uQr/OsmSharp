@@ -158,7 +158,11 @@ namespace OsmSharp.IO
         /// <param name="count"></param>
         public override void Write(byte[] buffer, int offset, int count)
         {
-            throw new NotSupportedException("Writing to a CappedStream is not possible.");
+            if(_stream.Position + count > _offset + _length)
+            { // oeps, outside of the capped stream bounds.
+                throw new Exception("Cannot write outside of the capped streams ranged.");
+            }
+            _stream.Write(buffer, offset, count);
         }
     }
 }
