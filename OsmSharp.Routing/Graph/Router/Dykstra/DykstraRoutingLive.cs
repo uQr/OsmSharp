@@ -615,7 +615,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                                     //double totalWeight = current.Weight + neighbour.Value.Distance;
 
                                     // update the visit list;
-                                    var neighbourRoute = new PathSegment<long>(neighbour.Neighbour, totalWeight, current);
+                                    var neighbourRoute = new PathSegment<long>(neighbour.Neighbour, neighbour.Id, totalWeight, current);
                                     heap.Push(neighbourRoute, (float)neighbourRoute.Weight);
                                 }
                             }

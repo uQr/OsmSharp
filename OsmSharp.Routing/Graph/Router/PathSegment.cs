@@ -35,6 +35,7 @@ namespace OsmSharp.Routing.Graph.Router
         {
             this.VertexId = vertexId;
             this.Weight = 0;
+            this.EdgeId = -1;
             this.From = null;
         }
 
@@ -44,10 +45,11 @@ namespace OsmSharp.Routing.Graph.Router
         /// <param name="vertexId"></param>
         /// <param name="weight"></param>
         /// <param name="from"></param>
-        public PathSegment(TIdType vertexId, double weight, PathSegment<TIdType> from)
+        public PathSegment(TIdType vertexId, long edgeId, double weight, PathSegment<TIdType> from)
         {
             this.VertexId = vertexId;
             this.Weight = weight;
+            this.EdgeId = edgeId;
             this.From = from;
         }
 
@@ -55,6 +57,11 @@ namespace OsmSharp.Routing.Graph.Router
         /// The id of this vertex.
         /// </summary>
         public TIdType VertexId { get; set; }
+
+        /// <summary>
+        /// The edge id.
+        /// </summary>
+        public long EdgeId { get; set; }
 
         /// <summary>
         /// The weight from the source vertex.
@@ -76,7 +83,7 @@ namespace OsmSharp.Routing.Graph.Router
             PathSegment<TIdType> next = this;
             while (next.From != null)
             {
-                route = new PathSegment<TIdType>(next.From.VertexId,
+                route = new PathSegment<TIdType>(next.From.VertexId, next.EdgeId,
                     (next.Weight - next.From.Weight) + route.Weight, route);
                 next = next.From;
             }
@@ -178,7 +185,7 @@ namespace OsmSharp.Routing.Graph.Router
             else
             { // recursively clone the from segments.
                 PathSegment<TIdType> from = this.From.Clone();
-                return new PathSegment<TIdType>(this.VertexId, this.Weight, from);
+                return new PathSegment<TIdType>(this.VertexId, this.EdgeId, this.Weight, from);
             }
         }
 

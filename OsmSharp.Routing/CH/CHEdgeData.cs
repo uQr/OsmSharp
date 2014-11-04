@@ -18,6 +18,7 @@
 
 using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Routing.Graph;
+using OsmSharp.Routing.Graph.Router;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -281,6 +282,76 @@ namespace OsmSharp.Routing.CH.PreProcessing
                 }
             }
             return result;
+        }
+
+        /// <summary>
+        /// Returns the edge id of the edge with the lowest weight between the two given vertices.
+        /// </summary>
+        /// <param name="graph"></param>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
+        public static long GetShortestEdgeId(IGraphReadOnly<CHEdgeData> graph, uint from, uint to)
+        {
+            var edges = graph.GetEdges(from, to);
+            var min = double.MaxValue;
+            long? edgeId = null;
+            foreach (var edge in edges)
+            {
+                var weight = edge.EdgeData.ForwardWeight;
+                if (edge.EdgeData.Backward)
+                {
+                    weight = edge.EdgeData.BackwardWeight;
+                }
+                if (min > weight)
+                {
+                    min = weight;
+                    edgeId = edge.Id;
+                }
+            }
+            if (!edgeId.HasValue)
+            {
+                throw new Exception(string.Format("Edge between vertex {0} and {1} not found!", from, to));
+            }
+            return edgeId.Value;
+        }
+
+        /// <summary>
+        /// Returns the edge details of the edge with the lowest weight between the two given vertices.
+        /// </summary>
+        /// <param name="graph"></param>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="id"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static bool GetShortestEdge(IGraphReadOnly<CHEdgeData> graph, uint from, uint to, out long id, out CHEdgeData data)
+        {
+            var edges = graph.GetEdges(from, to);
+            var min = double.MaxValue;
+            id = 0;
+            data = new CHEdgeData();
+            bool found = false;
+            foreach (var edge in edges)
+            {
+                var weight = edge.EdgeData.ForwardWeight;
+                if (edge.EdgeData.Backward)
+                {
+                    weight = edge.EdgeData.BackwardWeight;
+                }
+                if (min > weight)
+                {
+                    found = true;
+                    min = weight;
+                    id = edge.Id;
+                    data = edge.EdgeData;
+                }
+            }
+            if (!found)
+            {
+                throw new Exception(string.Format("Edge between vertex {0} and {1} not found!", from, to));
+            }
+            return true;
         }
 
         /// <summary>

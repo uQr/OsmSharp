@@ -43,29 +43,37 @@ namespace OsmSharp.Routing.Graph
         bool ContainsEdge(uint vertexId, uint neighbour);
 
         /// <summary>
-        /// Returns all arcs for the given vertex.
+        /// Returns all edges for the given vertex.
         /// </summary>
         /// <param name="vertexId"></param>
         /// <returns></returns>
         IEdgeEnumerator<TEdgeData> GetEdges(uint vertexId);
 
         /// <summary>
-        /// Gets the data associated with the given edge and returns true if the edge exists.
+        /// Returns all edges for the between the given vertices.
         /// </summary>
         /// <param name="vertex1"></param>
         /// <param name="vertex2"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        bool GetEdge(uint vertex1, uint vertex2, out TEdgeData data);
+        IEdgeEnumerator<TEdgeData> GetEdges(uint vertex1, uint vertex2);
 
         /// <summary>
-        /// Gets the shape associated with the given edge and returns true if the edge exists.
+        /// Gets the data associated with the given edge.
+        /// </summary>
+        /// <param name="edgeId"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        bool GetEdge(uint edgeId, out TEdgeData data);
+
+        /// <summary>
+        /// Gets the shape associated with the given edge.
         /// </summary>
         /// <param name="vertex1"></param>
         /// <param name="vertex2"></param>
         /// <param name="shape"></param>
         /// <returns></returns>
-        bool GetEdgeShape(uint vertex1, uint vertex2, out ICoordinateCollection shape);
+        bool GetEdgeShape(uint edgeId, out ICoordinateCollection shape);
 
         /// <summary>
         /// Returns the total number of vertices.

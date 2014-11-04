@@ -205,11 +205,27 @@ namespace OsmSharp.Routing.Routers
         public class RouterResolvedGraphEdge : IGraphEdgeData
         {
             /// <summary>
+            /// Holds the next id.
+            /// </summary>
+            private static long _nextId = 1;
+
+            /// <summary>
+            /// Returns a new id.
+            /// </summary>
+            /// <returns></returns>
+            public static long NextId()
+            {
+                var id = _nextId;
+                _nextId++;
+                return id;
+            }
+
+            /// <summary>
             /// Creates a new resolved edge.
             /// </summary>
             /// <param name="tags"></param>
             /// <param name="forward"></param>
-            public RouterResolvedGraphEdge(uint tags, bool forward)
+            public RouterResolvedGraphEdge(long id, uint tags, bool forward)
             {
                 this.Tags = tags;
                 this.Forward = forward;
@@ -228,6 +244,15 @@ namespace OsmSharp.Routing.Routers
             /// Gets or sets the type id.
             /// </summary>
             public uint TypeId
+            {
+                get;
+                private set;
+            }
+
+            /// <summary>
+            /// Gets the id.
+            /// </summary>
+            public long Id
             {
                 get;
                 private set;
