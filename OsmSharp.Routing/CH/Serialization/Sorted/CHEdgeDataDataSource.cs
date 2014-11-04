@@ -699,7 +699,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             throw new NotImplementedException();
         }
 
-        public void AddRestriction(Vehicle vehicle, uint[] route)
+        public void AddRestriction(string vehicleType, uint[] route)
         {
             throw new NotImplementedException();
         }

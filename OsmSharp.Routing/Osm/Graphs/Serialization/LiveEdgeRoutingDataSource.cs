@@ -717,7 +717,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
 
         }
 
-        public void AddRestriction(Vehicle vehicle, uint[] route)
+        public void AddRestriction(string vehicleType, uint[] route)
         {
 
         }
