@@ -52,7 +52,8 @@ namespace OsmSharp.Collections.Arrays
         /// <summary>
         /// Holds the default file element size.
         /// </summary>
-        private static long DefaultFileElementSize = (long)1024 * (long)1024 * (long)128;
+        //private static long DefaultFileElementSize = (long)1024 * (long)1024 * (long)128;
+        private static long DefaultFileElementSize = (long)1024 * (long)128;
 
         /// <summary>
         /// Holds the file element size.

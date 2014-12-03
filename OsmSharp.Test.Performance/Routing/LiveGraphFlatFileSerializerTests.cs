@@ -72,7 +72,7 @@ namespace OsmSharp.Test.Performance.Routing
             var routingSerializer = new LiveEdgeFlatfileSerializer();
 
             // read from the OSM-stream.
-            using (var fileFactory = new MemoryMappedFileFactory(@"d:\temp\"))
+            using (var fileFactory = new MemoryMappedFileFactory(@"c:\temp\"))
             {
                 using (var memoryMappedGraph = new MemoryMappedGraph<LiveEdge>(10000, fileFactory))
                 {

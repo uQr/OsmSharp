@@ -27,6 +27,12 @@ namespace OsmSharp.WinForms.UI.IO.MemoryMappedFiles.Streamed
             _stream = stream;
             _read = read;
             _write = write;
+
+            var byteArray = new byte[1024];
+            for(int idx = 0; idx < _stream.Length; idx = idx + 1024)
+            {
+                _stream.Write(byteArray, 0, 1024);
+            }
         }
 
         public bool CanRead
