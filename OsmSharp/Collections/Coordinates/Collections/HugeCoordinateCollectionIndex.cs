@@ -97,6 +97,31 @@ namespace OsmSharp.Collections.Coordinates.Collections
         }
 
         /// <summary>
+        /// Creates a new huge coordinate index.
+        /// </summary>
+        /// <param name="fileName">The file to use as a mapping.</param>
+        /// <param name="size">The size of the array.</param>
+        public HugeCoordinateCollectionIndex(string fileName, long size)
+            : this(fileName, 0, size)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new huge coordinate index.
+        /// </summary>
+        /// <param name="fileName">The file to use as a mapping.</param>
+        /// <param name="size">The size of the array.</param>
+        /// <param name="offset"></param>
+        public HugeCoordinateCollectionIndex(string fileName, long offset, long size)
+        {
+            int ulongSize = NativeMemoryMappedFileFactory.GetSize(typeof(ulong));
+
+            _index = new MemoryMappedHugeArray<ulong>(fileName, offset, size);
+            _coordinates = new MemoryMappedHugeArray<float>(fileName, offset + (size * ulongSize), size * 2 * ESTIMATED_SIZE);
+        }
+
+        /// <summary>
         /// Returns the collection with the given id.
         /// </summary>
         /// <param name="id"></param>

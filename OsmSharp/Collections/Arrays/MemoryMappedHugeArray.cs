@@ -128,11 +128,65 @@ namespace OsmSharp.Collections.Arrays
         }
 
         /// <summary>
+        /// Creates a memory mapped huge array.
+        /// </summary>
+        /// <param name="fileName">The file to use as a mapping.</param>
+        /// <param name="size">The size of the array.</param>
+        public MemoryMappedHugeArray(string fileName, long size)
+            : this(fileName, 0, size, DefaultFileElementSize)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a memory mapped huge array.
+        /// </summary>
+        /// <param name="fileName">The file to use as a mapping.</param>
+        /// <param name="offset">The offset in the file.</param>
+        /// <param name="size">The size of the array.</param>
+        public MemoryMappedHugeArray(string fileName, long offset, long size)
+            : this(fileName, offset, size, DefaultFileElementSize)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a memory mapped huge array.
+        /// </summary>
+        /// <param name="fileName">The file to use as a mapping.</param>
+        /// <param name="offset">The offset in the file.</param>
+        /// <param name="size">The size of the array.</param>
+        /// <param name="arraySize">The size of an indivdual array block.</param>
+        public MemoryMappedHugeArray(string fileName, long offset, long size, long arraySize)
+        {
+            _length = size;
+            _fileElementSize = arraySize;
+            _elementSize = NativeMemoryMappedFileFactory.GetSize(typeof(T));
+            _fileSizeBytes = arraySize * _elementSize;
+
+            var arrayCount = (int)System.Math.Ceiling((double)size / _fileElementSize);
+            _files = new List<IMemoryMappedFile>(arrayCount);
+            _accessors = new List<IMemoryMappedViewAccessor>(arrayCount);
+
+            var file = MemoryMappedFileFactory.New(fileName, _fileSizeBytes, offset);
+            _files.Add(file);
+            _accessors.Add(file.CreateViewAccessor(0, _fileSizeBytes));
+        }
+
+        /// <summary>
         /// Returns the length of this array.
         /// </summary>
         public long Length
         {
             get { return _length; }
+        }
+
+        /// <summary>
+        /// Returns true if this array can be resized.
+        /// </summary>
+        public bool CanResize
+        { // when factory is null, one fixed size file is used and no resizing is possible.
+            get { return _factory != null ; }
         }
 
         /// <summary>

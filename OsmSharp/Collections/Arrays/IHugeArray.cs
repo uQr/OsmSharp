@@ -29,6 +29,11 @@ namespace OsmSharp.Collections.Arrays
         /// Returns the length of this array.
         /// </summary>
         long Length { get; }
+
+        /// <summary>
+        /// Returns true if this array can be resized.
+        /// </summary>
+        bool CanResize { get; }
         
         /// <summary>
         /// Resizes this array.

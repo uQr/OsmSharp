@@ -16,18 +16,18 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Collections.Tags;
+using OsmSharp.Osm.PBF.Streams;
+using OsmSharp.Osm.Xml.Streams;
+using OsmSharp.Routing;
+using OsmSharp.Routing.CH;
+using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.WinForms.UI;
 using OsmSharp.WinForms.UI.Renderer;
-using OsmSharp.Routing;
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
-using OsmSharp.Osm.PBF.Streams;
-using OsmSharp.Routing.Osm.Interpreter;
-using OsmSharp.Collections.Tags;
-using OsmSharp.Routing.CH;
-using OsmSharp.Osm.Xml.Streams;
 
 namespace OsmSharp.Test.Performance
 {
@@ -71,9 +71,9 @@ namespace OsmSharp.Test.Performance
 
                 // test the routing preprocessor.
                 //Routing.LivePreProcessorTest.Test();
-                Routing.LiveEdgeGraphFlatFileSerializerTests.Test();
-                //Routing.LiveRoutingTest.Test();
-                //Routing.CH.CHPreProcessorTest.Test();
+                //Routing.LiveEdgeGraphFlatFileSerializerTests.Test();
+                //Routing.LiveRoutingTest.TestMemoryMapped();
+                Routing.LiveRoutingTest.Test();
                 //Routing.CH.CHEdgeGraphFlatFileSerializerTests.Test();
                 //Routing.CH.CHSerializedRoutingTest.Test();
                 //Routing.CH.CHRoutingTest.Test();

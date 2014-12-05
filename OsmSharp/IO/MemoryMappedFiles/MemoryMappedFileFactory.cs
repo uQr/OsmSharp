@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2014 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -73,6 +73,18 @@ namespace OsmSharp.IO.MemoryMappedFiles
             }
             _files.Add(newFile);
             return newFile;
+        }
+
+        /// <summary>
+        /// Creates a new memory mapped file based on the given filename and size.
+        /// </summary>
+        /// <param name="file">The filename to use.</param>
+        /// <param name="sizeInBytes">The size in bytes.</param>
+        /// <param name="offset">The offset from the beginning of the file.</param>
+        /// <returns></returns>
+        public static IMemoryMappedFile New(string file, long sizeInBytes, long offset)
+        {
+            return NativeMemoryMappedFileFactory.CreateFromFile(file, sizeInBytes);
         }
 
         /// <summary>

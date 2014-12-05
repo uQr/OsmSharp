@@ -91,6 +91,14 @@ namespace OsmSharp.Collections.Arrays
         }
 
         /// <summary>
+        /// Returns true if this array can be resized.
+        /// </summary>
+        public bool CanResize
+        {
+            get { return true; }
+        }
+
+        /// <summary>
         /// Resizes this array.
         /// </summary>
         /// <param name="size"></param>

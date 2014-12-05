@@ -34,7 +34,8 @@ namespace OsmSharp.IO.MemoryMappedFiles
         /// </summary>
         /// <param name="path">The path to file to map.</param>
         /// <param name="capacity">The maximum size, in bytes, to allocate to the memory-mapped file.</param>
-        public delegate IMemoryMappedFile NativeMemoryMappedFileCreate(string path, long capacity);
+        /// <param name="offset">The offset, in bytes, in the file to start the mapping.</param>
+        public delegate IMemoryMappedFile NativeMemoryMappedFileCreate(string path, long capacity, long offset);
 
         /// <summary>
         /// The native MemoryMappedFile create delegate.
@@ -46,13 +47,25 @@ namespace OsmSharp.IO.MemoryMappedFiles
         /// </summary>
         /// <param name="path">The path to file to map.</param>
         /// <param name="capacity">The maximum size, in bytes, to allocate to the memory-mapped file.</param>
+        /// <returns></returns>
         public static IMemoryMappedFile CreateFromFile(string path, long capacity)
+        {
+            return NativeMemoryMappedFileFactory.CreateFromFile(path, capacity, 0);
+        }
+
+        /// <summary>
+        /// Creates a native MemoryMappedFile.
+        /// </summary>
+        /// <param name="path">The path to file to map.</param>
+        /// <param name="capacity">The maximum size, in bytes, to allocate to the memory-mapped file.</param>
+        /// <param name="offset">The offset, in bytes, in the file to start the mapping.</param>
+        public static IMemoryMappedFile CreateFromFile(string path, long capacity, long offset)
         {
             if (_nativeMemoryMappedFileDelegate == null)
             { // oeps, not initialized.
                 throw new InvalidOperationException("MemoryMappedFile creating delegate not initialized, call OsmSharp.{Platform).UI.Native.Initialize() in the native code.");
             }
-            return _nativeMemoryMappedFileDelegate.Invoke(path, capacity);
+            return _nativeMemoryMappedFileDelegate.Invoke(path, capacity, offset);
         }
 
         /// <summary>
@@ -128,7 +141,6 @@ namespace OsmSharp.IO.MemoryMappedFiles
         /// </summary>
         /// <param name="type"></param>
         /// <param name="stream"></param>
-        /// <param name="structure"></param>
         /// <returns></returns>
         public delegate object ReadStructureDelegate(Type type, Stream stream);
 

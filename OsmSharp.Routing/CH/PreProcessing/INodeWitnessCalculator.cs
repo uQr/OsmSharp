@@ -44,7 +44,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// </summary>
         /// <param name="graph"></param>
         /// <param name="from"></param>
-        /// <param name="to"></param>
+        /// <param name="tos"></param>
         /// <param name="maxWeight"></param>
         /// <param name="maxSettles"></param>
         /// <param name="exists"></param>

@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.IO;
 using OsmSharp.IO.MemoryMappedFiles;
 using OsmSharp.Routing.Graph.MemoryMapping;
 using OsmSharp.WinForms.UI.IO.MemoryMappedFiles;
@@ -49,13 +50,17 @@ namespace OsmSharp.WinForms.UI
                     return new NativeImageCache();
                 });
             OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.SetDelegates(
-                (path, capacity) =>
+                (path, capacity, offset) =>
                 {
                     var file = new FileInfo(path);
                     var fs = file.Open(FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
-                    //return new MemoryMappedFileWrapper(
-                    //    MemoryMappedFile.CreateFromFile(fs, file.Name, capacity, MemoryMappedFileAccess.ReadWrite, null, HandleInheritability.Inheritable, false),
-                    //    file.FullName);
+                    if(offset > 0)
+                    { // offset not zero.
+                        var cappedStream = new CappedStream(
+                            fs, offset, capacity);
+                        return new MemoryMappedFileStreamWrapper(cappedStream,
+                            NativeMemoryMappedFileFactory.Read, NativeMemoryMappedFileFactory.Write, NativeMemoryMappedFileFactory.SizeOf);
+                    }
                     return new MemoryMappedFileStreamWrapper(fs, 
                         NativeMemoryMappedFileFactory.Read, NativeMemoryMappedFileFactory.Write, NativeMemoryMappedFileFactory.SizeOf);
                 },
