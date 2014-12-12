@@ -578,7 +578,8 @@ namespace OsmSharp.Routing.Graph
                 uint otherVertexId = 0;
                 var currentEdgeId = edgeId;
                 edgeDataForward = true;
-                if (_edges[edgeId + NODEA] == vertex1)
+                uint nodeAVertex = _edges[edgeId + NODEA];
+                if (nodeAVertex == vertex1)
                 {
                     otherVertexId = _edges[edgeId + NODEB];
                     edgeId = _edges[edgeId + NEXTNODEA];
@@ -586,7 +587,7 @@ namespace OsmSharp.Routing.Graph
                 }
                 else
                 {
-                    otherVertexId = _edges[edgeId + NODEA];
+                    otherVertexId = nodeAVertex;
                     edgeId = _edges[edgeId + NEXTNODEB];
                     nextEdgeSlot = edgeId + NEXTNODEB;
                     edgeDataForward = false;

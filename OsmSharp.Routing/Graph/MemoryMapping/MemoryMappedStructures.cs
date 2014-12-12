@@ -37,15 +37,15 @@ namespace OsmSharp.Routing.Graph.MemoryMapping
             }
             else if (typeof(CHEdgeData) == type)
             {
-                stream.Read(_readBuffer, 0, 17);
+                stream.Read(_readBuffer, 0, 21);
                 return new CHEdgeData()
                 {
-                    ContractedDirectionValue = _readBuffer[0],
-                    TagsValue = BitConverter.ToUInt32(_readBuffer, 1),
-                    ForwardWeight = BitConverter.ToSingle(_readBuffer, 5),
-                    ForwardContractedId = BitConverter.ToUInt32(_readBuffer, 9),
-                    BackwardWeight = BitConverter.ToSingle(_readBuffer, 13),
-                    BackwardContractedId = BitConverter.ToUInt32(_readBuffer, 17)
+                    ContractedDirectionValue = _readBuffer[0], // 1
+                    TagsValue = BitConverter.ToUInt32(_readBuffer, 1), // 4
+                    ForwardWeight = BitConverter.ToSingle(_readBuffer, 5), // 4
+                    ForwardContractedId = BitConverter.ToUInt32(_readBuffer, 9), // 4
+                    BackwardWeight = BitConverter.ToSingle(_readBuffer, 13), // 4
+                    BackwardContractedId = BitConverter.ToUInt32(_readBuffer, 17) // 4
                 };
             }
             throw new NotSupportedException(string.Format("Type {0} not supported for memory mapping.", type.ToInvariantString()));

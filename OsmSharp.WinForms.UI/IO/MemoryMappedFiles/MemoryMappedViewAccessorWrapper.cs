@@ -115,6 +115,7 @@ namespace OsmSharp.WinForms.UI.IO.MemoryMappedFiles
 
         public void Dispose()
         {
+            _accessor.Flush();
             _accessor.Dispose();
             _accessor = null;
         }

@@ -49,7 +49,7 @@ namespace OsmSharp.Test.Performance.Routing
                 new GeoCoordinate(51.20190, 4.66540),
                 new GeoCoordinate(51.30720, 4.89820));
             LiveRoutingTest.TestSerializedRouting("LiveRouting", 
-                "kempen-big.osm.pbf", box, 2500);
+                "kempen.osm.pbf", box, 2500);
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace OsmSharp.Test.Performance.Routing
                 new GeoCoordinate(51.20190, 4.66540),
                 new GeoCoordinate(51.30720, 4.89820));
             LiveRoutingTest.TestMemoryMappedRouting("LiveRouting",
-                "kempen-big.osm.pbf", box, 2500);
+                "kempen.osm.pbf", box, 2500);
         }
 
         /// <summary>
@@ -215,7 +215,7 @@ namespace OsmSharp.Test.Performance.Routing
                             testCount--;
 
                             // report progress.
-                            float progress = (float)System.Math.Round(((double)(totalCount - testCount) / (double)totalCount) * 100);
+                            float progress = (float)System.Math.Round((((double)(totalCount - testCount) / (double)totalCount) * 10)) * 10;
                             if (progress != latestProgress)
                             {
                                 OsmSharp.Logging.Log.TraceEvent("LiveEdgePreprocessor", TraceEventType.Information,

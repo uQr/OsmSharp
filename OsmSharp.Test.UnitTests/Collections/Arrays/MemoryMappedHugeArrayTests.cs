@@ -37,15 +37,17 @@ namespace OsmSharp.Test.Unittests.Collections.Arrays
         [Test]
         public void MemoryMappedHugeArraySimpleTest()
         {
+            int size = 10000;
+
             // make sure to initialize the native hooks to create a memory mapping.
             Native.Initialize();
 
-            using (var intArray = new MemoryMappedHugeArray<int>(1000, 1024))
+            using (var intArray = new MemoryMappedHugeArray<int>(size, 1024))
             {
-                var intArrayRef = new int[1000];
+                var intArrayRef = new int[size];
 
                 var randomGenerator = new RandomGenerator(66707770); // make this deterministic 
-                for (int idx = 0; idx < 1000; idx++)
+                for (int idx = 0; idx < size; idx++)
                 {
                     if (randomGenerator.Generate(2.0) > 1)
                     { // add data.
@@ -59,7 +61,34 @@ namespace OsmSharp.Test.Unittests.Collections.Arrays
                     }
                 }
 
-                for (int idx = 0; idx < 1000; idx++)
+                for (int idx = 0; idx < size; idx++)
+                {
+                    Assert.AreEqual(intArrayRef[idx], intArray[idx]);
+                }
+            }
+
+            using (var intArray = new MemoryMappedHugeArray<int>(size, 1024))
+            {
+                var intArrayRef = new int[size];
+
+                var randomGenerator = new RandomGenerator(66707770); // make this deterministic 
+                for (int idx = 0; idx < size; idx++)
+                {
+                    if (randomGenerator.Generate(2.0) > 1)
+                    { // add data.
+                        intArrayRef[idx] = idx;
+                        intArray[idx] = idx;
+                    }
+                    else
+                    {
+                        intArrayRef[idx] = int.MaxValue;
+                        intArray[idx] = int.MaxValue;
+                    }
+
+                    Assert.AreEqual(intArrayRef[idx], intArray[idx]);
+                }
+
+                for (int idx = 0; idx < size; idx++)
                 {
                     Assert.AreEqual(intArrayRef[idx], intArray[idx]);
                 }
@@ -72,70 +101,74 @@ namespace OsmSharp.Test.Unittests.Collections.Arrays
         [Test]
         public void MemoryMappedHugeArrayResizeTests()
         {
+            int size = 25000;
+
             // make sure to initialize the native hooks to create a memory mapping.
             Native.Initialize();
 
             var randomGenerator = new RandomGenerator(66707770); // make this deterministic 
 
-            using (var fileFactory = new MemoryMappedFileFactory(@"d:\temp\"))
+            using (var intArray = new MemoryMappedHugeArray<int>(size, 1024))
             {
-                using (var intArray = new MemoryMappedHugeArray<int>(fileFactory, 1000, 300))
+                var intArrayRef = new int[size];
+
+                for (int idx = 0; idx < size; idx++)
                 {
-                    var intArrayRef = new int[1000];
-
-                    for (int idx = 0; idx < 1000; idx++)
-                    {
-                        if (randomGenerator.Generate(2.0) > 1)
-                        { // add data.
-                            intArrayRef[idx] = idx;
-                            intArray[idx] = idx;
-                        }
-                        else
-                        {
-                            intArrayRef[idx] = int.MaxValue;
-                            intArray[idx] = int.MaxValue;
-                        }
+                    if (randomGenerator.Generate(2.0) > 1)
+                    { // add data.
+                        intArrayRef[idx] = idx;
+                        intArray[idx] = idx;
                     }
-
-                    Array.Resize<int>(ref intArrayRef, 335);
-                    intArray.Resize(335);
-
-                    Assert.AreEqual(intArrayRef.Length, intArray.Length);
-                    for (int idx = 0; idx < intArrayRef.Length; idx++)
+                    else
                     {
-                        Assert.AreEqual(intArrayRef[idx], intArray[idx]);
+                        intArrayRef[idx] = int.MaxValue;
+                        intArray[idx] = int.MaxValue;
                     }
+                    // Assert.AreEqual(intArrayRef[idx], intArray[idx]);
+                }
+
+                Assert.AreEqual(intArrayRef.Length, intArray.Length);
+                for (int idx = 0; idx < intArrayRef.Length; idx++)
+                {
+                    Assert.AreEqual(intArrayRef[idx], intArray[idx]);
+                }
+
+                Array.Resize<int>(ref intArrayRef, 335);
+                intArray.Resize(335);
+
+                Assert.AreEqual(intArrayRef.Length, intArray.Length);
+                for (int idx = 0; idx < intArrayRef.Length; idx++)
+                {
+                    Assert.AreEqual(intArrayRef[idx], intArray[idx]);
                 }
             }
 
-            using (var fileFactory = new MemoryMappedFileFactory(@"d:\temp\"))
+            using (var intArray = new MemoryMappedHugeArray<int>(size, 300))
             {
-                using (var intArray = new MemoryMappedHugeArray<int>(fileFactory, 1000, 300))
+                var intArrayRef = new int[size];
+
+                for (int idx = 0; idx < size; idx++)
                 {
-                    var intArrayRef = new int[1000];
-
-                    for (int idx = 0; idx < 1000; idx++)
-                    {
-                        if (randomGenerator.Generate(2.0) > 1)
-                        { // add data.
-                            intArrayRef[idx] = idx;
-                            intArray[idx] = idx;
-                        }
-                        else
-                        {
-                            intArrayRef[idx] = int.MaxValue;
-                            intArray[idx] = int.MaxValue;
-                        }
+                    if (randomGenerator.Generate(2.0) > 1)
+                    { // add data.
+                        intArrayRef[idx] = idx;
+                        intArray[idx] = idx;
                     }
-
-                    Array.Resize<int>(ref intArrayRef, 1235);
-                    intArray.Resize(1235);
-
-                    Assert.AreEqual(intArrayRef.Length, intArray.Length);
-                    for (int idx = 0; idx < intArrayRef.Length; idx++)
+                    else
                     {
-                        Assert.AreEqual(intArrayRef[idx], intArray[idx]);
+                        intArrayRef[idx] = int.MaxValue;
+                        intArray[idx] = int.MaxValue;
                     }
+                    Assert.AreEqual(intArrayRef[idx], intArray[idx]);
+                }
+
+                Array.Resize<int>(ref intArrayRef, 1235);
+                intArray.Resize(1235);
+
+                Assert.AreEqual(intArrayRef.Length, intArray.Length);
+                for (int idx = 0; idx < intArrayRef.Length; idx++)
+                {
+                    Assert.AreEqual(intArrayRef[idx], intArray[idx]);
                 }
             }
         }

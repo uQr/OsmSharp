@@ -31,7 +31,8 @@ namespace OsmSharp.WinForms.UI.IO.MemoryMappedFiles.Streamed
             var byteArray = new byte[1024];
             for(int idx = 0; idx < _stream.Length; idx = idx + 1024)
             {
-                _stream.Write(byteArray, 0, 1024);
+                int writeSize = System.Math.Min(1024, (int)(_stream.Length - _stream.Position));
+                _stream.Write(byteArray, 0, writeSize);
             }
         }
 
@@ -52,13 +53,19 @@ namespace OsmSharp.WinForms.UI.IO.MemoryMappedFiles.Streamed
 
         public void Read<T>(long position, out T structure) where T : struct
         {
-            _stream.Seek(position, SeekOrigin.Begin);
+            if(_stream.Position != position)
+            { // seek from current position.
+                _stream.Seek(position - _stream.Position, SeekOrigin.Current);
+            }
             structure = (T)_read.Invoke(typeof(T), _stream);
         }
 
         public int ReadArray<T>(long position, T[] array, int offset, int count) where T : struct
         {
-            _stream.Seek(position, SeekOrigin.Begin);
+            if (_stream.Position != position)
+            { // seek from current position.
+                _stream.Seek(position - _stream.Position, SeekOrigin.Current);
+            }
             for(int idx = offset; idx < offset + count; idx++)
             {
                 object structure = _read.Invoke(typeof(T), _stream);
@@ -76,14 +83,20 @@ namespace OsmSharp.WinForms.UI.IO.MemoryMappedFiles.Streamed
 
         public void Write<T>(long position, ref T structure) where T : struct
         {
-            _stream.Seek(position, SeekOrigin.Begin);
+            if (_stream.Position != position)
+            { // seek from current position.
+                _stream.Seek(position - _stream.Position, SeekOrigin.Current);
+            }
             var structureBoxed = (object)structure;
             _write.Invoke(typeof(T), _stream, ref structureBoxed);
         }
 
         public void WriteArray<T>(long position, T[] array, int offset, int count) where T : struct
         {
-            _stream.Seek(position, SeekOrigin.Begin);
+            if (_stream.Position != position)
+            { // seek from current position.
+                _stream.Seek(position - _stream.Position, SeekOrigin.Current);
+            }
             for (int idx = offset; idx < offset + count; idx++)
             {
                 var structureBoxed = (object)array[idx];

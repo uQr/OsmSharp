@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2014 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -54,23 +54,25 @@ namespace OsmSharp.WinForms.UI
                 {
                     var file = new FileInfo(path);
                     var fs = file.Open(FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
+                    var buffered = fs;// new BufferedStream(fs, 16 * 4096);
                     if(offset > 0)
                     { // offset not zero.
                         var cappedStream = new CappedStream(
-                            fs, offset, capacity);
+                            buffered, offset, capacity);
                         return new MemoryMappedFileStreamWrapper(cappedStream,
                             NativeMemoryMappedFileFactory.Read, NativeMemoryMappedFileFactory.Write, NativeMemoryMappedFileFactory.SizeOf);
                     }
-                    return new MemoryMappedFileStreamWrapper(fs, 
+                    return new MemoryMappedFileStreamWrapper(buffered, 
                         NativeMemoryMappedFileFactory.Read, NativeMemoryMappedFileFactory.Write, NativeMemoryMappedFileFactory.SizeOf);
                 },
                 (mapName, capacity) =>
                 {
-                    throw new NotSupportedException("Only file-based memory mapped files are supported.");
+                    return new MemoryMappedFileStreamWrapper(new MemoryStream(new byte[capacity], 0, (int)capacity, true),
+                        NativeMemoryMappedFileFactory.Read, NativeMemoryMappedFileFactory.Write, NativeMemoryMappedFileFactory.SizeOf);
                 },
                 (type) =>
                 {
-                    return System.Runtime.InteropServices.Marshal.SizeOf(type);
+                    return NativeMemoryMappedFileFactory.SizeOf(type);
                 });
         }
     }

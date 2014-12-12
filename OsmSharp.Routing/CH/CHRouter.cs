@@ -1115,31 +1115,34 @@ namespace OsmSharp.Routing.CH
                 var neighbours = graph.GetEdges(Convert.ToUInt32(current.VertexId));
 
                 // add the neighbours to the queue.
-                foreach (var neighbour in neighbours)
+                while(neighbours.MoveNext())
+                // foreach (var neighbour in neighbours)
                 {
-                    if ((neighbour.EdgeData.ToHigher || !neighbour.EdgeData.ToLower) &&
-                        neighbour.EdgeData.Forward)
+                    var edgeData = neighbours.EdgeData;
+                    if ((edgeData.ToHigher || !edgeData.ToLower) &&
+                        edgeData.Forward)
                     { // the edge is forward, and is to higher or was not contracted at all.
-                        if (!settledQueue.Forward.ContainsKey(neighbour.Neighbour) &&
-                            (exception == 0 || (exception != neighbour.Neighbour &&
-                            exception != neighbour.EdgeData.ForwardContractedId)))
+                        var neighbour = neighbours.Neighbour;
+                        if (!settledQueue.Forward.ContainsKey(neighbour) &&
+                            (exception == 0 || (exception != neighbour &&
+                            exception != edgeData.ForwardContractedId)))
                         {
                             // if not yet settled.
                             var routeToNeighbour = new PathSegment<long>(
-                                neighbour.Neighbour, current.Weight + neighbour.EdgeData.ForwardWeight, current);
+                                neighbour, current.Weight + edgeData.ForwardWeight, current);
                             queue.Push(routeToNeighbour, (float)routeToNeighbour.Weight);
                         }
-                        else if ((exception == 0 || (exception != neighbour.Neighbour &&
-                            exception != neighbour.EdgeData.ForwardContractedId)))
+                        else if ((exception == 0 || (exception != neighbour &&
+                            exception != edgeData.ForwardContractedId)))
                         {
                             // node was settled before: make sure this route is not shorter.
                             var routeToNeighbour = new PathSegment<long>(
-                                neighbour.Neighbour, current.Weight + neighbour.EdgeData.ForwardWeight, current);
+                                neighbour, current.Weight + edgeData.ForwardWeight, current);
 
                             // remove from the queue again when there is a shorter route found.
-                            if (settledQueue.Forward[neighbour.Neighbour].Weight > routeToNeighbour.Weight)
+                            if (settledQueue.Forward[neighbour].Weight > routeToNeighbour.Weight)
                             {
-                                settledQueue.Forward.Remove(neighbour.Neighbour);
+                                settledQueue.Forward.Remove(neighbour);
                                 queue.Push(routeToNeighbour, (float)routeToNeighbour.Weight);
                             }
                         }
@@ -1190,31 +1193,34 @@ namespace OsmSharp.Routing.CH
                 var neighbours = graph.GetEdges(Convert.ToUInt32(current.VertexId));
 
                 // add the neighbours to the queue.
-                foreach (var neighbour in neighbours)
+                while(neighbours.MoveNext())
+                // foreach (var neighbour in neighbours)
                 {
-                    if ((neighbour.EdgeData.ToHigher || !neighbour.EdgeData.ToLower) &&
-                        neighbour.EdgeData.Backward)
+                    var edgeData = neighbours.EdgeData;
+                    if ((edgeData.ToHigher || !edgeData.ToLower) &&
+                        edgeData.Backward)
                     { // the edge is backward, and is to higher or was not contracted at all.
-                        if (!settledQueue.Backward.ContainsKey(neighbour.Neighbour)
-                            && (exception == 0 || (exception != neighbour.Neighbour &&
-                            exception != neighbour.EdgeData.BackwardContractedId)))
+                        var neighbour = neighbours.Neighbour;
+                        if (!settledQueue.Backward.ContainsKey(neighbour)
+                            && (exception == 0 || (exception != neighbour &&
+                            exception != edgeData.BackwardContractedId)))
                         {
                             // if not yet settled.
                             var routeToNeighbour = new PathSegment<long>(
-                                neighbour.Neighbour, current.Weight + neighbour.EdgeData.BackwardWeight, current);
+                                neighbour, current.Weight + edgeData.BackwardWeight, current);
                             queue.Push(routeToNeighbour, (float)routeToNeighbour.Weight);
                         }
-                        else if ((exception == 0 || (exception != neighbour.Neighbour &&
-                            exception != neighbour.EdgeData.BackwardContractedId)))
+                        else if ((exception == 0 || (exception != neighbour &&
+                            exception != edgeData.BackwardContractedId)))
                         {
                             // node was settled before: make sure this route is not shorter.
                             var routeToNeighbour = new PathSegment<long>(
-                                neighbour.Neighbour, current.Weight + neighbour.EdgeData.BackwardContractedId, current);
+                                neighbour, current.Weight + edgeData.BackwardContractedId, current);
 
                             // remove from the queue again when there is a shorter route found.
-                            if (settledQueue.Backward[neighbour.Neighbour].Weight > routeToNeighbour.Weight)
+                            if (settledQueue.Backward[neighbour].Weight > routeToNeighbour.Weight)
                             {
-                                settledQueue.Backward.Remove(neighbour.Neighbour);
+                                settledQueue.Backward.Remove(neighbour);
                                 queue.Push(routeToNeighbour, (float)routeToNeighbour.Weight);
                             }
                         }

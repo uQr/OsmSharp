@@ -164,7 +164,7 @@ namespace OsmSharp.IO.MemoryMappedFiles
             }
             else if (typeof(int) == type)
             {
-                stream.Read(_readBuffer, 0, 8);
+                stream.Read(_readBuffer, 0, 4);
                 return BitConverter.ToInt32(_readBuffer, 0);
             }
             else if (typeof(long) == type)

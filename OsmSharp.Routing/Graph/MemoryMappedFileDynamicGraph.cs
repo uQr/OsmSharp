@@ -123,6 +123,59 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Creates a new memory mapped file dynamic graph.
         /// </summary>
+        /// <param name="size"></param>
+        /// <param name="fileName"></param>
+        public MemoryMappedGraph(long size, string fileName)
+            : this(size, 0, fileName)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new memory mapped file dynamic graph.
+        /// </summary>
+        /// <param name="size"></param>
+        /// <param name="offset"></param>
+        /// <param name="fileName"></param>
+        public MemoryMappedGraph(long size, long offset, string fileName)
+            : this(size,
+            new MemoryMappedHugeArray<GeoCoordinateSimple>(fileName, offset, size),
+            new MemoryMappedHugeArray<uint>(fileName, offset +
+                Offset(size * NativeMemoryMappedFileFactory.GetSize(typeof(GeoCoordinateSimple))), size),
+            new MemoryMappedHugeArray<uint>(fileName, offset +
+                Offset(size * NativeMemoryMappedFileFactory.GetSize(typeof(GeoCoordinateSimple)),
+                       size * NativeMemoryMappedFileFactory.GetSize(typeof(uint))), size),
+            new MemoryMappedHugeArray<TEdgeData>(fileName, offset +
+                Offset(size * NativeMemoryMappedFileFactory.GetSize(typeof(GeoCoordinateSimple)),
+                       size * NativeMemoryMappedFileFactory.GetSize(typeof(uint)),
+                       size * NativeMemoryMappedFileFactory.GetSize(typeof(uint))), size),
+            new HugeCoordinateCollectionIndex(fileName, offset +
+                Offset(size * NativeMemoryMappedFileFactory.GetSize(typeof(GeoCoordinateSimple)),
+                       size * NativeMemoryMappedFileFactory.GetSize(typeof(uint)),
+                       size * NativeMemoryMappedFileFactory.GetSize(typeof(uint)),
+                       size * NativeMemoryMappedFileFactory.GetSize(typeof(TEdgeData))), size))
+        {
+
+        }
+
+        /// <summary>
+        /// Calculates offsets.
+        /// </summary>
+        /// <param name="offsets"></param>
+        /// <returns></returns>
+        private static long Offset(params long[] offsets)
+        {
+            long offset = 0;
+            for(int idx = 0; idx < offsets.Length; idx++)
+            {
+                offset = offset + offsets[idx];
+            }
+            return offset;
+        }
+
+        /// <summary>
+        /// Creates a new memory mapped file dynamic graph.
+        /// </summary>
         /// <param name="estimatedSize"></param>
         /// <param name="coordinates"></param>
         /// <param name="vertices"></param>

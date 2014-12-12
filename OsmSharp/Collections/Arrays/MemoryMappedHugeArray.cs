@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2014 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Collections.Cache;
 using OsmSharp.IO.MemoryMappedFiles;
 using System;
 using System.Collections.Generic;
@@ -71,6 +72,16 @@ namespace OsmSharp.Collections.Arrays
         private long _fileSizeBytes;
 
         /// <summary>
+        /// Holds the size of one cache block.
+        /// </summary>
+        private int _cacheBlockSize;
+
+        /// <summary>
+        /// Holds the cache.
+        /// </summary>
+        private LRUCache<long, T[]> _cache;
+
+        /// <summary>
         /// Creates a memory mapped huge array.
         /// </summary>
         /// <param name="size">The size of the array.</param>
@@ -115,6 +126,14 @@ namespace OsmSharp.Collections.Arrays
             _fileElementSize = arraySize;
             _elementSize = NativeMemoryMappedFileFactory.GetSize(typeof(T));
             _fileSizeBytes = arraySize * _elementSize;
+
+            _cacheBlockSize = 1024;
+            if (arraySize % _cacheBlockSize != 0)
+            { // cacheblock size needs to be a multiple of arraySize.
+                int n = (int)(arraySize / _cacheBlockSize) + 1;
+                _cacheBlockSize = (int)(n * arraySize);
+            }
+            _cache = new LRUCache<long, T[]>(10);
 
             var arrayCount = (int)System.Math.Ceiling((double)size / _fileElementSize);
             _files = new List<IMemoryMappedFile>(arrayCount);
@@ -196,9 +215,9 @@ namespace OsmSharp.Collections.Arrays
         public void Resize(long size)
         {
             _length = size;
+            _cache.Clear();
 
             var arrayCount = (int)System.Math.Ceiling((double)size / _fileElementSize);
-            _files = new List<IMemoryMappedFile>(arrayCount);
             if (arrayCount < _files.Count)
             { // decrease files/accessors.
                 for (int arrayIdx = (int)arrayCount; arrayIdx < _files.Count; arrayIdx++)
@@ -209,6 +228,7 @@ namespace OsmSharp.Collections.Arrays
                     _files[arrayIdx] = null;
                 }
                 _files.RemoveRange((int)arrayCount, (int)(_files.Count - arrayCount));
+                _accessors.RemoveRange((int)arrayCount, (int)(_accessors.Count - arrayCount));
             }
             else
             { // increase files/accessors.
@@ -230,18 +250,56 @@ namespace OsmSharp.Collections.Arrays
         {
             get
             {
-                long arrayIdx = (long)System.Math.Floor(idx / _fileElementSize);
-                long localIdx = idx % _fileElementSize;
-                long localPosition = localIdx * _elementSize;
-                T structure;
-                _accessors[(int)arrayIdx].Read<T>(localPosition, out structure);
+                // calculate cacheblock and see if it's in cach.
+                long cacheBlockId = idx - (idx % _cacheBlockSize);
+                T[] cacheBlock;
+                if (!_cache.TryGet(cacheBlockId, out cacheBlock))
+                { // not in cache.
+                    cacheBlock = new T[_cacheBlockSize];
+
+                    long arrayIdx = (long)System.Math.Floor(cacheBlockId / _fileElementSize);
+                    long localIdx = cacheBlockId % _fileElementSize;
+                    long localPosition = localIdx * _elementSize;
+                    _accessors[(int)arrayIdx].ReadArray<T>(localPosition, cacheBlock, 0, cacheBlock.Length);
+                    _cache.Add(cacheBlockId, cacheBlock);
+                }
+                T structure = cacheBlock[idx - cacheBlockId];
+
+                //T refStructure;
+                //long refArrayIdx = (long)System.Math.Floor(idx / _fileElementSize);
+                //long refLocalIdx = idx % _fileElementSize;
+                //long refLocalPosition = refLocalIdx * _elementSize;
+                //// OsmSharp.Logging.Log.TraceEvent("MemoryMappedHugeArray.this.set", Logging.TraceEventType.Information, string.Format("{0}.{1}", arrayIdx, localPosition));
+                //_accessors[(int)refArrayIdx].Read<T>(refLocalPosition, out refStructure);
+                ////// OsmSharp.Logging.Log.TraceEvent("MemoryMappedHugeArray.this.get", Logging.TraceEventType.Information, string.Format("{0}.{1}", arrayIdx, localPosition));
+                ////// _accessors[(int)arrayIdx].Read<T>(localPosition, out structure);
+                //if(!refStructure.Equals(structure))
+                //{ // oeps!
+                //    throw new Exception();
+                //}
                 return structure;
+
+                //T structure;
+                //long arrayIdx = (long)System.Math.Floor(idx / _fileElementSize);
+                //long localIdx = idx % _fileElementSize;
+                //long localPosition = localIdx * _elementSize;
+                //// OsmSharp.Logging.Log.TraceEvent("MemoryMappedHugeArray.this.set", Logging.TraceEventType.Information, string.Format("{0}.{1}", arrayIdx, localPosition));
+                //_accessors[(int)arrayIdx].Read<T>(localPosition, out structure);
+                //return structure;
             }
             set
             {
+                long cacheBlockId = idx - (idx % _cacheBlockSize);
+                T[] cacheBlock;
+                if (_cache.TryGet(cacheBlockId, out cacheBlock))
+                { // the current index is in cache, also update it there.
+                    cacheBlock[idx - cacheBlockId] = value;
+                }
+
                 long arrayIdx = (long)System.Math.Floor(idx / _fileElementSize);
                 long localIdx = idx % _fileElementSize;
                 long localPosition = localIdx * _elementSize;
+                // OsmSharp.Logging.Log.TraceEvent("MemoryMappedHugeArray.this.set", Logging.TraceEventType.Information, string.Format("{0}.{1}", arrayIdx, localPosition));
                 _accessors[(int)arrayIdx].Write<T>(localPosition, ref value);
             }
         }
