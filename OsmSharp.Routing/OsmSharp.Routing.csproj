@@ -63,6 +63,7 @@
     <Compile Include="Graph\IEdgeEnumerator.cs" />
     <Compile Include="Graph\IGraph.cs" />
     <Compile Include="Graph\IGraphEdgeData.cs" />
+    <Compile Include="Graph\IGraphExtensions.cs" />
     <Compile Include="Graph\IGraphReadOnly.cs" />
     <Compile Include="Graph\IGraphWriteOnly.cs" />
     <Compile Include="Graph\MemoryGraph.cs" />

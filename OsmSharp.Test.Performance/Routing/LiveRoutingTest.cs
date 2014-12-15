@@ -61,7 +61,7 @@ namespace OsmSharp.Test.Performance.Routing
                 new GeoCoordinate(51.20190, 4.66540),
                 new GeoCoordinate(51.30720, 4.89820));
             LiveRoutingTest.TestMemoryMappedRouting("LiveRouting",
-                "kempen.osm.pbf", box, 2500);
+                "kempen.osm.pbf", box, 1000);
         }
 
         /// <summary>
@@ -100,8 +100,25 @@ namespace OsmSharp.Test.Performance.Routing
         public static void TestSerializedRouting(string name, Stream stream,
             GeoCoordinateBox box, int testCount)
         {
-            var router = Router.CreateLiveFrom(new OsmSharp.Osm.PBF.Streams.PBFOsmStreamSource(stream),
-                new OsmRoutingInterpreter());
+            var tagsIndex = new TagsTableCollectionIndex(); // creates a tagged index.
+
+            // read from the OSM-stream.
+            var interpreter = new OsmRoutingInterpreter();
+            var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
+            var targetData = new LiveGraphOsmStreamTarget(memoryData, interpreter, tagsIndex);
+            targetData.RegisterSource(new OsmSharp.Osm.PBF.Streams.PBFOsmStreamSource(stream));
+            targetData.Pull();
+
+            // drop vertex index.
+            memoryData.DropVertexIndex();
+            memoryData.SortHilbert(1024 * 1025 * 4);
+
+            // copy graph data.
+            var sortedCopy = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
+            sortedCopy.DropVertexIndex();
+            sortedCopy.CopyFrom(memoryData);
+
+            var router = Router.CreateLiveFrom(sortedCopy, interpreter);
 
             var performanceInfo = new PerformanceInfoConsumer("LiveRouting");
             performanceInfo.Start();
@@ -130,7 +147,7 @@ namespace OsmSharp.Test.Performance.Routing
                 testCount--;
 
                 // report progress.
-                float progress = (float)System.Math.Round(((double)(totalCount - testCount)  / (double)totalCount) * 100);
+                float progress = (float)System.Math.Round(((double)(totalCount - testCount)  / (double)totalCount) * 10) * 10;
                 if (progress != latestProgress)
                 {
                     OsmSharp.Logging.Log.TraceEvent("LiveEdgePreprocessor", TraceEventType.Information,
@@ -168,10 +185,18 @@ namespace OsmSharp.Test.Performance.Routing
         public static void TestMemoryMappedRouting(string name, Stream stream,
             GeoCoordinateBox box, int testCount)
         {
-            var tagsIndex = new TagsTableCollectionIndex();
-            var source = new PBFOsmStreamSource(stream);
-            var progressFilter = new OsmStreamFilterProgress();
-            progressFilter.RegisterSource(source);
+            var tagsIndex = new TagsTableCollectionIndex(); // creates a tagged index.
+
+            // read from the OSM-stream.
+            var interpreter = new OsmRoutingInterpreter();
+            var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
+            var targetData = new LiveGraphOsmStreamTarget(memoryData, interpreter, tagsIndex);
+            targetData.RegisterSource(new OsmSharp.Osm.PBF.Streams.PBFOsmStreamSource(stream));
+            targetData.Pull();
+
+            // drop vertex index.
+            memoryData.DropVertexIndex();
+            memoryData.SortHilbert(1024 * 1024 * 4);
 
             // read from the OSM-stream.
             using (var fileFactory = new MemoryMappedFileFactory(@"c:\temp\"))
@@ -180,12 +205,18 @@ namespace OsmSharp.Test.Performance.Routing
                 {
                     using (var coordinates = new HugeCoordinateIndex(fileFactory, 10000))
                     {
-                        var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(memoryMappedGraph, tagsIndex);
-                        var targetData = new LiveGraphOsmStreamTarget(memoryData, new OsmRoutingInterpreter(), tagsIndex, coordinates);
-                        targetData.RegisterSource(progressFilter);
-                        targetData.Pull();
+                        var copiedData = new DynamicGraphRouterDataSource<LiveEdge>(memoryMappedGraph, tagsIndex);
+                        copiedData.DropVertexIndex();
+                        copiedData.CopyFrom(memoryData);
+                        //var targetData2 = new LiveGraphOsmStreamTarget(copiedData, new OsmRoutingInterpreter(), tagsIndex, coordinates);
+                        //targetData2.RegisterSource(new OsmSharp.Osm.PBF.Streams.PBFOsmStreamSource(stream));
+                        //targetData2.Pull();
 
-                        var router = Router.CreateLiveFrom(memoryData, new OsmSharp.Routing.Graph.Router.Dykstra.DykstraRoutingLive(),
+                        //// drop vertex index.
+                        //copiedData.DropVertexIndex();
+                        //memoryMappedGraph.SortHilbert(10000000);
+
+                        var router = Router.CreateLiveFrom(copiedData, new OsmSharp.Routing.Graph.Router.Dykstra.DykstraRoutingLive(),
                            new OsmRoutingInterpreter());
 
                         var performanceInfo = new PerformanceInfoConsumer("LiveRouting");

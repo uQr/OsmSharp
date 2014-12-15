@@ -127,13 +127,13 @@ namespace OsmSharp.Collections.Arrays
             _elementSize = NativeMemoryMappedFileFactory.GetSize(typeof(T));
             _fileSizeBytes = arraySize * _elementSize;
 
-            _cacheBlockSize = 1024;
+            _cacheBlockSize = 32;
             if (arraySize % _cacheBlockSize != 0)
             { // cacheblock size needs to be a multiple of arraySize.
                 int n = (int)(arraySize / _cacheBlockSize) + 1;
                 _cacheBlockSize = (int)(n * arraySize);
             }
-            _cache = new LRUCache<long, T[]>(10);
+            _cache = new LRUCache<long, T[]>(1000);
 
             var arrayCount = (int)System.Math.Ceiling((double)size / _fileElementSize);
             _files = new List<IMemoryMappedFile>(arrayCount);

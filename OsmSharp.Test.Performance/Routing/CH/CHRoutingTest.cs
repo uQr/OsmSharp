@@ -32,6 +32,7 @@ using OsmSharp.Routing.Graph;
 using OsmSharp.Collections.Coordinates;
 using OsmSharp.Routing.Osm.Streams.Graphs;
 using OsmSharp.Routing.Osm.Graphs;
+using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.CH.PreProcessing.Ordering;
@@ -193,6 +194,10 @@ namespace OsmSharp.Test.Performance.Routing.CH
                     var edgeDifference = new EdgeDifferenceContractedSearchSpace(memoryData, witnessCalculator);
                     var preProcessor = new CHPreProcessor(memoryData, edgeDifference, witnessCalculator);
                     preProcessor.Start();
+
+                    // drop vertex index.
+                    memoryData.DropVertexIndex();
+                    memoryMappedGraph.SortHilbert(1000);
 
                     var router = Router.CreateCHFrom(memoryData, new OsmSharp.Routing.CH.CHRouter(), 
                        new OsmRoutingInterpreter());

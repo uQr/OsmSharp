@@ -197,6 +197,7 @@
     <Compile Include="Math\AI\Genetic\Solvers\Solver.cs" />
     <Compile Include="Math\AI\Genetic\Solvers\SolverSettings.cs" />
     <Compile Include="Math\Algorithms\ConvexHull.cs" />
+    <Compile Include="Math\Algorithms\HilbertCurve.cs" />
     <Compile Include="Math\Algorithms\Rotation.cs" />
     <Compile Include="Math\Algorithms\SimplifyCurve.cs" />
     <Compile Include="Math\Algorithms\Tessellation\LineairRingTessellator.cs" />

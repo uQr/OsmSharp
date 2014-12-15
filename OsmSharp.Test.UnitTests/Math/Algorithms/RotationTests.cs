@@ -34,7 +34,8 @@ namespace OsmSharp.Test.Unittests.Math.Algorithms
 		/// Tests simple rotations.
 		/// </summary>
 		[Test]
-		public void RotationSimpleTest(){
+		public void RotationSimpleTest()
+        {
 			double delta = 0.00001;
 
 			PointF2D center = new PointF2D (1, 1);
