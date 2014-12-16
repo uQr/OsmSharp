@@ -223,6 +223,10 @@
     <Compile Include="Math\StateMachines\FiniteStateMachineState.cs" />
     <Compile Include="Math\StateMachines\FiniteStateMachineTransition.cs" />
     <Compile Include="Math\StateMachines\FiniteStateMachineTransitionCondition.cs" />
+    <Compile Include="Math\Structures\Graph\IGraph.cs" />
+    <Compile Include="Math\Structures\Graph\IGraphReadOnly.cs" />
+    <Compile Include="Math\Structures\Graph\IGraphWriteOnly.cs" />
+    <Compile Include="Math\Structures\Graph\MemoryGraph.cs" />
     <Compile Include="Math\Structures\ILocatedObjectIndex.cs" />
     <Compile Include="Math\Structures\KDTree\Tree2D.cs" />
     <Compile Include="Math\Structures\KDTree\Tree2DNode.cs" />

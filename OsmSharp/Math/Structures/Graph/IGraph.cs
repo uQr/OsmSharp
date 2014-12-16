@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2014 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,25 +16,31 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-namespace OsmSharp.Routing.Graph
+namespace OsmSharp.Math.Structures.Graph
 {
     /// <summary>
-    /// Abstracts a graph implementation.
+    /// Abstracts a graph.
     /// </summary>
-    public interface IGraph<TEdgeData> : IGraphWriteOnly<TEdgeData>
-        where TEdgeData : IGraphEdgeData
+    public interface IGraph : IGraphWriteOnly
     {
         /// <summary>
-        /// Removes all edges from/to the given vertex.
+        /// Removes the vertex and all of it's adjacent edges.
         /// </summary>
-        /// <param name="vertex"></param>
-        void RemoveEdges(uint vertex);
+        /// <param name="vertex">The vertex.</param>
+        void RemoveVertex(uint vertex);
 
         /// <summary>
-        /// Delete the edge between the two given vertices.
+        /// Removes the edge between the two given vertices. Also removes the edge vertex2->vertex1.
         /// </summary>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
-        void RemoveEdge(uint from, uint to);
+        /// <param name="vertex1">The first vertex.</param>
+        /// <param name="vertex2">The second vertex.</param>
+        bool RemoveEdge(uint vertex1, uint vertex2);
+
+        /// <summary>
+        /// Removes the edge.
+        /// </summary>
+        /// <param name="edge">The edge.</param>
+        /// <returns></returns>
+        bool RemoveEdge(long edge);
     }
 }
