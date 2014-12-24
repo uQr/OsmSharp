@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2014 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -31,15 +31,6 @@ namespace OsmSharp.Math.Structures.Graph
         bool HasVertex(uint vertex);
 
         /// <summary>
-        /// Gets the all edges adjacent to the given vertex.
-        /// </summary>
-        /// <param name="vertex">The vertex.</param>
-        /// <param name="edges">The output array containing the edge id's.</param>
-        /// <param name="edgeData">The output array containing all the edge data.</param>
-        /// <returns></returns>
-        int GetEdges(uint vertex, ref long[] edges, ref uint[] edgeData);
-
-        /// <summary>
         /// Gets the edge information for the given edge.
         /// </summary>
         /// <param name="edge">The edge.</param>
@@ -67,6 +58,16 @@ namespace OsmSharp.Math.Structures.Graph
         /// <param name="edgeData">The output array containing all the edge data.</param>
         /// <returns>True if the edge exists, false otherwise.</returns>
         bool GetEdge(uint vertex1, uint vertex2, out long edge, ref uint[] edgeData);
+
+        /// <summary>
+        /// Gets the all edges adjacent to the given vertex.
+        /// </summary>
+        /// <param name="vertex">The vertex.</param>
+        /// <param name="edges">The output array containing the edge id's.</param>
+        /// <param name="edgeData">The output array containing all the edge data.</param>
+        /// <param name="neighbours">The array containing the neigbours of the given vertex.</param>
+        /// <returns></returns>
+        int GetEdges(uint vertex, ref long[] edges, ref uint[] neighbours, ref uint[] edgeData);
 
         /// <summary>
         /// Returns the size of the data in one edge.

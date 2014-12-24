@@ -20,8 +20,6 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Osm.Data;
 using OsmSharp.Routing;
-using OsmSharp.Routing.Graph.Router;
-using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.UI.Map.Layers;
 using OsmSharp.UI.Map.Styles;
 using OsmSharp.UI.Renderer;
@@ -355,19 +353,19 @@ namespace OsmSharp.UI.Map
         //    return layerScene;
         //}
 
-        /// <summary>
-        /// Adds a graph layer with the given data and style.
-        /// </summary>
-        /// <param name="dataSource"></param>
-        /// <param name="styleInterpreter"></param>
-        /// <returns></returns>
-        public LayerDynamicGraphLiveEdge AddLayerGraph(IBasicRouterDataSource<LiveEdge> dataSource,
-            StyleInterpreter styleInterpreter)
-        {
-            LayerDynamicGraphLiveEdge layerGraph = new LayerDynamicGraphLiveEdge(dataSource, styleInterpreter);
-            this.AddLayer(layerGraph);
-            return layerGraph;
-        }
+        ///// <summary>
+        ///// Adds a graph layer with the given data and style.
+        ///// </summary>
+        ///// <param name="dataSource"></param>
+        ///// <param name="styleInterpreter"></param>
+        ///// <returns></returns>
+        //public LayerDynamicGraphLiveEdge AddLayerGraph(IBasicRouterDataSource<LiveEdge> dataSource,
+        //    StyleInterpreter styleInterpreter)
+        //{
+        //    LayerDynamicGraphLiveEdge layerGraph = new LayerDynamicGraphLiveEdge(dataSource, styleInterpreter);
+        //    this.AddLayer(layerGraph);
+        //    return layerGraph;
+        //}
 
         /// <summary>
         /// Adds a layer displaying osm data from a given data source using the given style.

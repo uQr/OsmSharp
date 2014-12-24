@@ -223,6 +223,7 @@
     <Compile Include="Math\StateMachines\FiniteStateMachineState.cs" />
     <Compile Include="Math\StateMachines\FiniteStateMachineTransition.cs" />
     <Compile Include="Math\StateMachines\FiniteStateMachineTransitionCondition.cs" />
+    <Compile Include="Math\Structures\Graph\Geometric\GeometricGraph.cs" />
     <Compile Include="Math\Structures\Graph\IGraph.cs" />
     <Compile Include="Math\Structures\Graph\IGraphReadOnly.cs" />
     <Compile Include="Math\Structures\Graph\IGraphWriteOnly.cs" />

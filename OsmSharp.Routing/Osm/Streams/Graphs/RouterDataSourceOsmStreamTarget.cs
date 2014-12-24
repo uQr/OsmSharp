@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -38,25 +38,19 @@ using System.Collections.Generic;
 namespace OsmSharp.Routing.Osm.Streams.Graphs
 {
     /// <summary>
-    /// Data Processor Target to fill a dynamic graph object.
+    /// A data processor target that fills a routing datasource.
     /// </summary>
-    public abstract class DynamicGraphOsmStreamWriter<TEdgeData> : OsmStreamTarget
-        where TEdgeData : IGraphEdgeData 
+    public abstract class RouterDataSourceOsmStreamTarget : OsmStreamTarget
     {
         /// <summary>
         /// Holds the dynamic graph.
         /// </summary>
-        private readonly IDynamicGraphRouterDataSource<TEdgeData> _dynamicGraph;
+        private readonly RouterDataSource _data;
 
         /// <summary>
         /// The interpreter for osm data.
         /// </summary>
         private readonly IOsmRoutingInterpreter _interpreter;
-
-        /// <summary>
-        /// Holds the tags index.
-        /// </summary>
-        private ITagsCollectionIndex _tagsIndex;
 
         /// <summary>
         /// Holds the osm data cache.
@@ -69,95 +63,9 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         private bool _preIndexMode;
 
         /// <summary>
-        /// Holds the edge comparer.
-        /// </summary>
-        private readonly IDynamicGraphEdgeComparer<TEdgeData> _edgeComparer;
-
-        /// <summary>
         /// Holds the collect intermediates flag.
         /// </summary>
         private bool _collectIntermediates;
-
-        /// <summary>
-        /// Creates a new processor target.
-        /// </summary>
-        /// <param name="dynamicGraph">The graph that will be filled.</param>
-        /// <param name="interpreter">The interpreter to generate the edge data.</param>
-        /// <param name="edgeComparer"></param>
-        /// <param name="tagsIndex"></param>
-        /// <param name="idTransformations"></param>
-        protected DynamicGraphOsmStreamWriter(IDynamicGraphRouterDataSource<TEdgeData> dynamicGraph,
-            IOsmRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<TEdgeData> edgeComparer, ITagsCollectionIndex tagsIndex)
-            : this(dynamicGraph, interpreter, edgeComparer, tagsIndex, new HugeDictionary<long, uint>(), false, new CoordinateIndex())
-        {
-
-        }
-
-        /// <summary>
-        /// Creates a new processor target.
-        /// </summary>
-        /// <param name="dynamicGraph">The graph that will be filled.</param>
-        /// <param name="interpreter">The interpreter to generate the edge data.</param>
-        /// <param name="edgeComparer"></param>
-        /// <param name="tagsIndex"></param>
-        /// <param name="idTransformations"></param>
-        /// <param name="collectIntermediates"></param>
-        /// <param name="coordinates"></param>
-        protected DynamicGraphOsmStreamWriter(
-            IDynamicGraphRouterDataSource<TEdgeData> dynamicGraph, IOsmRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<TEdgeData> edgeComparer,
-            ITagsCollectionIndex tagsIndex, HugeDictionary<long, uint> idTransformations, bool collectIntermediates, ICoordinateIndex coordinates)
-        {
-            _dynamicGraph = dynamicGraph;
-            _interpreter = interpreter;
-            _edgeComparer = edgeComparer;
-
-            _tagsIndex = tagsIndex;
-            _idTransformations = idTransformations;
-            _preIndexMode = true;
-            _preIndex = new OsmSharp.Collections.LongIndex.LongIndex.LongIndex();
-            _relevantNodes = new OsmSharp.Collections.LongIndex.LongIndex.LongIndex();
-            _restricedWays = new HashSet<long>();
-            _collapsedNodes = new Dictionary<long, KeyValuePair<KeyValuePair<long, uint>, KeyValuePair<long, uint>>>();
-
-            _collectIntermediates = collectIntermediates;
-            _dataCache = new OsmDataCacheMemory();
-            _coordinates = coordinates;
-        }
-
-        /// <summary>
-        /// Returns the tags index.
-        /// </summary>
-        public ITagsCollectionIndex TagsIndex
-        {
-            get
-            {
-                return _tagsIndex;
-            }
-        }
-
-        /// <summary>
-        /// Returns the target graph.
-        /// </summary>
-        public IDynamicGraphRouterDataSource<TEdgeData> DynamicGraph
-        {
-            get { return _dynamicGraph; }
-        }
-
-        /// <summary>
-        /// Returns the osm routing interpreter.
-        /// </summary>
-        public IOsmRoutingInterpreter Interpreter
-        {
-            get { return _interpreter; }
-        }
-
-        /// <summary>
-        /// Returns the edge comparer.
-        /// </summary>
-        public IDynamicGraphEdgeComparer<TEdgeData> EdgeComparer
-        {
-            get { return _edgeComparer; }
-        }
 
         /// <summary>
         /// Holds the coordinates.
@@ -173,6 +81,58 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// Holds the id transformations.
         /// </summary>
         private readonly HugeDictionary<long, uint> _idTransformations;
+
+        /// <summary>
+        /// Creates a new processor target.
+        /// </summary>
+        /// <param name="data">The datasource that will be filled.</param>
+        /// <param name="interpreter">The interpreter to generate the edge data.</param>
+        protected RouterDataSourceOsmStreamTarget(RouterDataSource data, IOsmRoutingInterpreter interpreter)
+            : this(data, interpreter, true, new CoordinateIndex())
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new processor target.
+        /// </summary>
+        /// <param name="data">The datasource that will be filled.</param>
+        /// <param name="interpreter">The interpreter to generate the edge data.</param>
+        /// <param name="dropIntermediates">Drops intermediates that have no topological meaning.</param>
+        /// <param name="coordinatesIndex">The coordinates index.</param>
+        protected RouterDataSourceOsmStreamTarget(RouterDataSource data, IOsmRoutingInterpreter interpreter,
+            bool dropIntermediates, ICoordinateIndex coordinatesIndex)
+        {
+            _data = data;
+            _interpreter = interpreter;
+
+            _idTransformations = new HugeDictionary<long, uint>();
+            _preIndexMode = true;
+            _preIndex = new OsmSharp.Collections.LongIndex.LongIndex.LongIndex();
+            _relevantNodes = new OsmSharp.Collections.LongIndex.LongIndex.LongIndex();
+            _restricedWays = new HashSet<long>();
+            _collapsedNodes = new Dictionary<long, KeyValuePair<KeyValuePair<long, uint>, KeyValuePair<long, uint>>>();
+
+            _collectIntermediates = dropIntermediates;
+            _dataCache = new OsmDataCacheMemory();
+            _coordinates = coordinatesIndex;
+        }
+
+        /// <summary>
+        /// Gets the datasource being filled.
+        /// </summary>
+        public RouterDataSource DataSource
+        {
+            get { return _data; }
+        }
+
+        /// <summary>
+        /// Returns the osm routing interpreter.
+        /// </summary>
+        public IOsmRoutingInterpreter Interpreter
+        {
+            get { return _interpreter; }
+        }
 
         /// <summary>
         /// Initializes the processing.
@@ -217,13 +177,13 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                             var restriction = new uint[] { vertexId };
                             if (vehicles.Contains(null))
                             { // restriction is valid for all vehicles.
-                                _dynamicGraph.AddRestriction(restriction);
+                                _data.AddRestriction(restriction);
                             }
                             else
                             { // restriction is restricted to some vehicles only.
                                 foreach (Vehicle vehicle in vehicles)
                                 {
-                                    _dynamicGraph.AddRestriction(vehicle, restriction);
+                                    _data.AddRestriction(vehicle, restriction);
                                 }
                             }
                         }
@@ -256,7 +216,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             if (!_preIndexMode && _waysToCache != null &&
                 _waysToCache.Contains(way.Id.Value))
             { // cache this way?
-               _dataCache.AddWay(way);
+                _dataCache.AddWay(way);
             }
 
             // initialize the way interpreter.
@@ -272,7 +232,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                         {
                             return !_interpreter.IsRelevantRouting(x.Key);
                         });
-                        _tagsIndex.Add(routableWayTags);
+                        _data.Tags.Add(routableWayTags);
 
                         int wayNodesCount = way.Nodes.Count;
                         for (int idx = 0; idx < wayNodesCount; idx++)
@@ -302,7 +262,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                 { // add actual edges.
                     if (way.Nodes != null && way.Nodes.Count > 1)
                     { // way has at least two nodes.
-                        if (this.CalculateIsTraversable(_interpreter.EdgeInterpreter, _tagsIndex,
+                        if (this.CalculateIsTraversable(_interpreter.EdgeInterpreter, _data.Tags,
                             way.Tags))
                         { // the edge is traversable, add the edges.
                             uint? from = this.AddRoadNode(way.Nodes[0]);
@@ -321,15 +281,15 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                                     // add the edge(s).
                                     if (from.HasValue && to.HasValue)
                                     { // add a road edge.
-                                        while(from.Value == to.Value)
+                                        while (from.Value == to.Value)
                                         {
-                                            if(intermediates.Count > 0)
+                                            if (intermediates.Count > 0)
                                             {
                                                 uint? dummy = this.AddRoadNode(intermediates[0]);
                                                 intermediates.RemoveAt(0);
-                                                if(dummy.HasValue && from.Value != dummy.Value)
+                                                if (dummy.HasValue && from.Value != dummy.Value)
                                                 {
-                                                    this.AddRoadEdge(way.Tags, true, from.Value, dummy.Value, null);
+                                                    this.AddRoadEdge(from.Value, dummy.Value, way.Tags, null);
                                                     from = dummy;
                                                 }
                                             }
@@ -357,16 +317,16 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                                         if (intermediateCoordinates.Count == intermediates.Count &&
                                             from.Value != to.Value)
                                         { // all coordinates have been found.
-                                            this.AddRoadEdge(way.Tags, true, from.Value, to.Value, intermediateCoordinates);
+                                            this.AddRoadEdge(from.Value, to.Value, way.Tags, intermediateCoordinates);
                                         }
                                     }
 
                                     // if this way has a restriction save the collapsed nodes information.
-                                    if(_restricedWays.Contains(way.Id.Value) && to.HasValue && from.HasValue)
+                                    if (_restricedWays.Contains(way.Id.Value) && to.HasValue && from.HasValue)
                                     { // loop over all intermediates and save.
                                         var collapsedInfo = new KeyValuePair<KeyValuePair<long, uint>, KeyValuePair<long, uint>>(
                                             new KeyValuePair<long, uint>(fromNodeId, from.Value), new KeyValuePair<long, uint>(toNodeId, to.Value));
-                                        foreach(var intermedidate in intermediates)
+                                        foreach (var intermedidate in intermediates)
                                         {
                                             _collapsedNodes[intermedidate] = collapsedInfo;
                                         }
@@ -390,6 +350,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// Returns true if the given node has an actual road node, meaning a relevant vertex, and outputs the vertex id.
         /// </summary>
         /// <param name="nodeId"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
         private bool TryGetRoadNode(long nodeId, out uint id)
         {
@@ -411,7 +372,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                 ICoordinate coordinates;
                 if (_coordinates.TryGet(nodeId, out coordinates))
                 { // the coordinate is present.
-                    id = _dynamicGraph.AddVertex(
+                    id = _data.GeometricGraph.AddVertex(
                         coordinates.Latitude, coordinates.Longitude);
                     _coordinates.Remove(nodeId); // free the memory again!
 
@@ -427,33 +388,50 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         }
 
         /// <summary>
-        /// Adds an edge.
+        /// Adds a new edge to the datasource.
         /// </summary>
-        /// <param name="forward"></param>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
-        /// <param name="tags"></param>
-        /// <param name="intermediates"></param>
-        protected virtual void AddRoadEdge(TagsCollectionBase tags, bool forward, uint from, uint to, List<GeoCoordinateSimple> intermediates)
+        /// <param name="from">The first vertex.</param>
+        /// <param name="to">The second vertex.</param>
+        /// <param name="tags">The tags.</param>
+        /// <param name="intermediates">The intermediate coordinates.</param>
+        protected virtual void AddRoadEdge(uint from, uint to, TagsCollectionBase tags, List<GeoCoordinateSimple> intermediates)
         {
             float latitude;
             float longitude;
             GeoCoordinate fromCoordinate = null;
-            if (_dynamicGraph.GetVertex(from, out latitude, out longitude))
-            { // 
+            if (_data.GeometricGraph.GetVertex(from, out latitude, out longitude))
+            {
                 fromCoordinate = new GeoCoordinate(latitude, longitude);
             }
             GeoCoordinate toCoordinate = null;
-            if (_dynamicGraph.GetVertex(to, out latitude, out longitude))
+            if (_data.GeometricGraph.GetVertex(to, out latitude, out longitude))
             { // 
                 toCoordinate = new GeoCoordinate(latitude, longitude);
             }
 
             if (fromCoordinate != null && toCoordinate != null)
-            { // calculate the edge data.
-                var edgeData = this.CalculateEdgeData(_interpreter.EdgeInterpreter, _tagsIndex, tags, forward, fromCoordinate, toCoordinate, intermediates);
+            { // vertices found, calculate edge data and add the new edge.
+                // check if edge exists or not.
+                bool forward = true;
+                long edge = 0;
+                if (_data.GeometricGraph.Grap.GetEdge(from, to, out edge))
+                { // edge was found, check if it exists backwards.
+                    forward = (edge >= 0);
+                }
 
-                _dynamicGraph.AddEdge(from, to, edgeData, new CoordinateArrayCollection<GeoCoordinateSimple>(intermediates.ToArray()), _edgeComparer);
+                // calculate edge data.
+                var edgeData = this.CalculateEdgeData(_interpreter.EdgeInterpreter, _data.Tags, tags, forward, fromCoordinate, toCoordinate, intermediates);
+
+                // add the edge.
+                if(forward)
+                { // just add edge.
+                    _data.GeometricGraph.AddEdge(from, to, edgeData, new CoordinateArrayCollection<GeoCoordinateSimple>(intermediates.ToArray()));
+                }
+                else
+                { // reverse from->to and coordinate array.
+                    intermediates.Reverse();
+                    _data.GeometricGraph.AddEdge(to, from, edgeData, new CoordinateArrayCollection<GeoCoordinateSimple>(intermediates.ToArray()));
+                }
             }
         }
 
@@ -461,7 +439,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// Calculates the edge data.
         /// </summary>
         /// <returns></returns>
-        protected abstract TEdgeData CalculateEdgeData(IEdgeInterpreter edgeInterpreter, ITagsCollectionIndex tagsIndex, TagsCollectionBase tags, 
+        protected abstract byte[] CalculateEdgeData(IEdgeInterpreter edgeInterpreter, ITagsCollectionIndex tagsIndex, TagsCollectionBase tags,
             bool directionForward, GeoCoordinate from, GeoCoordinate to, List<GeoCoordinateSimple> intermediates);
 
         /// <summary>
@@ -537,12 +515,12 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                                 else
                                 { // ok, not relevant, should be in the collapsed nodes.
                                     KeyValuePair<KeyValuePair<long, uint>, KeyValuePair<long, uint>> collapsedInfo;
-                                    if(!_collapsedNodes.TryGetValue(vehicleRestriction.Value[idx], out collapsedInfo))
+                                    if (!_collapsedNodes.TryGetValue(vehicleRestriction.Value[idx], out collapsedInfo))
                                     { // one of the nodes was not found, this restriction is incomplete or invalid, skip it.
                                         restriction = null;
                                         break;
                                     }
-                                    if(previousRelevantId.HasValue)
+                                    if (previousRelevantId.HasValue)
                                     { // ok, there is a previous relevant id, one of them should match collapsedInfo.
                                         if (collapsedInfo.Key.Value == previousRelevantId.Value)
                                         { // ok, take the other relevant one.
@@ -568,11 +546,11 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                             { // restriction exists.
                                 if (vehicleRestriction.Key == null)
                                 { // this restriction is for all vehicles.
-                                    _dynamicGraph.AddRestriction(restriction.ToArray());
+                                    _data.AddRestriction(restriction.ToArray());
                                 }
                                 else
                                 { // this restriction is just for the given vehicle.
-                                    _dynamicGraph.AddRestriction(vehicleRestriction.Key, restriction.ToArray());
+                                    _data.AddRestriction(vehicleRestriction.Key, restriction.ToArray());
                                 }
                             }
                         }
@@ -657,10 +635,10 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             // reset the source.
             this.Source.Reset();
 
-            // resize graph.
-            // TODO: study avery cardinality and slightly overestimate here.
-            long vertexEstimate = _relevantNodes.Count + (long)(_relevantNodes.Count * 0.1);
-            _dynamicGraph.Resize(vertexEstimate, (long)(vertexEstimate * 4));
+            //// resize graph.
+            //// TODO: study avery cardinality and slightly overestimate here.
+            //long vertexEstimate = _relevantNodes.Count + (long)(_relevantNodes.Count * 0.1);
+            //_dynamicGraph.Resize(vertexEstimate, (long)(vertexEstimate * 4));
 
             // move out of pre-index mode.
             _preIndexMode = false;
@@ -677,13 +655,13 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
 
             // execute pre-processor.
             var preProcessor = this.GetPreprocessor();
-            if(preProcessor != null)
+            if (preProcessor != null)
             { // there is a pre-processor, trigger execution.
                 preProcessor.Start();
             }
 
-            // trim the graph.
-            _dynamicGraph.Trim();
+            //// trim the graph.
+            //_dynamicGraph.Trim();
         }
 
         /// <summary>
@@ -694,7 +672,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             _coordinates.Clear();
             _dataCache.Clear();
             _idTransformations.Clear();
-            if(_nodesToCache != null)
+            if (_nodesToCache != null)
             {
                 _nodesToCache.Clear();
             }
@@ -706,7 +684,6 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             _collapsedNodes = null;
             _preIndex = null;
             _relevantNodes = null;
-            _tagsIndex = null;
         }
     }
 }

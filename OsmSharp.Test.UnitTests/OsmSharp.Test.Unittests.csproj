@@ -168,6 +168,7 @@
     <Compile Include="Math\Algorithms\HilbertCurveTest.cs" />
     <Compile Include="Math\Primitives\Line2DTests.cs" />
     <Compile Include="Math\Primitives\RectangleF2DTests.cs" />
+    <Compile Include="Math\Structures\Graph\MemoryGraphTests.cs" />
     <Compile Include="Osm\Cache\OsmDataCacheDiskTests.cs" />
     <Compile Include="Osm\Cache\OsmDataCacheMemoryTests.cs" />
     <Compile Include="Osm\Cache\OsmDataCacheTestsBase.cs" />

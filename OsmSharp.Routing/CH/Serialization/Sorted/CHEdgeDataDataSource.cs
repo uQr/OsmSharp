@@ -1,696 +1,696 @@
-﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
-// 
-// This file is part of OsmSharp.
-// 
-// OsmSharp is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 2 of the License, or
-// (at your option) any later version.
-// 
-// OsmSharp is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+﻿//// OsmSharp - OpenStreetMap (OSM) SDK
+//// Copyright (C) 2013 Abelshausen Ben
+//// 
+//// This file is part of OsmSharp.
+//// 
+//// OsmSharp is free software: you can redistribute it and/or modify
+//// it under the terms of the GNU General Public License as published by
+//// the Free Software Foundation, either version 2 of the License, or
+//// (at your option) any later version.
+//// 
+//// OsmSharp is distributed in the hope that it will be useful,
+//// but WITHOUT ANY WARRANTY; without even the implied warranty of
+//// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+//// GNU General Public License for more details.
+//// 
+//// You should have received a copy of the GNU General Public License
+//// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using OsmSharp.Collections.Cache;
-using OsmSharp.Collections.Coordinates.Collections;
-using OsmSharp.Collections.Tags.Index;
-using OsmSharp.Math.Geo;
-using OsmSharp.Osm.Tiles;
-using OsmSharp.Routing.CH.PreProcessing;
-using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Graph.Router;
-using System;
-using System.Collections.Generic;
-using System.IO;
+//using OsmSharp.Collections.Cache;
+//using OsmSharp.Collections.Coordinates.Collections;
+//using OsmSharp.Collections.Tags.Index;
+//using OsmSharp.Math.Geo;
+//using OsmSharp.Osm.Tiles;
+//using OsmSharp.Routing.CH.PreProcessing;
+//using OsmSharp.Routing.Graph;
+//using OsmSharp.Routing.Graph.Router;
+//using System;
+//using System.Collections.Generic;
+//using System.IO;
 
-namespace OsmSharp.Routing.CH.Serialization.Sorted
-{
-    /// <summary>
-    /// A basic router datasource.
-    /// </summary>
-    internal class CHEdgeDataDataSource : IBasicRouterDataSource<CHEdgeData>
-    {
-        /// <summary>
-        /// Holds the tags index.
-        /// </summary>
-        private ITagsCollectionIndexReadonly _tagsIndex;
+//namespace OsmSharp.Routing.CH.Serialization.Sorted
+//{
+//    /// <summary>
+//    /// A basic router datasource.
+//    /// </summary>
+//    internal class CHEdgeDataDataSource : IBasicRouterDataSource<CHEdgeData>
+//    {
+//        /// <summary>
+//        /// Holds the tags index.
+//        /// </summary>
+//        private ITagsCollectionIndexReadonly _tagsIndex;
 
-        /// <summary>
-        /// Holds the stream.
-        /// </summary>
-        private Stream _stream;
+//        /// <summary>
+//        /// Holds the stream.
+//        /// </summary>
+//        private Stream _stream;
 
-        /// <summary>
-        /// Holds the serializer.
-        /// </summary>
-        private CHEdgeDataDataSourceSerializer _serializer;
+//        /// <summary>
+//        /// Holds the serializer.
+//        /// </summary>
+//        private CHEdgeDataDataSourceSerializer _serializer;
 
-        /// <summary>
-        /// Holds the supported vehicles.
-        /// </summary>
-        private readonly HashSet<string> _vehicles;
+//        /// <summary>
+//        /// Holds the supported vehicles.
+//        /// </summary>
+//        private readonly HashSet<string> _vehicles;
 
-        /// <summary>
-        /// Creates a new CH edge data source.
-        /// </summary>
-        public CHEdgeDataDataSource(Stream stream, CHEdgeDataDataSourceSerializer serializer, IEnumerable<string> vehicles,
-            int startOfRegions, CHVertexRegionIndex regionIndex, int zoom,
-            int startOfBlocks, CHBlockIndex blockIndex, uint blockSize,
-            ITagsCollectionIndexReadonly tagsIndex)
-        {
-            _stream = stream;
-            _serializer = serializer;
-            _vehicles = new HashSet<string>(vehicles);
+//        /// <summary>
+//        /// Creates a new CH edge data source.
+//        /// </summary>
+//        public CHEdgeDataDataSource(Stream stream, CHEdgeDataDataSourceSerializer serializer, IEnumerable<string> vehicles,
+//            int startOfRegions, CHVertexRegionIndex regionIndex, int zoom,
+//            int startOfBlocks, CHBlockIndex blockIndex, uint blockSize,
+//            ITagsCollectionIndexReadonly tagsIndex)
+//        {
+//            _stream = stream;
+//            _serializer = serializer;
+//            _vehicles = new HashSet<string>(vehicles);
 
-            this.InitializeRegions(startOfRegions, regionIndex, zoom);
-            this.InitializeBlocks(startOfBlocks, blockIndex, blockSize);
+//            this.InitializeRegions(startOfRegions, regionIndex, zoom);
+//            this.InitializeBlocks(startOfBlocks, blockIndex, blockSize);
 
-            _blocks = new LRUCache<uint, CHBlock>(1000);
-            _regions = new LRUCache<ulong, CHVertexRegion>(1000);
-            _tagsIndex = tagsIndex;
-        }
+//            _blocks = new LRUCache<uint, CHBlock>(1000);
+//            _regions = new LRUCache<ulong, CHVertexRegion>(1000);
+//            _tagsIndex = tagsIndex;
+//        }
 
-        /// <summary>
-        /// Returns true if the given profile is supported.
-        /// </summary>
-        /// <param name="vehicle"></param>
-        /// <returns></returns>
-        public bool SupportsProfile(Vehicle vehicle)
-        {
-            return _vehicles.Contains(vehicle.UniqueName);
-        }
+//        /// <summary>
+//        /// Returns true if the given profile is supported.
+//        /// </summary>
+//        /// <param name="vehicle"></param>
+//        /// <returns></returns>
+//        public bool SupportsProfile(Vehicle vehicle)
+//        {
+//            return _vehicles.Contains(vehicle.UniqueName);
+//        }
 
-        /// <summary>
-        /// Returns true if the given profile is supported.
-        /// </summary>
-        /// <param name="vehicle"></param>
-        /// <returns></returns>
-        public void AddSupportedProfile(Vehicle vehicle)
-        {
-            throw new InvalidOperationException("Cannot add extra vehicle profiles to a read-only source.");
-        }
+//        /// <summary>
+//        /// Returns true if the given profile is supported.
+//        /// </summary>
+//        /// <param name="vehicle"></param>
+//        /// <returns></returns>
+//        public void AddSupportedProfile(Vehicle vehicle)
+//        {
+//            throw new InvalidOperationException("Cannot add extra vehicle profiles to a read-only source.");
+//        }
 
-        /// <summary>
-        /// Returns all edges inside the given boundingbox.
-        /// </summary>
-        /// <param name="box"></param>
-        /// <returns></returns>
-        public KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>>[] GetEdges(
-            GeoCoordinateBox box)
-        {
-            List<uint> vertices = this.LoadVerticesIn(box);
-            KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>>[] arcs =
-                new KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>>[vertices.Count * 3];
-            int arcCount = 0;
-            foreach (uint vertexId in vertices)
-            {
-                var vertexArcs = this.GetEdges(vertexId);
-                foreach (var arc in vertexArcs)
-                {
-                    arcCount++;
-                    if (arcs.Length <= arcCount)
-                    { // resize array.
-                        Array.Resize(ref arcs, arcs.Length + 100);
-                    }
-                    arcs[arcCount - 1] = new KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>>(
-                        vertexId, new KeyValuePair<uint, CHEdgeData>(arc.Neighbour, arc.EdgeData));
-                }
-            }
-            Array.Resize(ref arcs, arcCount);
-            return arcs;
-        }
+//        /// <summary>
+//        /// Returns all edges inside the given boundingbox.
+//        /// </summary>
+//        /// <param name="box"></param>
+//        /// <returns></returns>
+//        public KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>>[] GetEdges(
+//            GeoCoordinateBox box)
+//        {
+//            List<uint> vertices = this.LoadVerticesIn(box);
+//            KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>>[] arcs =
+//                new KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>>[vertices.Count * 3];
+//            int arcCount = 0;
+//            foreach (uint vertexId in vertices)
+//            {
+//                var vertexArcs = this.GetEdges(vertexId);
+//                foreach (var arc in vertexArcs)
+//                {
+//                    arcCount++;
+//                    if (arcs.Length <= arcCount)
+//                    { // resize array.
+//                        Array.Resize(ref arcs, arcs.Length + 100);
+//                    }
+//                    arcs[arcCount - 1] = new KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>>(
+//                        vertexId, new KeyValuePair<uint, CHEdgeData>(arc.Neighbour, arc.EdgeData));
+//                }
+//            }
+//            Array.Resize(ref arcs, arcCount);
+//            return arcs;
+//        }
 
-        /// <summary>
-        /// Returns the tags index.
-        /// </summary>
-        public ITagsCollectionIndexReadonly TagsIndex
-        {
-            get { return _tagsIndex; }
-        }
+//        /// <summary>
+//        /// Returns the tags index.
+//        /// </summary>
+//        public ITagsCollectionIndexReadonly TagsIndex
+//        {
+//            get { return _tagsIndex; }
+//        }
 
-        /// <summary>
-        /// Returns the location of the vertex with the given id.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="latitude"></param>
-        /// <param name="longitude"></param>
-        /// <returns></returns>
-        public bool GetVertex(uint id, out float latitude, out float longitude)
-        {
-            return this.LoadVertex(id, out latitude, out longitude);
-        }
+//        /// <summary>
+//        /// Returns the location of the vertex with the given id.
+//        /// </summary>
+//        /// <param name="id"></param>
+//        /// <param name="latitude"></param>
+//        /// <param name="longitude"></param>
+//        /// <returns></returns>
+//        public bool GetVertex(uint id, out float latitude, out float longitude)
+//        {
+//            return this.LoadVertex(id, out latitude, out longitude);
+//        }
 
-        /// <summary>
-        /// Returns all vertices in this router data source.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<uint> GetVertices()
-        {
-            throw new NotSupportedException();
-        }
+//        /// <summary>
+//        /// Returns all vertices in this router data source.
+//        /// </summary>
+//        /// <returns></returns>
+//        public IEnumerable<uint> GetVertices()
+//        {
+//            throw new NotSupportedException();
+//        }
 
-        /// <summary>
-        /// Returns an enumerator for edges for the given vertex.
-        /// </summary>
-        /// <param name="vertexId"></param>
-        /// <returns></returns>
-        public IEdgeEnumerator<CHEdgeData> GetEdges(uint vertexId)
-        {
-            return new EdgeEnumerator(this.GetEdgePairs(vertexId));
-        }
+//        /// <summary>
+//        /// Returns an enumerator for edges for the given vertex.
+//        /// </summary>
+//        /// <param name="vertexId"></param>
+//        /// <returns></returns>
+//        public IEdgeEnumerator<CHEdgeData> GetEdges(uint vertexId)
+//        {
+//            return new EdgeEnumerator(this.GetEdgePairs(vertexId));
+//        }
 
-        /// <summary>
-        /// Returns true if the given vertex has the given neighbour.
-        /// </summary>
-        /// <param name="vertexId"></param>
-        /// <param name="neighbour"></param>
-        /// <returns></returns>
-        public bool ContainsEdge(uint vertexId, uint neighbour)
-        {
-            CHEdgeData data;
-            return this.GetEdge(vertexId, neighbour, out data);
-        }
+//        /// <summary>
+//        /// Returns true if the given vertex has the given neighbour.
+//        /// </summary>
+//        /// <param name="vertexId"></param>
+//        /// <param name="neighbour"></param>
+//        /// <returns></returns>
+//        public bool ContainsEdge(uint vertexId, uint neighbour)
+//        {
+//            CHEdgeData data;
+//            return this.GetEdge(vertexId, neighbour, out data);
+//        }
 
-        /// <summary>
-        /// Returns true if the given vertex has the given neighbour.
-        /// </summary>
-        /// <param name="vertex1"></param>
-        /// <param name="vertex2"></param>
-        /// <param name="data"></param>
-        /// <returns></returns>
-        public bool GetEdge(uint vertex1, uint vertex2, out CHEdgeData data)
-        {
-            return this.LoadArc(vertex1, vertex2, out data);
-        }
+//        /// <summary>
+//        /// Returns true if the given vertex has the given neighbour.
+//        /// </summary>
+//        /// <param name="vertex1"></param>
+//        /// <param name="vertex2"></param>
+//        /// <param name="data"></param>
+//        /// <returns></returns>
+//        public bool GetEdge(uint vertex1, uint vertex2, out CHEdgeData data)
+//        {
+//            return this.LoadArc(vertex1, vertex2, out data);
+//        }
 
-        /// <summary>
-        /// Returns true if the given vertex has the given neighbour.
-        /// </summary>
-        /// <param name="vertex1"></param>
-        /// <param name="vertex2"></param>
-        /// <param name="shape"></param>
-        /// <returns></returns>
-        public bool GetEdgeShape(uint vertex1, uint vertex2, out ICoordinateCollection shape)
-        {
-            CHEdgeData data;
-            shape = null;
-            return this.LoadArc(vertex1, vertex2, out data);
-        }
+//        /// <summary>
+//        /// Returns true if the given vertex has the given neighbour.
+//        /// </summary>
+//        /// <param name="vertex1"></param>
+//        /// <param name="vertex2"></param>
+//        /// <param name="shape"></param>
+//        /// <returns></returns>
+//        public bool GetEdgeShape(uint vertex1, uint vertex2, out ICoordinateCollection shape)
+//        {
+//            CHEdgeData data;
+//            shape = null;
+//            return this.LoadArc(vertex1, vertex2, out data);
+//        }
 
-        /// <summary>
-        /// Returns the vertex count.
-        /// </summary>
-        public uint VertexCount
-        {
-            get { throw new NotSupportedException(); }
-        }
+//        /// <summary>
+//        /// Returns the vertex count.
+//        /// </summary>
+//        public uint VertexCount
+//        {
+//            get { throw new NotSupportedException(); }
+//        }
 
-        /// <summary>
-        /// Represents a part of a stream.
-        /// </summary>
-        private class StreamPart
-        {
-            /// <summary>
-            /// Gets/sets the offset.
-            /// </summary>
-            public long Offset { get; set; }
+//        /// <summary>
+//        /// Represents a part of a stream.
+//        /// </summary>
+//        private class StreamPart
+//        {
+//            /// <summary>
+//            /// Gets/sets the offset.
+//            /// </summary>
+//            public long Offset { get; set; }
 
-            /// <summary>
-            /// Gets/sets the length.
-            /// </summary>
-            public int Length { get; set; }
-        }
+//            /// <summary>
+//            /// Gets/sets the length.
+//            /// </summary>
+//            public int Length { get; set; }
+//        }
 
-        /// <summary>
-        /// Returns all arcs for the given vertex.
-        /// </summary>
-        /// <param name="vertexId"></param>
-        /// <returns></returns>
-        private KeyValuePair<uint, CHEdgeData>[] GetEdgePairs(uint vertexId)
-        {
-            return this.LoadArcs(vertexId);
-        }
+//        /// <summary>
+//        /// Returns all arcs for the given vertex.
+//        /// </summary>
+//        /// <param name="vertexId"></param>
+//        /// <returns></returns>
+//        private KeyValuePair<uint, CHEdgeData>[] GetEdgePairs(uint vertexId)
+//        {
+//            return this.LoadArcs(vertexId);
+//        }
 
-        #region Regions
+//        #region Regions
 
-        /// <summary>
-        /// The region zoom size.
-        /// </summary>
-        private int _zoom;
+//        /// <summary>
+//        /// The region zoom size.
+//        /// </summary>
+//        private int _zoom;
 
-        /// <summary>
-        /// Holds the regions.
-        /// </summary>
-        private LRUCache<ulong, CHVertexRegion> _regions;
+//        /// <summary>
+//        /// Holds the regions.
+//        /// </summary>
+//        private LRUCache<ulong, CHVertexRegion> _regions;
 
-        /// <summary>
-        /// Holds the region stream parts.
-        /// </summary>
-        private Dictionary<ulong, StreamPart> _regionStreamParts;
+//        /// <summary>
+//        /// Holds the region stream parts.
+//        /// </summary>
+//        private Dictionary<ulong, StreamPart> _regionStreamParts;
 
-        /// <summary>
-        /// Initializes all region stuff.
-        /// </summary>
-        /// <param name="startOfRegions"></param>
-        /// <param name="regionIndex"></param>
-        /// <param name="zoom"></param>
-        private void InitializeRegions(int startOfRegions, CHVertexRegionIndex regionIndex, int zoom)
-        {
-            _zoom = zoom;
-            _regionStreamParts = new Dictionary<ulong, StreamPart>();
+//        /// <summary>
+//        /// Initializes all region stuff.
+//        /// </summary>
+//        /// <param name="startOfRegions"></param>
+//        /// <param name="regionIndex"></param>
+//        /// <param name="zoom"></param>
+//        private void InitializeRegions(int startOfRegions, CHVertexRegionIndex regionIndex, int zoom)
+//        {
+//            _zoom = zoom;
+//            _regionStreamParts = new Dictionary<ulong, StreamPart>();
 
-            for (int idx = 0; idx < regionIndex.LocationIndex.Length; idx++)
-            {
-                StreamPart streamPart = new StreamPart();
-                if (idx == 0)
-                { // start is at startOfRegions.
-                    streamPart.Offset = startOfRegions;
-                    streamPart.Length = regionIndex.LocationIndex[0];
-                }
-                else
-                { // start is at startOfRegions + location end of previous block.
-                    streamPart.Offset = startOfRegions + regionIndex.LocationIndex[idx - 1];
-                    streamPart.Length = regionIndex.LocationIndex[idx] - regionIndex.LocationIndex[idx - 1];
-                }
-                _regionStreamParts.Add(regionIndex.RegionIds[idx],
-                    streamPart);
-            }
-        }
+//            for (int idx = 0; idx < regionIndex.LocationIndex.Length; idx++)
+//            {
+//                StreamPart streamPart = new StreamPart();
+//                if (idx == 0)
+//                { // start is at startOfRegions.
+//                    streamPart.Offset = startOfRegions;
+//                    streamPart.Length = regionIndex.LocationIndex[0];
+//                }
+//                else
+//                { // start is at startOfRegions + location end of previous block.
+//                    streamPart.Offset = startOfRegions + regionIndex.LocationIndex[idx - 1];
+//                    streamPart.Length = regionIndex.LocationIndex[idx] - regionIndex.LocationIndex[idx - 1];
+//                }
+//                _regionStreamParts.Add(regionIndex.RegionIds[idx],
+//                    streamPart);
+//            }
+//        }
 
-        /// <summary>
-        /// Loads all vertices inside the given boundingbox.
-        /// </summary>
-        /// <param name="box"></param>
-        /// <returns></returns>
-        private List<uint> LoadVerticesIn(GeoCoordinateBox box)
-        {
-            List<uint> vertices = new List<uint>();
-            TileRange range = TileRange.CreateAroundBoundingBox(box, _zoom);
-            foreach (Tile tile in range)
-            {
-                CHVertexRegion region;
-                if (!_regions.TryGet(tile.Id, out region))
-                {
-                    region = this.DeserializeRegion(tile.Id);
-                    if (region != null)
-                    {
-                        _regions.Add(tile.Id, region);
-                    }
-                }
-                if (region != null)
-                {
-                    vertices.AddRange(region.Vertices);
-                }
-            }
-            return vertices;
-        }
+//        /// <summary>
+//        /// Loads all vertices inside the given boundingbox.
+//        /// </summary>
+//        /// <param name="box"></param>
+//        /// <returns></returns>
+//        private List<uint> LoadVerticesIn(GeoCoordinateBox box)
+//        {
+//            List<uint> vertices = new List<uint>();
+//            TileRange range = TileRange.CreateAroundBoundingBox(box, _zoom);
+//            foreach (Tile tile in range)
+//            {
+//                CHVertexRegion region;
+//                if (!_regions.TryGet(tile.Id, out region))
+//                {
+//                    region = this.DeserializeRegion(tile.Id);
+//                    if (region != null)
+//                    {
+//                        _regions.Add(tile.Id, region);
+//                    }
+//                }
+//                if (region != null)
+//                {
+//                    vertices.AddRange(region.Vertices);
+//                }
+//            }
+//            return vertices;
+//        }
 
-        /// <summary>
-        /// Deserializes a region with the given id.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        private CHVertexRegion DeserializeRegion(ulong id)
-        {
-            StreamPart part;
-            if (_regionStreamParts.TryGetValue(id, out part))
-            {
-                return _serializer.DeserializeRegion(_stream, part.Offset, part.Length, false);
-            }
-            return null;
-        }
+//        /// <summary>
+//        /// Deserializes a region with the given id.
+//        /// </summary>
+//        /// <param name="id"></param>
+//        /// <returns></returns>
+//        private CHVertexRegion DeserializeRegion(ulong id)
+//        {
+//            StreamPart part;
+//            if (_regionStreamParts.TryGetValue(id, out part))
+//            {
+//                return _serializer.DeserializeRegion(_stream, part.Offset, part.Length, false);
+//            }
+//            return null;
+//        }
 
-        #endregion
+//        #endregion
 
-        #region Blocks
+//        #region Blocks
 
-        /// <summary>
-        /// Holds the blocksize.
-        /// </summary>
-        private uint _blockSize;
+//        /// <summary>
+//        /// Holds the blocksize.
+//        /// </summary>
+//        private uint _blockSize;
 
-        /// <summary>
-        /// Holds the cached blocks.
-        /// </summary>
-        private LRUCache<uint, CHBlock> _blocks;
+//        /// <summary>
+//        /// Holds the cached blocks.
+//        /// </summary>
+//        private LRUCache<uint, CHBlock> _blocks;
 
-        /// <summary>
-        /// Holds the start-position of the blocks.
-        /// </summary>
-        private int _startOfBlocks;
+//        /// <summary>
+//        /// Holds the start-position of the blocks.
+//        /// </summary>
+//        private int _startOfBlocks;
 
-        /// <summary>
-        /// Holds the blocks index.
-        /// </summary>
-        private CHBlockIndex _blocksIndex;
+//        /// <summary>
+//        /// Holds the blocks index.
+//        /// </summary>
+//        private CHBlockIndex _blocksIndex;
 
-        /// <summary>
-        /// Initializes the blocks stuff.
-        /// </summary>
-        /// <param name="startOfBlocks"></param>
-        /// <param name="blocksIndex"></param>
-        /// <param name="blockSize"></param>
-        private void InitializeBlocks(int startOfBlocks, CHBlockIndex blocksIndex, uint blockSize)
-        {
-            _startOfBlocks = startOfBlocks;
-            _blocksIndex = blocksIndex;
-            _blockSize = blockSize;
-        }
+//        /// <summary>
+//        /// Initializes the blocks stuff.
+//        /// </summary>
+//        /// <param name="startOfBlocks"></param>
+//        /// <param name="blocksIndex"></param>
+//        /// <param name="blockSize"></param>
+//        private void InitializeBlocks(int startOfBlocks, CHBlockIndex blocksIndex, uint blockSize)
+//        {
+//            _startOfBlocks = startOfBlocks;
+//            _blocksIndex = blocksIndex;
+//            _blockSize = blockSize;
+//        }
 
-        /// <summary>
-        /// Loads a vertex and returns true if found.
-        /// </summary>
-        /// <param name="vertexId"></param>
-        /// <param name="latitude"></param>
-        /// <param name="longitude"></param>
-        /// <returns></returns>
-        private bool LoadVertex(uint vertexId, out float latitude, out float longitude)
-        {
-            uint blockId = CHBlock.CalculateId(vertexId, _blockSize);
-            CHBlock block;
-            if (!_blocks.TryGet(blockId, out block))
-            { // damn block not cached!
-                block = this.DeserializeBlock(blockId);
-                if (block == null)
-                { // oops even now the block is not found!
-                    longitude = 0;
-                    latitude = 0;
-                    return false;
-                }
-                _blocks.Add(blockId, block);
-            }
-            uint blockIdx = vertexId - blockId;
-            if (block.Vertices != null &&
-                blockIdx < block.Vertices.Length)
-            { // block is found and the vertex is there!
-                latitude = block.Vertices[blockIdx].Latitude;
-                longitude = block.Vertices[blockIdx].Longitude;
-                return true;
-            }
-            // oops even now the block is not found!
-            longitude = 0;
-            latitude = 0;
-            return false;
-        }
+//        /// <summary>
+//        /// Loads a vertex and returns true if found.
+//        /// </summary>
+//        /// <param name="vertexId"></param>
+//        /// <param name="latitude"></param>
+//        /// <param name="longitude"></param>
+//        /// <returns></returns>
+//        private bool LoadVertex(uint vertexId, out float latitude, out float longitude)
+//        {
+//            uint blockId = CHBlock.CalculateId(vertexId, _blockSize);
+//            CHBlock block;
+//            if (!_blocks.TryGet(blockId, out block))
+//            { // damn block not cached!
+//                block = this.DeserializeBlock(blockId);
+//                if (block == null)
+//                { // oops even now the block is not found!
+//                    longitude = 0;
+//                    latitude = 0;
+//                    return false;
+//                }
+//                _blocks.Add(blockId, block);
+//            }
+//            uint blockIdx = vertexId - blockId;
+//            if (block.Vertices != null &&
+//                blockIdx < block.Vertices.Length)
+//            { // block is found and the vertex is there!
+//                latitude = block.Vertices[blockIdx].Latitude;
+//                longitude = block.Vertices[blockIdx].Longitude;
+//                return true;
+//            }
+//            // oops even now the block is not found!
+//            longitude = 0;
+//            latitude = 0;
+//            return false;
+//        }
 
-        /// <summary>
-        /// Loads the edge between the given vertices.
-        /// </summary>
-        /// <param name="vertex1"></param>
-        /// <param name="vertex2"></param>
-        /// <param name="data"></param>
-        /// <returns></returns>
-        private bool LoadArc(uint vertex1, uint vertex2, out CHEdgeData data)
-        {
-            uint blockId = CHBlock.CalculateId(vertex1, _blockSize);
-            CHBlock block;
-            if (!_blocks.TryGet(blockId, out block))
-            { // damn block not cached!
-                block = this.DeserializeBlock(blockId);
-                if (block == null)
-                { // oops even now the block is not found!
-                    data = new CHEdgeData();
-                    return false;
-                }
-                _blocks.Add(blockId, block);
-            }
-            uint blockIdx = vertex1 - blockId;
-            if (block.Vertices != null &&
-                blockIdx < block.Vertices.Length)
-            { // block is found and the vertex is there!
-                for (int arcIdx = block.Vertices[blockIdx].ArcIndex;
-                    arcIdx < block.Vertices[blockIdx].ArcIndex + block.Vertices[blockIdx].ArcCount; arcIdx++)
-                { // loop over all arcs.
-                    var chArc = block.Arcs[arcIdx];
-                    if(chArc.TargetId == vertex2)
-                    {
-                        data = new CHEdgeData();
-                        data.BackwardContractedId = chArc.BackwardContractedId;
-                        data.BackwardWeight = chArc.BackwardWeight;
-                        data.ForwardContractedId = chArc.ForwardContractedId;
-                        data.ForwardWeight = chArc.ForwardWeight;
-                        data.ContractedDirectionValue = chArc.ContractedDirectionValue;
-                        data.TagsValue = chArc.TagsValue;
-                        return true;
-                    }
-                }
-            }
-            blockId = CHBlock.CalculateId(vertex2, _blockSize);
-            if (!_blocks.TryGet(blockId, out block))
-            { // damn block not cached!
-                block = this.DeserializeBlock(blockId);
-                if (block == null)
-                { // oops even now the block is not found!
-                    data = new CHEdgeData();
-                    return false;
-                }
-                _blocks.Add(blockId, block);
-            }
-            blockIdx = vertex2 - blockId;
-            if (block.Vertices != null &&
-                blockIdx < block.Vertices.Length)
-            { // block is found and the vertex is there!
-                for (int arcIdx = block.Vertices[blockIdx].ArcIndex;
-                    arcIdx < block.Vertices[blockIdx].ArcIndex + block.Vertices[blockIdx].ArcCount; arcIdx++)
-                { // loop over all arcs.
-                    var chArc = block.Arcs[arcIdx];
-                    if (chArc.TargetId == vertex1)
-                    {
-                        data = new CHEdgeData();
-                        data.BackwardContractedId = chArc.BackwardContractedId;
-                        data.BackwardWeight = chArc.BackwardWeight;
-                        data.ForwardContractedId = chArc.ForwardContractedId;
-                        data.ForwardWeight = chArc.ForwardWeight;
-                        data.ContractedDirectionValue = chArc.ContractedDirectionValue;
-                        data.TagsValue = chArc.TagsValue;
-                        return true;
-                    }
-                }
-            }
-            data = new CHEdgeData();
-            return false;
-        }
+//        /// <summary>
+//        /// Loads the edge between the given vertices.
+//        /// </summary>
+//        /// <param name="vertex1"></param>
+//        /// <param name="vertex2"></param>
+//        /// <param name="data"></param>
+//        /// <returns></returns>
+//        private bool LoadArc(uint vertex1, uint vertex2, out CHEdgeData data)
+//        {
+//            uint blockId = CHBlock.CalculateId(vertex1, _blockSize);
+//            CHBlock block;
+//            if (!_blocks.TryGet(blockId, out block))
+//            { // damn block not cached!
+//                block = this.DeserializeBlock(blockId);
+//                if (block == null)
+//                { // oops even now the block is not found!
+//                    data = new CHEdgeData();
+//                    return false;
+//                }
+//                _blocks.Add(blockId, block);
+//            }
+//            uint blockIdx = vertex1 - blockId;
+//            if (block.Vertices != null &&
+//                blockIdx < block.Vertices.Length)
+//            { // block is found and the vertex is there!
+//                for (int arcIdx = block.Vertices[blockIdx].ArcIndex;
+//                    arcIdx < block.Vertices[blockIdx].ArcIndex + block.Vertices[blockIdx].ArcCount; arcIdx++)
+//                { // loop over all arcs.
+//                    var chArc = block.Arcs[arcIdx];
+//                    if(chArc.TargetId == vertex2)
+//                    {
+//                        data = new CHEdgeData();
+//                        data.BackwardContractedId = chArc.BackwardContractedId;
+//                        data.BackwardWeight = chArc.BackwardWeight;
+//                        data.ForwardContractedId = chArc.ForwardContractedId;
+//                        data.ForwardWeight = chArc.ForwardWeight;
+//                        data.ContractedDirectionValue = chArc.ContractedDirectionValue;
+//                        data.TagsValue = chArc.TagsValue;
+//                        return true;
+//                    }
+//                }
+//            }
+//            blockId = CHBlock.CalculateId(vertex2, _blockSize);
+//            if (!_blocks.TryGet(blockId, out block))
+//            { // damn block not cached!
+//                block = this.DeserializeBlock(blockId);
+//                if (block == null)
+//                { // oops even now the block is not found!
+//                    data = new CHEdgeData();
+//                    return false;
+//                }
+//                _blocks.Add(blockId, block);
+//            }
+//            blockIdx = vertex2 - blockId;
+//            if (block.Vertices != null &&
+//                blockIdx < block.Vertices.Length)
+//            { // block is found and the vertex is there!
+//                for (int arcIdx = block.Vertices[blockIdx].ArcIndex;
+//                    arcIdx < block.Vertices[blockIdx].ArcIndex + block.Vertices[blockIdx].ArcCount; arcIdx++)
+//                { // loop over all arcs.
+//                    var chArc = block.Arcs[arcIdx];
+//                    if (chArc.TargetId == vertex1)
+//                    {
+//                        data = new CHEdgeData();
+//                        data.BackwardContractedId = chArc.BackwardContractedId;
+//                        data.BackwardWeight = chArc.BackwardWeight;
+//                        data.ForwardContractedId = chArc.ForwardContractedId;
+//                        data.ForwardWeight = chArc.ForwardWeight;
+//                        data.ContractedDirectionValue = chArc.ContractedDirectionValue;
+//                        data.TagsValue = chArc.TagsValue;
+//                        return true;
+//                    }
+//                }
+//            }
+//            data = new CHEdgeData();
+//            return false;
+//        }
 
-        /// <summary>
-        /// Loads all arcs associated with the given vertex.
-        /// </summary>
-        /// <param name="vertexId"></param>
-        /// <returns></returns>
-        private KeyValuePair<uint, CHEdgeData>[] LoadArcs(uint vertexId)
-        {
-            uint blockId = CHBlock.CalculateId(vertexId, _blockSize);
-            CHBlock block;
-            if (!_blocks.TryGet(blockId, out block))
-            { // damn block not cached!
-                block = this.DeserializeBlock(blockId);
-                if (block == null)
-                { // oops even now the block is not found!
-                    return new KeyValuePair<uint, CHEdgeData>[0];
-                }
-                _blocks.Add(blockId, block);
-            }
-            uint blockIdx = vertexId - blockId;
-            if (block.Vertices != null &&
-                blockIdx < block.Vertices.Length)
-            { // block is found and the vertex is there!
-                var arcs = new KeyValuePair<uint, CHEdgeData>[
-                    block.Vertices[blockIdx].ArcCount];
-                for (int arcIdx = block.Vertices[blockIdx].ArcIndex;
-                    arcIdx < block.Vertices[blockIdx].ArcIndex + block.Vertices[blockIdx].ArcCount; arcIdx++)
-                { // loop over all arcs.
-                    var chArc = block.Arcs[arcIdx];
-                    var edgeData = new CHEdgeData();
-                    edgeData.BackwardContractedId = chArc.BackwardContractedId;
-                    edgeData.BackwardWeight = chArc.BackwardWeight;
-                    edgeData.ForwardContractedId = chArc.ForwardContractedId;
-                    edgeData.ForwardWeight = chArc.ForwardWeight;
-                    edgeData.ContractedDirectionValue = chArc.ContractedDirectionValue;
-                    edgeData.TagsValue = chArc.TagsValue;
-                    arcs[arcIdx - block.Vertices[blockIdx].ArcIndex] = new KeyValuePair<uint, CHEdgeData>(
-                        chArc.TargetId, edgeData);
-                }
-                return arcs;
-            }
-            // oops even now the block is not found!
-            return new KeyValuePair<uint, CHEdgeData>[0];
-        }
+//        /// <summary>
+//        /// Loads all arcs associated with the given vertex.
+//        /// </summary>
+//        /// <param name="vertexId"></param>
+//        /// <returns></returns>
+//        private KeyValuePair<uint, CHEdgeData>[] LoadArcs(uint vertexId)
+//        {
+//            uint blockId = CHBlock.CalculateId(vertexId, _blockSize);
+//            CHBlock block;
+//            if (!_blocks.TryGet(blockId, out block))
+//            { // damn block not cached!
+//                block = this.DeserializeBlock(blockId);
+//                if (block == null)
+//                { // oops even now the block is not found!
+//                    return new KeyValuePair<uint, CHEdgeData>[0];
+//                }
+//                _blocks.Add(blockId, block);
+//            }
+//            uint blockIdx = vertexId - blockId;
+//            if (block.Vertices != null &&
+//                blockIdx < block.Vertices.Length)
+//            { // block is found and the vertex is there!
+//                var arcs = new KeyValuePair<uint, CHEdgeData>[
+//                    block.Vertices[blockIdx].ArcCount];
+//                for (int arcIdx = block.Vertices[blockIdx].ArcIndex;
+//                    arcIdx < block.Vertices[blockIdx].ArcIndex + block.Vertices[blockIdx].ArcCount; arcIdx++)
+//                { // loop over all arcs.
+//                    var chArc = block.Arcs[arcIdx];
+//                    var edgeData = new CHEdgeData();
+//                    edgeData.BackwardContractedId = chArc.BackwardContractedId;
+//                    edgeData.BackwardWeight = chArc.BackwardWeight;
+//                    edgeData.ForwardContractedId = chArc.ForwardContractedId;
+//                    edgeData.ForwardWeight = chArc.ForwardWeight;
+//                    edgeData.ContractedDirectionValue = chArc.ContractedDirectionValue;
+//                    edgeData.TagsValue = chArc.TagsValue;
+//                    arcs[arcIdx - block.Vertices[blockIdx].ArcIndex] = new KeyValuePair<uint, CHEdgeData>(
+//                        chArc.TargetId, edgeData);
+//                }
+//                return arcs;
+//            }
+//            // oops even now the block is not found!
+//            return new KeyValuePair<uint, CHEdgeData>[0];
+//        }
 
-        /// <summary>
-        /// Deserialize the block with the given id.
-        /// </summary>
-        /// <param name="blockId"></param>
-        /// <returns></returns>
-        private CHBlock DeserializeBlock(uint blockId)
-        {
-            int blockOffset;
-            int blockSize;
-            uint blockIdx = blockId / _blockSize;
-            if (blockIdx == 0)
-            { // the block idx zero.
-                blockOffset = _startOfBlocks;
-                blockSize = _blocksIndex.LocationIndex[blockIdx];
-            }
-            else
-            { // need to calculate offset and size.
-                blockOffset = _startOfBlocks + _blocksIndex.LocationIndex[blockIdx - 1];
-                blockSize = _blocksIndex.LocationIndex[blockIdx] - _blocksIndex.LocationIndex[blockIdx - 1];
-            }
+//        /// <summary>
+//        /// Deserialize the block with the given id.
+//        /// </summary>
+//        /// <param name="blockId"></param>
+//        /// <returns></returns>
+//        private CHBlock DeserializeBlock(uint blockId)
+//        {
+//            int blockOffset;
+//            int blockSize;
+//            uint blockIdx = blockId / _blockSize;
+//            if (blockIdx == 0)
+//            { // the block idx zero.
+//                blockOffset = _startOfBlocks;
+//                blockSize = _blocksIndex.LocationIndex[blockIdx];
+//            }
+//            else
+//            { // need to calculate offset and size.
+//                blockOffset = _startOfBlocks + _blocksIndex.LocationIndex[blockIdx - 1];
+//                blockSize = _blocksIndex.LocationIndex[blockIdx] - _blocksIndex.LocationIndex[blockIdx - 1];
+//            }
 
-            //OsmSharp.Logging.Log.TraceEvent("CHEdgeDataDataSource.DeserializeBlock", Logging.TraceEventType.Information,
-            //    "Deserializing block {0}...", blockId);
-            return _serializer.DeserializeBlock(_stream, blockOffset, blockSize, true);
-        }
+//            //OsmSharp.Logging.Log.TraceEvent("CHEdgeDataDataSource.DeserializeBlock", Logging.TraceEventType.Information,
+//            //    "Deserializing block {0}...", blockId);
+//            return _serializer.DeserializeBlock(_stream, blockOffset, blockSize, true);
+//        }
 
-        #endregion
+//        #endregion
         
-        /// <summary>
-        /// An edge enumerator.
-        /// </summary>
-        private class EdgeEnumerator : IEdgeEnumerator<CHEdgeData>
-        {
-            /// <summary>
-            /// Holds the edges.
-            /// </summary>
-            private KeyValuePair<uint, CHEdgeData>[] _edges;
+//        /// <summary>
+//        /// An edge enumerator.
+//        /// </summary>
+//        private class EdgeEnumerator : IEdgeEnumerator<CHEdgeData>
+//        {
+//            /// <summary>
+//            /// Holds the edges.
+//            /// </summary>
+//            private KeyValuePair<uint, CHEdgeData>[] _edges;
 
-            /// <summary>
-            /// Holds the current position.
-            /// </summary>
-            private int _current = -1;
+//            /// <summary>
+//            /// Holds the current position.
+//            /// </summary>
+//            private int _current = -1;
 
-            /// <summary>
-            /// Creates a new enumerator.
-            /// </summary>
-            /// <param name="edges"></param>
-            public EdgeEnumerator(KeyValuePair<uint, CHEdgeData>[] edges)
-            {
-                _edges = edges;
-            }
+//            /// <summary>
+//            /// Creates a new enumerator.
+//            /// </summary>
+//            /// <param name="edges"></param>
+//            public EdgeEnumerator(KeyValuePair<uint, CHEdgeData>[] edges)
+//            {
+//                _edges = edges;
+//            }
 
-            /// <summary>
-            /// Moves to the next coordinate.
-            /// </summary>
-            /// <returns></returns>
-            public bool MoveNext()
-            {
-                _current++;
-                return _edges.Length > _current;
-            }
+//            /// <summary>
+//            /// Moves to the next coordinate.
+//            /// </summary>
+//            /// <returns></returns>
+//            public bool MoveNext()
+//            {
+//                _current++;
+//                return _edges.Length > _current;
+//            }
 
-            /// <summary>
-            /// Returns the current neighbour.
-            /// </summary>
-            public uint Neighbour
-            {
-                get { return _edges[_current].Key; }
-            }
+//            /// <summary>
+//            /// Returns the current neighbour.
+//            /// </summary>
+//            public uint Neighbour
+//            {
+//                get { return _edges[_current].Key; }
+//            }
 
-            /// <summary>
-            /// Returns the current edge data.
-            /// </summary>
-            public CHEdgeData EdgeData
-            {
-                get { return _edges[_current].Value; }
-            }
+//            /// <summary>
+//            /// Returns the current edge data.
+//            /// </summary>
+//            public CHEdgeData EdgeData
+//            {
+//                get { return _edges[_current].Value; }
+//            }
 
-            /// <summary>
-            /// Returns true if the edge data is inverted by default.
-            /// </summary>
-            public bool isInverted
-            {
-                get { return false; }
-            }
+//            /// <summary>
+//            /// Returns true if the edge data is inverted by default.
+//            /// </summary>
+//            public bool isInverted
+//            {
+//                get { return false; }
+//            }
 
-            /// <summary>
-            /// Returns the inverted edge data.
-            /// </summary>
-            public CHEdgeData InvertedEdgeData
-            {
-                get { return (CHEdgeData)this.EdgeData.Reverse(); }
-            }
+//            /// <summary>
+//            /// Returns the inverted edge data.
+//            /// </summary>
+//            public CHEdgeData InvertedEdgeData
+//            {
+//                get { return (CHEdgeData)this.EdgeData.Reverse(); }
+//            }
 
-            /// <summary>
-            /// Returns the current intermediates.
-            /// </summary>
-            public ICoordinateCollection Intermediates
-            {
-                get { return null; }
-            }
+//            /// <summary>
+//            /// Returns the current intermediates.
+//            /// </summary>
+//            public ICoordinateCollection Intermediates
+//            {
+//                get { return null; }
+//            }
 
-            /// <summary>
-            /// Returns the count.
-            /// </summary>
-            /// <returns></returns>
-            public int Count()
-            {
-                int count = 0;
-                while(this.MoveNext())
-                {
-                    count++;
-                }
-                return count;
-            }
+//            /// <summary>
+//            /// Returns the count.
+//            /// </summary>
+//            /// <returns></returns>
+//            public int Count()
+//            {
+//                int count = 0;
+//                while(this.MoveNext())
+//                {
+//                    count++;
+//                }
+//                return count;
+//            }
 
-            /// <summary>
-            /// Resets this enumerator.
-            /// </summary>
-            public void Reset()
-            {
-                _current = -1;
-            }
+//            /// <summary>
+//            /// Resets this enumerator.
+//            /// </summary>
+//            public void Reset()
+//            {
+//                _current = -1;
+//            }
 
-            public IEnumerator<Edge<CHEdgeData>> GetEnumerator()
-            {
-                this.Reset();
-                return this;
-            }
+//            public IEnumerator<Edge<CHEdgeData>> GetEnumerator()
+//            {
+//                this.Reset();
+//                return this;
+//            }
 
-            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-            {
-                this.Reset();
-                return this;
-            }
+//            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+//            {
+//                this.Reset();
+//                return this;
+//            }
 
-            public Edge<CHEdgeData> Current
-            {
-                get { return new Edge<CHEdgeData>(this); }
-            }
+//            public Edge<CHEdgeData> Current
+//            {
+//                get { return new Edge<CHEdgeData>(this); }
+//            }
 
-            object System.Collections.IEnumerator.Current
-            {
-                get { return this; }
-            }
+//            object System.Collections.IEnumerator.Current
+//            {
+//                get { return this; }
+//            }
 
-            public void Dispose()
-            {
+//            public void Dispose()
+//            {
 
-            }
-        }
+//            }
+//        }
 
 
-        public void AddRestriction(uint[] route)
-        {
-            throw new NotImplementedException();
-        }
+//        public void AddRestriction(uint[] route)
+//        {
+//            throw new NotImplementedException();
+//        }
 
-        public void AddRestriction(Vehicle vehicle, uint[] route)
-        {
-            throw new NotImplementedException();
-        }
+//        public void AddRestriction(Vehicle vehicle, uint[] route)
+//        {
+//            throw new NotImplementedException();
+//        }
 
-        public bool TryGetRestrictionAsStart(Vehicle vehicle, uint vertex, out List<uint[]> routes)
-        {
-            throw new NotImplementedException();
-        }
+//        public bool TryGetRestrictionAsStart(Vehicle vehicle, uint vertex, out List<uint[]> routes)
+//        {
+//            throw new NotImplementedException();
+//        }
 
-        public bool TryGetRestrictionAsEnd(Vehicle vehicle, uint vertex, out List<uint[]> routes)
-        {
-            throw new NotImplementedException();
-        }
-    }
-}
+//        public bool TryGetRestrictionAsEnd(Vehicle vehicle, uint vertex, out List<uint[]> routes)
+//        {
+//            throw new NotImplementedException();
+//        }
+//    }
+//}
