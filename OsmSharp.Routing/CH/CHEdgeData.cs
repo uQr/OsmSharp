@@ -27,7 +27,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
     /// <summary>
     /// Represents the data on a contracted edge.
     /// </summary>
-    public struct CHEdgeData : IGraphEdgeData
+    public struct CHEdgeData : IEdge
     {
         /// <summary>
         /// Bitmask holding status info [forwardMove(1), backwardMove(2), forwardTags(4), contracted(8)]
@@ -253,7 +253,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// Returns the exact inverse of this edge.
         /// </summary>
         /// <returns></returns>
-        public IGraphEdgeData Reverse()
+        public IEdge Reverse()
         {
             if (this.IsContracted)
             {
@@ -268,7 +268,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(IGraphEdgeData other)
+        public bool Equals(IEdge other)
         {
             var otherEdge = (CHEdgeData)other;
             return otherEdge._value == this._value &&

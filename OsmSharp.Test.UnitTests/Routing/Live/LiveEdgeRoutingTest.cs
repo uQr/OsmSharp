@@ -37,7 +37,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
     /// Tests the sparse node ordering CH.
     /// </summary>
     [TestFixture]
-    public class LiveEdgeRoutingTest : SimpleRoutingTests<LiveEdge>
+    public class EdgeRoutingTest : SimpleRoutingTests<Edge>
     {
         /// <summary>
         /// Returns a new router.
@@ -46,8 +46,8 @@ namespace OsmSharp.Test.Unittests.Routing.Live
         /// <param name="interpreter"></param>
         /// <param name="basicRouter"></param>
         /// <returns></returns>
-        public override Router BuildRouter(IBasicRouterDataSource<LiveEdge> data,
-            IRoutingInterpreter interpreter, IBasicRouter<LiveEdge> basicRouter)
+        public override Router BuildRouter(IBasicRouterDataSource<Edge> data,
+            IRoutingInterpreter interpreter, IBasicRouter<Edge> basicRouter)
         {
             return Router.CreateLiveFrom(data, basicRouter, interpreter);
         }
@@ -57,7 +57,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public override IBasicRouter<LiveEdge> BuildBasicRouter(IBasicRouterDataSource<LiveEdge> data)
+        public override IBasicRouter<Edge> BuildBasicRouter(IBasicRouterDataSource<Edge> data)
         {
             return new DykstraRoutingLive();
         }
@@ -68,19 +68,19 @@ namespace OsmSharp.Test.Unittests.Routing.Live
         /// <param name="interpreter"></param>
         /// <param name="embeddedString"></param>
         /// <returns></returns>
-        public override IBasicRouterDataSource<LiveEdge> BuildData(IOsmRoutingInterpreter interpreter, 
+        public override IBasicRouterDataSource<Edge> BuildData(IOsmRoutingInterpreter interpreter, 
             string embeddedString)
         {
-            string key = string.Format("LiveEdge.Routing.IBasicRouterDataSource<LiveEdge>.OSM.{0}",
+            string key = string.Format("Edge.Routing.IBasicRouterDataSource<Edge>.OSM.{0}",
                 embeddedString);
-            var data = StaticDictionary.Get<IBasicRouterDataSource<LiveEdge>>(
+            var data = StaticDictionary.Get<IBasicRouterDataSource<Edge>>(
                 key);
             if (data == null)
             {
                 var tagsIndex = new TagsTableCollectionIndex();
 
                 // do the data processing.
-                var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
+                var memoryData = new RouterDataSource<Edge>(tagsIndex);
                 var targetData = new LiveGraphOsmStreamTarget(
                     memoryData, interpreter, tagsIndex, null, false);
                 var dataProcessorSource = new XmlOsmStreamSource(
@@ -91,7 +91,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
                 targetData.Pull();
 
                 data = memoryData;
-                StaticDictionary.Add<IBasicRouterDataSource<LiveEdge>>(key, data);
+                StaticDictionary.Add<IBasicRouterDataSource<Edge>>(key, data);
             }
             return data;
         }
@@ -100,7 +100,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
         /// Tests a simple shortest route calculation.
         /// </summary>
         [Test]
-        public void TestLiveEdgeShortedDefault()
+        public void TestEdgeShortedDefault()
         {
             this.DoTestShortestDefault();
         }
@@ -109,7 +109,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
         /// Tests if the raw router preserves tags.
         /// </summary>
         [Test]
-        public void TestLiveEdgeResolvedTags()
+        public void TestEdgeResolvedTags()
         {
             this.DoTestResolvedTags();
         }
@@ -118,7 +118,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
         /// Tests if the raw router preserves tags on arcs/ways.
         /// </summary>
         [Test]
-        public void TestLiveEdgeEdgeTags()
+        public void TestEdgeEdgeTags()
         {
             this.DoTestEdgeTags();
         }
@@ -127,7 +127,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
         /// Test is the CH router can calculate another route.
         /// </summary>
         [Test]
-        public void TestLiveEdgeShortest1()
+        public void TestEdgeShortest1()
         {
             this.DoTestShortest1();
         }
@@ -136,7 +136,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
         /// Test is the CH router can calculate another route.
         /// </summary>
         [Test]
-        public void TestLiveEdgeShortest2()
+        public void TestEdgeShortest2()
         {
             this.DoTestShortest2();
         }
@@ -145,7 +145,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
         /// Test is the CH router can calculate another route.
         /// </summary>
         [Test]
-        public void TestLiveEdgeShortest3()
+        public void TestEdgeShortest3()
         {
             this.DoTestShortest3();
         }
@@ -154,7 +154,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
         /// Test is the CH router can calculate another route.
         /// </summary>
         [Test]
-        public void TestLiveEdgeShortest4()
+        public void TestEdgeShortest4()
         {
             this.DoTestShortest4();
         }
@@ -163,7 +163,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
         /// Test is the CH router can calculate another route.
         /// </summary>
         [Test]
-        public void TestLiveEdgeShortest5()
+        public void TestEdgeShortest5()
         {
             this.DoTestShortest5();
         }
@@ -172,7 +172,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
         /// Test is the raw router can calculate another route.
         /// </summary>
         [Test]
-        public void TestLiveEdgeResolvedShortest1()
+        public void TestEdgeResolvedShortest1()
         {
             this.DoTestShortestResolved1();
         }
@@ -181,7 +181,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
         /// Test is the raw router can calculate another route.
         /// </summary>
         [Test]
-        public void TestLiveEdgeResolvedShortest2()
+        public void TestEdgeResolvedShortest2()
         {
             this.DoTestShortestResolved2();
         }
@@ -190,7 +190,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
         /// Test if the ch router many-to-many weights correspond to the point-to-point weights.
         /// </summary>
         [Test]
-        public void TestLiveEdgeManyToMany1()
+        public void TestEdgeManyToMany1()
         {
             this.DoTestManyToMany1();
         }
@@ -199,7 +199,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
         /// Tests a simple shortest route calculation.
         /// </summary>
         [Test]
-        public void TestLiveEdgeResolveAllNodes()
+        public void TestEdgeResolveAllNodes()
         {
             this.DoTestResolveAllNodes();
         }
@@ -208,7 +208,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
         /// Tests routing when resolving points.
         /// </summary>
         [Test]
-        public void TestLiveEdgeResolveBetweenClose()
+        public void TestEdgeResolveBetweenClose()
         {
             this.DoTestResolveBetweenClose();
         }
@@ -217,7 +217,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
         /// Tests routing when resolving points.
         /// </summary>
         [Test]
-        public void TestLiveEdgeResolveBetweenTwo()
+        public void TestEdgeResolveBetweenTwo()
         {
             this.DoTestResolveBetweenTwo();
         }
@@ -226,7 +226,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
         /// Tests routing when resolving points.
         /// </summary>
         [Test]
-        public void TestLiveEdgeResolveCase1()
+        public void TestEdgeResolveCase1()
         {
             this.DoTestResolveCase1();
         }
@@ -235,7 +235,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
         /// Tests routing when resolving points.
         /// </summary>
         [Test]
-        public void TestLiveEdgeResolveCase2()
+        public void TestEdgeResolveCase2()
         {
             this.DoTestResolveCase2();
         }

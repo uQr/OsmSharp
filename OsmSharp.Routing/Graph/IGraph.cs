@@ -22,7 +22,7 @@ namespace OsmSharp.Routing.Graph
     /// Abstracts a graph implementation.
     /// </summary>
     public interface IGraph<TEdgeData> : IGraphWriteOnly<TEdgeData>
-        where TEdgeData : IGraphEdgeData
+        where TEdgeData : IEdge
     {
         /// <summary>
         /// Removes all edges adjacent to the given vertex.

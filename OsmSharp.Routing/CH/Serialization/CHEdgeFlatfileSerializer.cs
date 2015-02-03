@@ -33,16 +33,16 @@ namespace OsmSharp.Routing.CH.Serialization
     /// <summary>
     /// Serializes/deserialiers a routing data source with CH edges.
     /// </summary>
-    public class CHEdgeFlatfileSerializer : FlatfileSerializer<CHEdgeData>
+    public class CHEdgeFlatfileSerializer : FlatfileSerializerBase<CHEdgeData>
     {
         /// <summary>
         /// Creates the graph to serialize into.
         /// </summary>
         /// <param name="tagsCollectionIndex"></param>
         /// <returns></returns>
-        protected override DynamicGraphRouterDataSource<CHEdgeData> CreateGraph(ITagsCollectionIndex tagsCollectionIndex)
+        protected override RouterDataSource<CHEdgeData> CreateGraph(ITagsCollectionIndex tagsCollectionIndex)
         {
-            return new DynamicGraphRouterDataSource<CHEdgeData>(new MemoryDirectedGraph<CHEdgeData>(), tagsCollectionIndex);
+            return new RouterDataSource<CHEdgeData>(new MemoryDirectedGraph<CHEdgeData>(), tagsCollectionIndex);
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace OsmSharp.Routing.CH.Serialization
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="graph"></param>
-        protected override void SerializeEdges(LimitedStream stream, DynamicGraphRouterDataSource<CHEdgeData> graph)
+        protected override void SerializeEdges(LimitedStream stream, RouterDataSource<CHEdgeData> graph)
         {
             var typeModel = RuntimeTypeModel.Create();
             typeModel.Add(typeof(SerializableEdge), true);
@@ -102,7 +102,7 @@ namespace OsmSharp.Routing.CH.Serialization
         /// <param name="stream"></param>
         /// <param name="size"></param>
         /// <param name="graph"></param>
-        protected override void DeserializeEdges(LimitedStream stream, long size, DynamicGraphRouterDataSource<CHEdgeData> graph)
+        protected override void DeserializeEdges(LimitedStream stream, long size, RouterDataSource<CHEdgeData> graph)
         {
             var typeModel = RuntimeTypeModel.Create();
             typeModel.Add(typeof(SerializableEdge), true);

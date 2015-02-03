@@ -25,7 +25,7 @@ namespace OsmSharp.Routing.Graph
     /// Represents an abstract edge enumerator, enumerable and edge.
     /// </summary>
     public interface IEdgeEnumerator<TEdgeData> : IEnumerable<Edge<TEdgeData>>, IEnumerator<Edge<TEdgeData>>
-        where TEdgeData : IGraphEdgeData
+        where TEdgeData : IEdge
     {
         /// <summary>
         /// Returns the current neighbour.
@@ -86,7 +86,7 @@ namespace OsmSharp.Routing.Graph
     /// </summary>
     /// <typeparam name="TEdgeData"></typeparam>
     public class Edge<TEdgeData>
-        where TEdgeData : IGraphEdgeData
+        where TEdgeData : IEdge
     {
         /// <summary>
         /// Creates a new edge.
@@ -182,7 +182,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="enumerator"></param>
         /// <returns></returns>
         public static KeyValuePair<uint, TEdgeData>[] ToKeyValuePairs<TEdgeData>(this IEdgeEnumerator<TEdgeData> enumerator)
-            where TEdgeData : IGraphEdgeData
+            where TEdgeData : IEdge
         {
             enumerator.Reset();
             var pairs = new List<KeyValuePair<uint, TEdgeData>>();
@@ -201,7 +201,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="enumerator"></param>
         /// <returns></returns>
         public static KeyValuePair<uint, KeyValuePair<TEdgeData, ICoordinateCollection>>[] ToKeyValuePairsAndShapes<TEdgeData>(this IEdgeEnumerator<TEdgeData> enumerator)
-            where TEdgeData : IGraphEdgeData
+            where TEdgeData : IEdge
         {
             enumerator.Reset();
             var pairs = new List<KeyValuePair<uint, KeyValuePair<TEdgeData, ICoordinateCollection>>>();

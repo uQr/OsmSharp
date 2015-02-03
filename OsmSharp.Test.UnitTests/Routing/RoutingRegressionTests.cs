@@ -52,7 +52,7 @@ namespace OsmSharp.Test.Unittests.Routing
             var tagsIndex = new TagsTableCollectionIndex();
 
             // do the data processing.
-            var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
+            var memoryData = new RouterDataSource<Edge>(tagsIndex);
             var targetData = new LiveGraphOsmStreamTarget(memoryData, interpreter, tagsIndex);
             var dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test_routing_regression1.osm"));
@@ -89,7 +89,7 @@ namespace OsmSharp.Test.Unittests.Routing
             var tagsIndex = new TagsTableCollectionIndex();
 
             // do the data processing.
-            var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
+            var memoryData = new RouterDataSource<Edge>(tagsIndex);
             var targetData = new LiveGraphOsmStreamTarget(memoryData, interpreter, tagsIndex);
             var dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test_network.osm"));
@@ -174,7 +174,7 @@ namespace OsmSharp.Test.Unittests.Routing
             var tagsIndex = new TagsTableCollectionIndex();
 
             // do the data processing.
-            var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
+            var memoryData = new RouterDataSource<Edge>(tagsIndex);
             var targetData = new LiveGraphOsmStreamTarget(memoryData, interpreter, tagsIndex);
             var dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test_network.osm"));
@@ -255,7 +255,7 @@ namespace OsmSharp.Test.Unittests.Routing
             var tagsIndex = new TagsTableCollectionIndex();
 
             // do the data processing.
-            var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
+            var memoryData = new RouterDataSource<Edge>(tagsIndex);
             var targetData = new LiveGraphOsmStreamTarget(memoryData, interpreter, tagsIndex);
             var dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test_routing_regression1.osm"));

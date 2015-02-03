@@ -24,7 +24,7 @@ namespace OsmSharp.Routing.Graph
     /// Abstracts a graph implementation. 
     /// </summary>
     public interface IGraphReadOnly<TEdgeData>
-        where TEdgeData : IGraphEdgeData
+        where TEdgeData : IEdge
     {
         /// <summary>
         /// Returns true if an edge is only as an outgoing edge. When false, edges are added both from and to.

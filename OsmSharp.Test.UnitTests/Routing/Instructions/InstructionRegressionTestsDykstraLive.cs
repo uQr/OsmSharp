@@ -52,8 +52,8 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
             TagsTableCollectionIndex tagsIndex = new TagsTableCollectionIndex();
 
             // do the data processing.
-            DynamicGraphRouterDataSource<LiveEdge> memoryData =
-                new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
+            RouterDataSource<Edge> memoryData =
+                new RouterDataSource<Edge>(tagsIndex);
             LiveGraphOsmStreamTarget target_data = new LiveGraphOsmStreamTarget(
                 memoryData, interpreter, tagsIndex, null, false);
             XmlOsmStreamSource dataProcessorSource = new XmlOsmStreamSource(
@@ -63,7 +63,7 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
             target_data.RegisterSource(sorter);
             target_data.Pull();
 
-            IBasicRouter<LiveEdge> basicRouter = new DykstraRoutingLive();
+            IBasicRouter<Edge> basicRouter = new DykstraRoutingLive();
             return Router.CreateLiveFrom(memoryData, basicRouter, interpreter);
         }
 

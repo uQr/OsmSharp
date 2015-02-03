@@ -32,8 +32,8 @@ namespace OsmSharp.Routing.Graph.Serialization
     /// <summary>
     /// An abstract serializer to serialize/deserialize a routing data source to a flat-file.
     /// </summary>
-    public abstract class FlatfileSerializer<TEdgeData> : RoutingDataSourceSerializer<TEdgeData>
-        where TEdgeData : IGraphEdgeData
+    public abstract class FlatfileSerializerBase<TEdgeData> : DataSourceSerializerBase<TEdgeData>
+        where TEdgeData : IEdge
     {
         /// <summary>
         /// Does the v1 serialization.
@@ -42,7 +42,7 @@ namespace OsmSharp.Routing.Graph.Serialization
         /// <param name="graph"></param>
         /// <returns></returns>
         protected override void DoSerialize(LimitedStream stream,
-            DynamicGraphRouterDataSource<TEdgeData> graph)
+            RouterDataSource<TEdgeData> graph)
         {
             // LAYOUT:
             // [SIZE_OF_VERTICES(8bytes)][VERTICES][SIZE_OF_EDGES(8bytes)][EDGES][SIZE_OF_TAGS(8bytes][TAGS]
@@ -89,7 +89,7 @@ namespace OsmSharp.Routing.Graph.Serialization
             LimitedStream stream, bool lazy, IEnumerable<string> vehicles)
         {
             ITagsCollectionIndex tagsCollectionIndex = this.CreateTagsCollectionIndex();
-            DynamicGraphRouterDataSource<TEdgeData> graph = this.CreateGraph(tagsCollectionIndex);
+            RouterDataSource<TEdgeData> graph = this.CreateGraph(tagsCollectionIndex);
 
             // deserialize vertices.
             var sizeBytes = new byte[8];
@@ -120,7 +120,7 @@ namespace OsmSharp.Routing.Graph.Serialization
         /// Creates the graph.
         /// </summary>
         /// <returns></returns>
-        protected abstract DynamicGraphRouterDataSource<TEdgeData> CreateGraph(ITagsCollectionIndex tagsCollectionIndex);
+        protected abstract RouterDataSource<TEdgeData> CreateGraph(ITagsCollectionIndex tagsCollectionIndex);
 
         /// <summary>
         /// Creates the tags collection index.
@@ -138,7 +138,7 @@ namespace OsmSharp.Routing.Graph.Serialization
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="graph"></param>
-        protected virtual void SerializeVertices(LimitedStream stream, DynamicGraphRouterDataSource<TEdgeData> graph)
+        protected virtual void SerializeVertices(LimitedStream stream, RouterDataSource<TEdgeData> graph)
         {
             RuntimeTypeModel typeModel = RuntimeTypeModel.Create();
             typeModel.Add(typeof(SerializableVertex), true);
@@ -187,7 +187,7 @@ namespace OsmSharp.Routing.Graph.Serialization
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="graph"></param>
-        protected abstract void SerializeEdges(LimitedStream stream, DynamicGraphRouterDataSource<TEdgeData> graph);
+        protected abstract void SerializeEdges(LimitedStream stream, RouterDataSource<TEdgeData> graph);
 
         /// <summary>
         /// Serializes the meta-data.
@@ -241,7 +241,7 @@ namespace OsmSharp.Routing.Graph.Serialization
         /// <param name="stream"></param>
         /// <param name="graph"></param>
         /// <param name="size"></param>
-        protected virtual void DeserializeVertices(LimitedStream stream, long size, DynamicGraphRouterDataSource<TEdgeData> graph)
+        protected virtual void DeserializeVertices(LimitedStream stream, long size, RouterDataSource<TEdgeData> graph)
         {
             RuntimeTypeModel typeModel = RuntimeTypeModel.Create();
             typeModel.Add(typeof(SerializableVertex), true);
@@ -271,7 +271,7 @@ namespace OsmSharp.Routing.Graph.Serialization
         /// <param name="stream"></param>
         /// <param name="size"></param>
         /// <param name="graph"></param>
-        protected abstract void DeserializeEdges(LimitedStream stream, long size, DynamicGraphRouterDataSource<TEdgeData> graph);
+        protected abstract void DeserializeEdges(LimitedStream stream, long size, RouterDataSource<TEdgeData> graph);
 
         /// <summary>
         /// Deserializes the meta-data.

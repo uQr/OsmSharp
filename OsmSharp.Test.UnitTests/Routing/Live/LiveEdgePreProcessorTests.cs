@@ -28,7 +28,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
     /// Contains tests for the live edge pre processor tests.
     /// </summary>
     [TestFixture]
-    public class LiveEdgePreProcessorTests
+    public class EdgePreProcessorTests
     {
         /// <summary>
         /// Tests a simple removal of one sparse vertex.
@@ -40,11 +40,11 @@ namespace OsmSharp.Test.Unittests.Routing.Live
         public void TestSparseRemoval1()
         {
             // use one edge definition everywhere.
-            var edge = new LiveEdge();
+            var edge = new Edge();
             edge.Forward = true;
             edge.Tags = 1;
 
-            var graph = new MemoryGraph<LiveEdge>();
+            var graph = new MemoryGraph<Edge>();
             uint vertex1 = graph.AddVertex(0, 0);
             uint vertex2 = graph.AddVertex(1, 1);
             uint vertex3 = graph.AddVertex(2, 2);
@@ -55,7 +55,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
             graph.AddEdge(vertex3, vertex2, edge, null);
 
             // execute pre-processor.
-            var preProcessor = new LiveEdgePreprocessor(graph);
+            var preProcessor = new Preprocessor(graph);
             preProcessor.Start();
 
             // test resulting graph.
@@ -78,11 +78,11 @@ namespace OsmSharp.Test.Unittests.Routing.Live
         public void TestSparseRemoval2()
         {
             // use one edge definition everywhere.
-            var edge = new LiveEdge();
+            var edge = new Edge();
             edge.Forward = true;
             edge.Tags = 1;
 
-            var graph = new MemoryGraph<LiveEdge>();
+            var graph = new MemoryGraph<Edge>();
             uint vertex1 = graph.AddVertex(0, 0);
             uint vertex2 = graph.AddVertex(1, 1);
             uint vertex3 = graph.AddVertex(2, 2);
@@ -102,7 +102,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
             graph.AddEdge(vertex6, vertex3, edge, null); // 3 <-> 6
 
             // execute pre-processor.
-            var preProcessor = new LiveEdgePreprocessor(graph);
+            var preProcessor = new Preprocessor(graph);
             preProcessor.Start();
 
             // test resulting graph.

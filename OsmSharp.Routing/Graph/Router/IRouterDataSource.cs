@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -22,8 +22,8 @@ namespace OsmSharp.Routing.Graph.Router
     /// Interface representing objects that are both and IBasicRouterDataSource and a IDynamicGraph.
     /// </summary>
     /// <typeparam name="TEdgeData"></typeparam>
-    public interface IDynamicGraphRouterDataSource<TEdgeData> : IGraph<TEdgeData>, IBasicRouterDataSource<TEdgeData>
-        where TEdgeData : IGraphEdgeData
+    public interface IRouterDataSource<TEdgeData> : IGraph<TEdgeData>, IBasicRouterDataSource<TEdgeData>
+        where TEdgeData : IEdge
     {
 
     }

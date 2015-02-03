@@ -36,12 +36,12 @@ namespace OsmSharp.Test.Unittests.Routing.Live
     /// Tests the live routing against a reference implementation.
     /// </summary>
     [TestFixture]
-    public class LiveEdgeComparisonTests : RoutingComparisonTests
+    public class EdgeComparisonTests : RoutingComparisonTests
     {
         /// <summary>
         /// Holds the data.
         /// </summary>
-        private Dictionary<string, DynamicGraphRouterDataSource<LiveEdge>> _data = null;
+        private Dictionary<string, RouterDataSource<Edge>> _data = null;
 
         /// <summary>
         /// Returns a new router.
@@ -54,15 +54,15 @@ namespace OsmSharp.Test.Unittests.Routing.Live
         {
             if (_data == null)
             {
-                _data = new Dictionary<string, DynamicGraphRouterDataSource<LiveEdge>>();
+                _data = new Dictionary<string, RouterDataSource<Edge>>();
             }
-            DynamicGraphRouterDataSource<LiveEdge> data = null;
+            RouterDataSource<Edge> data = null;
             if (!_data.TryGetValue(embeddedName, out data))
             {
                 var tagsIndex = new TagsTableCollectionIndex();
 
                 // do the data processing.
-                data = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
+                data = new RouterDataSource<Edge>(tagsIndex);
                 var targetData = new LiveGraphOsmStreamTarget(
                     data, interpreter, tagsIndex, new Vehicle[] { Vehicle.Car }, false);
                 var dataProcessorSource = new XmlOsmStreamSource(
@@ -82,7 +82,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
         /// Compares all routes possible against a reference implementation.
         /// </summary>
         [Test]
-        public void TestLiveEdgeAgainstReference()
+        public void TestEdgeAgainstReference()
         {
             this.TestCompareAll("test_network.osm", true);
         }
@@ -91,7 +91,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
         /// Compares all routes possible against a reference implementation.
         /// </summary>
         [Test]
-        public void TestLiveEdgeAgainstReferenceBig()
+        public void TestEdgeAgainstReferenceBig()
         {
             this.TestCompareAll("test_network_big.osm", true);
         }
@@ -100,7 +100,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
         /// Compares all routes possible against a reference implementation.
         /// </summary>
         [Test]
-        public void TestLiveEdgeOneWayAgainstReference()
+        public void TestEdgeOneWayAgainstReference()
         {
             this.TestCompareAll("test_network_oneway.osm", true);
         }
@@ -109,7 +109,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
         /// Compares all routes possible against a reference implementation.
         /// </summary>
         [Test]
-        public void TestLiveEdgeRegression1()
+        public void TestEdgeRegression1()
         {
             this.TestCompareAll("test_routing_regression1.osm", true);
         }
@@ -118,7 +118,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
         /// Tests one failing route specifically again.
         /// </summary>
         [Test]
-        public void TestLiveEdgeRegression2Regression1()
+        public void TestEdgeRegression2Regression1()
         {
             this.TestCompareOne("test_routing_regression2.osm", false, new OsmSharp.Math.Geo.GeoCoordinate(51.0219654, 3.9911377),
                 new OsmSharp.Math.Geo.GeoCoordinate(51.0206158, 3.9932989));
@@ -128,7 +128,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
         /// Tests one failing route specifically again.
         /// </summary>
         [Test]
-        public void TestLiveEdgeRegression2Regression2()
+        public void TestEdgeRegression2Regression2()
         {
             this.TestCompareOne("test_routing_regression2.osm", false, new OsmSharp.Math.Geo.GeoCoordinate(51.0204852, 3.993617),
                 new OsmSharp.Math.Geo.GeoCoordinate(51.0219591301773, 3.99107989102905));
@@ -138,7 +138,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
         /// Compares all routes possible against a reference implementation.
         /// </summary>
         [Test]
-        public void TestLiveEdgeRegression2()
+        public void TestEdgeRegression2()
         {
             this.TestCompareAll("test_routing_regression2.osm", true);
         }
@@ -147,7 +147,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
         /// Compares all routes possible against a reference implementation.
         /// </summary>
         [Test]
-        public void TestLiveEdgeBig()
+        public void TestEdgeBig()
         {
             this.TestCompareAll("test_network_big.osm", true);
         }
@@ -156,7 +156,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
         /// Compares all routes possible against a reference implementation.
         /// </summary>
         [Test]
-        public void TestLiveEdgeAgainstReferenceRealNetwork()
+        public void TestEdgeAgainstReferenceRealNetwork()
         {
             this.TestCompareAll("test_network_real1.osm", true);
         }

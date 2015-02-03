@@ -36,7 +36,7 @@ namespace OsmSharp.Routing.Routers
     /// A class that implements common functionality for any routing algorithm.
     /// </summary>
     public abstract class TypedRouter<TEdgeData> : ITypedRouter
-        where TEdgeData : IGraphEdgeData
+        where TEdgeData : IEdge
     {
         /// <summary>
         /// The default search delta.
@@ -692,10 +692,10 @@ namespace OsmSharp.Routing.Routers
         /// <param name="previousVertex"></param>
         /// <param name="nextVertex"></param>
         /// <returns></returns>
-        protected virtual List<KeyValuePair<long, IGraphEdgeData>> GetNeighboursUndirectedWithEdges(Vehicle vehicle,
+        protected virtual List<KeyValuePair<long, IEdge>> GetNeighboursUndirectedWithEdges(Vehicle vehicle,
             long vertex1, long previousVertex, long nextVertex)
         {
-            var neighbours = new List<KeyValuePair<long, IGraphEdgeData>>();
+            var neighbours = new List<KeyValuePair<long, IEdge>>();
             var distanceToPrevious = double.MaxValue;
             var distanceToNext = double.MaxValue;
             var indexOfPrevious = -1;
@@ -852,7 +852,7 @@ namespace OsmSharp.Routing.Routers
                             }
                         }
                     }
-                    neighbours.Add(new KeyValuePair<long, IGraphEdgeData>(arc.Neighbour, arc.EdgeData));
+                    neighbours.Add(new KeyValuePair<long, IEdge>(arc.Neighbour, arc.EdgeData));
                 }
             }
 
@@ -932,7 +932,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="vertex1"></param>
         /// <param name="vertex2"></param>
         /// <returns></returns>
-        protected virtual IGraphEdgeData GetEdgeData(Vehicle vehicle, long vertex1, long vertex2)
+        protected virtual IEdge GetEdgeData(Vehicle vehicle, long vertex1, long vertex2)
         {
             // get the resolved graph for the given profile.
             var graph = this.GetForProfile(vehicle);

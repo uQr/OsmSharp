@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -36,7 +36,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
     /// <summary>
     /// A router data source that dynamically loads data.
     /// </summary>
-    internal class RouterLiveEdgeDataSource : IBasicRouterDataSource<LiveEdge>
+    internal class TiledDataSource : IBasicRouterDataSource<Edge>
     {
         /// <summary>
         /// Holds all graph data.
@@ -70,13 +70,13 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <param name="compressed"></param>
         /// <param name="tileMetas"></param>
         /// <param name="zoom"></param>
-        /// <param name="v1RoutingDataSourceSerializer"></param>
+        /// <param name="dataSourceSerializer"></param>
         /// <param name="vehicles"></param>
         /// <param name="initialCapacity"></param>
-        internal RouterLiveEdgeDataSource(
+        internal TiledDataSource(
             Stream stream, bool compressed,
-            RoutingDataSourceLiveEdgeSerializer.SerializableGraphTileMetas tileMetas,
-            int zoom, RoutingDataSourceLiveEdgeSerializer v1RoutingDataSourceSerializer,
+            TiledDataSourceSerializer.SerializableGraphTileMetas tileMetas,
+            int zoom, TiledDataSourceSerializer dataSourceSerializer,
             IEnumerable<string> vehicles,
             int initialCapacity = 1000)
         {
@@ -102,7 +102,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             _loadedTiles = new HashSet<Tile>();
             _tilesPerVertex = new Dictionary<uint, Tile>();
             _zoom = zoom;
-            _routingDataSourceSerializer = v1RoutingDataSourceSerializer;
+            _routingDataSourceSerializer = dataSourceSerializer;
             _stream = stream;
             _compressed = compressed;
         }
@@ -132,7 +132,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-        public INeighbourEnumerator<LiveEdge> GetEdges(
+        public INeighbourEnumerator<Edge> GetEdges(
             GeoCoordinateBox box)
         {
             // load the missing tiles.
@@ -142,7 +142,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             var vertices = _vertexIndex.GetInside(box);
 
             // loop over all vertices and get the arcs.
-            var neighbours = new List<Tuple<uint, uint, uint, LiveEdge>>();
+            var neighbours = new List<Tuple<uint, uint, uint, Edge>>();
             foreach (uint vertexId in vertices)
             {
                 var location = _coordinates[(int)vertexId];
@@ -162,7 +162,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                             var localArcs = vertex.Arcs;
                             for (int arcIdx = 0; arcIdx < vertex.Arcs.Length; arcIdx++)
                             {
-                                neighbours.Add(new Tuple<uint, uint, uint, LiveEdge>(vertexId, (uint)arcIdx, localArcs[arcIdx].Item1, localArcs[arcIdx].Item2));
+                                neighbours.Add(new Tuple<uint, uint, uint, Edge>(vertexId, (uint)arcIdx, localArcs[arcIdx].Item1, localArcs[arcIdx].Item2));
                             }
                         }
                     }
@@ -244,7 +244,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// </summary>
         /// <param name="vertexId"></param>
         /// <returns></returns>
-        public IEdgeEnumerator<LiveEdge> GetEdges(uint vertexId)
+        public IEdgeEnumerator<Edge> GetEdges(uint vertexId)
         {
             Tile tile;
             if (_tilesPerVertex.TryGetValue(vertexId, out tile))
@@ -261,16 +261,16 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                 if (vertex != null &&
                     vertex.Arcs != null)
                 {
-                    var arcs = new KeyValuePair<uint, Osm.Graphs.LiveEdge>[vertex.Arcs.Length];
+                    var arcs = new KeyValuePair<uint, Osm.Graphs.Edge>[vertex.Arcs.Length];
                     for(int idx = 0; idx< vertex.Arcs.Length; idx++)
                     {
-                        arcs[idx] = new KeyValuePair<uint, LiveEdge>(
+                        arcs[idx] = new KeyValuePair<uint, Edge>(
                             vertex.Arcs[idx].Item1, vertex.Arcs[idx].Item2);
                     }
                     return new EdgeEnumerator(arcs);
                 }
             }
-            return new EdgeEnumerator(new KeyValuePair<uint, LiveEdge>[0]);
+            return new EdgeEnumerator(new KeyValuePair<uint, Edge>[0]);
         }
 
         /// <summary>
@@ -291,7 +291,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <param name="neighbour"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        public bool ContainsEdge(uint vertexId, uint neighbour, LiveEdge data)
+        public bool ContainsEdge(uint vertexId, uint neighbour, Edge data)
         {
             throw new NotImplementedException();
         }
@@ -303,7 +303,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <param name="vertex2"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        public bool GetEdge(uint vertex1, uint vertex2, out LiveEdge data)
+        public bool GetEdge(uint vertex1, uint vertex2, out Edge data)
         {
             Tile tile;
             if (_tilesPerVertex.TryGetValue(vertex1, out tile))
@@ -329,7 +329,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                     }
                 }
             }
-            data = default(LiveEdge);
+            data = default(Edge);
             return false;
         }
 
@@ -340,7 +340,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <param name="vertex2"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        public IEdgeEnumerator<LiveEdge> GetEdges(uint vertex1, uint vertex2)
+        public IEdgeEnumerator<Edge> GetEdges(uint vertex1, uint vertex2)
         {
             Tile tile;
             if (_tilesPerVertex.TryGetValue(vertex1, out tile))
@@ -361,14 +361,14 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                     {
                         if (vertex.Arcs[idx].Item1 == vertex2)
                         {
-                            return new EdgeEnumerator(new KeyValuePair<uint, LiveEdge>[]{
-                                new KeyValuePair<uint, LiveEdge>(vertex.Arcs[idx].Item1, vertex.Arcs[idx].Item2)
+                            return new EdgeEnumerator(new KeyValuePair<uint, Edge>[]{
+                                new KeyValuePair<uint, Edge>(vertex.Arcs[idx].Item1, vertex.Arcs[idx].Item2)
                             });
                         }
                     }
                 }
             }
-            return new EdgeEnumerator(new KeyValuePair<uint, LiveEdge>[0]);
+            return new EdgeEnumerator(new KeyValuePair<uint, Edge>[0]);
         }
 
         /// <summary>
@@ -429,7 +429,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             /// <summary>
             /// Holds an array of edges starting at this vertex.
             /// </summary>
-            public Tuple<uint, LiveEdge, GeoCoordinateSimple[]>[] Arcs;
+            public Tuple<uint, Edge, GeoCoordinateSimple[]>[] Arcs;
         }
 
         /// <summary>
@@ -463,7 +463,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <summary>
         /// Holds the routing serializer.
         /// </summary>
-        private readonly RoutingDataSourceLiveEdgeSerializer _routingDataSourceSerializer;
+        private readonly TiledDataSourceSerializer _routingDataSourceSerializer;
 
         /// <summary>
         /// Holds the tile metas.
@@ -567,7 +567,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                         // convert the arcs.
                         if (tileData.Arcs[vertexIdx] != null)
                         {
-                            var arcs = new Tuple<uint, Osm.Graphs.LiveEdge, GeoCoordinateSimple[]>[tileData.Arcs[vertexIdx].DestinationId.Length];
+                            var arcs = new Tuple<uint, Osm.Graphs.Edge, GeoCoordinateSimple[]>[tileData.Arcs[vertexIdx].DestinationId.Length];
                             for (int idx = 0; idx < tileData.Arcs[vertexIdx].DestinationId.Length; idx++)
                             {
                                 // create the tags collection.
@@ -584,15 +584,15 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                                 uint tags = _tagsIndex.Add(tagsCollection);
 
                                 // create the liveedge.
-                                var edge = new Osm.Graphs.LiveEdge();
+                                var edge = new Osm.Graphs.Edge();
                                 edge.Forward = tileData.Arcs[vertexIdx].Forward[idx];
                                 edge.Tags = tags;
-                                var coordinates = RoutingDataSourceLiveEdgeSerializer.SerializableCoordinate.ToSimpleArray(
+                                var coordinates = TiledDataSourceSerializer.SerializableCoordinate.ToSimpleArray(
                                     tileData.Arcs[vertexIdx].Intermediates[idx].Coordinates);
                                 edge.Distance = tileData.Arcs[vertexIdx].Distances[idx];
 
                                 // convert the arc.
-                                arcs[idx] = new Tuple<uint, Osm.Graphs.LiveEdge, GeoCoordinateSimple[]>(
+                                arcs[idx] = new Tuple<uint, Osm.Graphs.Edge, GeoCoordinateSimple[]>(
                                     tileData.Arcs[vertexIdx].DestinationId[idx], edge, coordinates);
 
                                 // store the target tile.
@@ -622,12 +622,12 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <summary>
         /// An edge enumerator.
         /// </summary>
-        private class EdgeEnumerator : IEdgeEnumerator<LiveEdge>
+        private class EdgeEnumerator : IEdgeEnumerator<Edge>
         {
             /// <summary>
             /// Holds the edges.
             /// </summary>
-            private KeyValuePair<uint, LiveEdge>[] _edges;
+            private KeyValuePair<uint, Edge>[] _edges;
 
             /// <summary>
             /// Holds the current position.
@@ -638,7 +638,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             /// Creates a new enumerator.
             /// </summary>
             /// <param name="edges"></param>
-            public EdgeEnumerator(KeyValuePair<uint, LiveEdge>[] edges)
+            public EdgeEnumerator(KeyValuePair<uint, Edge>[] edges)
             {
                 _edges = edges;
             }
@@ -660,7 +660,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             /// <summary>
             /// Returns the current edge data.
             /// </summary>
-            public LiveEdge EdgeData
+            public Edge EdgeData
             {
                 get { return _edges[_current].Value; }
             }
@@ -676,9 +676,9 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             /// <summary>
             /// Returns the inverted edge data.
             /// </summary>
-            public LiveEdge InvertedEdgeData
+            public Edge InvertedEdgeData
             {
-                get { return (LiveEdge)this.EdgeData.Reverse(); }
+                get { return (Edge)this.EdgeData.Reverse(); }
             }
 
             /// <summary>
@@ -701,7 +701,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             /// Returns the enumerator.
             /// </summary>
             /// <returns></returns>
-            public IEnumerator<Edge<LiveEdge>> GetEnumerator()
+            public IEnumerator<Edge<Edge>> GetEnumerator()
             {
                 this.Reset();
                 return this;
@@ -720,9 +720,9 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             /// <summary>
             /// Returns the current edge.
             /// </summary>
-            public Edge<LiveEdge> Current
+            public Edge<Edge> Current
             {
-                get { return new Edge<LiveEdge>(this); }
+                get { return new Edge<Edge>(this); }
             }
 
             /// <summary>
@@ -730,7 +730,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             /// </summary>
             object System.Collections.IEnumerator.Current
             {
-                get { return new Edge<LiveEdge>(this); }
+                get { return new Edge<Edge>(this); }
             }
 
             /// <summary>
@@ -767,17 +767,17 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <summary>
         /// A neighbour enumerators.
         /// </summary>
-        private class NeighbourEnumerator : INeighbourEnumerator<LiveEdge>
+        private class NeighbourEnumerator : INeighbourEnumerator<Edge>
         {
             /// <summary>
             /// Holds the edge and neighbours.
             /// </summary>
-            private List<Tuple<uint, uint, uint, LiveEdge>> _neighbours;
+            private List<Tuple<uint, uint, uint, Edge>> _neighbours;
 
             /// <summary>
             /// Holds the source.
             /// </summary>
-            private RouterLiveEdgeDataSource _source;
+            private TiledDataSource _source;
 
             /// <summary>
             /// Holds the current position.
@@ -788,9 +788,9 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             /// Creates a new enumerators.
             /// </summary>
             /// <param name="source">The datasource the edges come from.</param>
-            /// <param name="edges">The edge data.</param>
-            public NeighbourEnumerator(RouterLiveEdgeDataSource source, 
-                List<Tuple<uint, uint, uint, LiveEdge>> neighbours)
+            /// <param name="neighbours">The neighbour data.</param>
+            public NeighbourEnumerator(TiledDataSource source, 
+                List<Tuple<uint, uint, uint, Edge>> neighbours)
             {
                 _source = source;
                 _neighbours = neighbours;
@@ -825,7 +825,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             /// <summary>
             /// Gets the edge data.
             /// </summary>
-            public LiveEdge EdgeData
+            public Edge EdgeData
             {
                 get { return _neighbours[_current].Item4; }
             }
@@ -870,7 +870,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                 _current = -1;
             }
 
-            public IEnumerator<Neighbour<LiveEdge>> GetEnumerator()
+            public IEnumerator<Neighbour<Edge>> GetEnumerator()
             {
                 this.Reset();
                 return this;
@@ -882,9 +882,9 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                 return this;
             }
 
-            public Neighbour<LiveEdge> Current
+            public Neighbour<Edge> Current
             {
-                get { return new Neighbour<LiveEdge>(this); }
+                get { return new Neighbour<Edge>(this); }
             }
 
             object System.Collections.IEnumerator.Current
@@ -930,7 +930,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             get { return false; }
         }
 
-        public IEnumerable<Edge<LiveEdge>> GetDirectNeighbours(uint vertex)
+        public IEnumerable<Edge<Edge>> GetDirectNeighbours(uint vertex)
         {
             return this.GetEdges(vertex);
         }

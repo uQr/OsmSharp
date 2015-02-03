@@ -30,7 +30,7 @@ namespace OsmSharp.Routing.Graph.Router
     /// Abstract a router that works on a dynamic graph.
     /// </summary>
     public interface IBasicRouter<TEdgeData>
-        where TEdgeData : IGraphEdgeData
+        where TEdgeData : IEdge
     {
         /// <summary>
         /// Calculates a shortest path between two given vertices.

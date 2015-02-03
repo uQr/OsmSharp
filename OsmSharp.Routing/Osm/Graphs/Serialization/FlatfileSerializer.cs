@@ -31,16 +31,16 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
     /// <summary>
     /// Serializes/deserializes edges.
     /// </summary>
-    public class LiveEdgeFlatfileSerializer : FlatfileSerializer<LiveEdge>
+    public class FlatfileSerializer : FlatfileSerializerBase<Edge>
     {
         /// <summary>
         /// Creates the graph to deserialize into.
         /// </summary>
         /// <param name="tagsCollectionIndex"></param>
         /// <returns></returns>
-        protected override DynamicGraphRouterDataSource<LiveEdge> CreateGraph(ITagsCollectionIndex tagsCollectionIndex)
+        protected override RouterDataSource<Edge> CreateGraph(ITagsCollectionIndex tagsCollectionIndex)
         {
-            return new DynamicGraphRouterDataSource<LiveEdge>(tagsCollectionIndex);
+            return new RouterDataSource<Edge>(tagsCollectionIndex);
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="graph"></param>
-        protected override void SerializeEdges(LimitedStream stream, DynamicGraphRouterDataSource<LiveEdge> graph)
+        protected override void SerializeEdges(LimitedStream stream, RouterDataSource<Edge> graph)
         {
             var typeModel = RuntimeTypeModel.Create();
             typeModel.Add(typeof(SerializableEdge), true);
@@ -101,7 +101,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <param name="stream"></param>
         /// <param name="size"></param>
         /// <param name="graph"></param>
-        protected override void DeserializeEdges(LimitedStream stream, long size, DynamicGraphRouterDataSource<LiveEdge> graph)
+        protected override void DeserializeEdges(LimitedStream stream, long size, RouterDataSource<Edge> graph)
         {
             var typeModel = RuntimeTypeModel.Create();
             typeModel.Add(typeof(SerializableEdge), true);
@@ -119,7 +119,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                         coordinateCollection = new CoordinateArrayCollection<GeoCoordinateSimple>(serializableEdges[idx].Coordinates);
                     }
                     graph.AddEdge(serializableEdges[idx].FromId, serializableEdges[idx].ToId,
-                        new LiveEdge()
+                        new Edge()
                         {
                             Distance = serializableEdges[idx].Distance,
                             Value = serializableEdges[idx].Value
@@ -133,7 +133,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// </summary>
         public override string VersionString
         {
-            get { return "LiveEdgeFlatfile.v1.0"; }
+            get { return "Flatfile.v1.0"; }
         }
 
         /// <summary>

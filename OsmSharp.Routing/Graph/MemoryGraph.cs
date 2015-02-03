@@ -28,7 +28,7 @@ namespace OsmSharp.Routing.Graph
     /// An implementation of an in-memory dynamic graph.
     /// </summary>
     public class MemoryGraph<TEdgeData> : IGraph<TEdgeData>
-        where TEdgeData : IGraphEdgeData
+        where TEdgeData : IEdge
     {
         private const int EDGE_SIZE = 4;
         private const uint NO_EDGE = uint.MaxValue;

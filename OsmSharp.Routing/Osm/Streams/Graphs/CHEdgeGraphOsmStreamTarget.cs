@@ -52,7 +52,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="interpreter"></param>
         /// <param name="tagsIndex"></param>
         /// <param name="vehicle"></param>
-        public CHEdgeGraphOsmStreamTarget(IDynamicGraphRouterDataSource<CHEdgeData> dynamicGraph,
+        public CHEdgeGraphOsmStreamTarget(IRouterDataSource<CHEdgeData> dynamicGraph,
             IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex, Vehicle vehicle)
             : base(dynamicGraph, interpreter, tagsIndex)
         {
@@ -151,11 +151,11 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="interpreter"></param>
         /// <param name="vehicle"></param>
         /// <returns></returns>
-        public static DynamicGraphRouterDataSource<CHEdgeData> Preprocess(OsmStreamSource reader,
+        public static RouterDataSource<CHEdgeData> Preprocess(OsmStreamSource reader,
             ITagsCollectionIndex tagsIndex, IOsmRoutingInterpreter interpreter, Vehicle vehicle)
         {
             // pull in the data.
-            var graph = new DynamicGraphRouterDataSource<CHEdgeData>(new MemoryDirectedGraph<CHEdgeData>(), tagsIndex);
+            var graph = new RouterDataSource<CHEdgeData>(new MemoryDirectedGraph<CHEdgeData>(), tagsIndex);
             var targetData = new CHEdgeGraphOsmStreamTarget(
                 graph, interpreter, tagsIndex, vehicle);
             targetData.RegisterSource(reader);
@@ -177,7 +177,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="interpreter"></param>
         /// <param name="vehicle"></param>
         /// <returns></returns>
-        public static DynamicGraphRouterDataSource<CHEdgeData> Preprocess(OsmStreamSource reader,
+        public static RouterDataSource<CHEdgeData> Preprocess(OsmStreamSource reader,
             IOsmRoutingInterpreter interpreter, Vehicle vehicle)
         {
             return CHEdgeGraphOsmStreamTarget.Preprocess(reader, new TagsTableCollectionIndex(), interpreter, vehicle);

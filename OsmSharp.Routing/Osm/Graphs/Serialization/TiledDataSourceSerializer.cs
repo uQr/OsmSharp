@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -35,10 +35,10 @@ using System.Linq;
 namespace OsmSharp.Routing.Osm.Graphs.Serialization
 {
     /// <summary>
-    /// A v2 routing serializer.
+    /// A tiled routing serializer.
     /// </summary>
     /// <remarks>Versioning is implemented in the file format to guarantee backward compatibility.</remarks>
-    public class RoutingDataSourceLiveEdgeSerializer : RoutingDataSourceSerializer<LiveEdge>
+    public class TiledDataSourceSerializer : DataSourceSerializerBase<Edge>
     {
         /// <summary>
         /// Holds the size of the tile meta.
@@ -64,7 +64,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// Creates a new v2 serializer.
         /// </summary>
         /// <param name="compress">Flag telling this serializer to compress it's data.</param>
-        public RoutingDataSourceLiveEdgeSerializer(bool compress)
+        public TiledDataSourceSerializer(bool compress)
         {
             _compress = compress;
 
@@ -83,7 +83,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// </summary>
         public override string VersionString
         {
-            get { return "LiveEdge.v1"; }
+            get { return "Edge.v1"; }
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <param name="graph"></param>
         /// <returns></returns>
         protected override void DoSerialize(LimitedStream stream,
-            DynamicGraphRouterDataSource<LiveEdge> graph)
+            RouterDataSource<Edge> graph)
         {
             // create an index per tile.
             var dataPerTile = new Dictionary<Tile, UnserializedTileData>();
@@ -285,7 +285,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <param name="lazy"></param>
         /// <param name="vehicles"></param>
         /// <returns></returns>
-        protected override IBasicRouterDataSource<LiveEdge> DoDeserialize(
+        protected override IBasicRouterDataSource<Edge> DoDeserialize(
             LimitedStream stream, bool lazy, IEnumerable<string> vehicles)
         {
             // serialize all tile meta data.
@@ -308,7 +308,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                     typeof(SerializableGraphTileMetas));
 
             // create the datasource.
-            var routerDataSource = new RouterLiveEdgeDataSource(stream, decompress, metas, Zoom,
+            var routerDataSource = new TiledDataSource(stream, decompress, metas, Zoom,
                     this, vehicles, 1000);
             if (!lazy)
             {

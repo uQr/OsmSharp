@@ -29,7 +29,7 @@ namespace OsmSharp.Routing.Graph
     /// </summary>
     /// <typeparam name="TEdgeData"></typeparam>
     public class MemoryMappedGraph<TEdgeData> : MemoryGraph<TEdgeData>, IDisposable
-        where TEdgeData : struct, IGraphEdgeData
+        where TEdgeData : struct, IEdge
     {
         /// <summary>
         /// Holds the coordinates array.

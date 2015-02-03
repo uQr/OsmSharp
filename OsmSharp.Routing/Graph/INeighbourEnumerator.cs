@@ -25,7 +25,7 @@ namespace OsmSharp.Routing.Graph
     /// Represents an abstract neighbour enumerator, enumerable and neighbour.
     /// </summary>
     public interface INeighbourEnumerator<TEdgeData> : IEnumerable<Neighbour<TEdgeData>>, IEnumerator<Neighbour<TEdgeData>>
-        where TEdgeData : IGraphEdgeData
+        where TEdgeData : IEdge
     {
         /// <summary>
         /// Returns the first vertex.
@@ -81,7 +81,7 @@ namespace OsmSharp.Routing.Graph
     /// </summary>
     /// <typeparam name="TEdgeData"></typeparam>
     public class Neighbour<TEdgeData>
-        where TEdgeData : IGraphEdgeData
+        where TEdgeData : IEdge
     {
         /// <summary>
         /// Creates a new neighbour.

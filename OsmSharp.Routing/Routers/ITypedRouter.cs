@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
+using OsmSharp.Routing.Graph;
 
 namespace OsmSharp.Routing.Routers
 {

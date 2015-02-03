@@ -37,7 +37,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
         /// <summary>
         /// Tests the CH serializer.
         /// </summary>
-        public static DynamicGraphRouterDataSource<CHEdgeData> Test()
+        public static RouterDataSource<CHEdgeData> Test()
         {
             return CHEdgeGraphFlatFileSerializerTests.TestSerialization("CHSerializerFlatFile", "germany-latest.osm.pbf");
         }
@@ -47,7 +47,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
         /// </summary>
         /// <param name="name"></param>
         /// <param name="pbfFile"></param>
-        public static DynamicGraphRouterDataSource<CHEdgeData> TestSerialization(string name, string pbfFile)
+        public static RouterDataSource<CHEdgeData> TestSerialization(string name, string pbfFile)
         {
             var testFile = new FileInfo(string.Format(@".\TestFiles\{0}", pbfFile));
             var stream = testFile.OpenRead();

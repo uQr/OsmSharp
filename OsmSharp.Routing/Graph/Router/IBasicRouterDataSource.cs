@@ -29,7 +29,7 @@ namespace OsmSharp.Routing.Graph.Router
     /// </summary>
     /// <typeparam name="TEdgeData"></typeparam>
     public interface IBasicRouterDataSource<TEdgeData> : IGraphReadOnly<TEdgeData>
-        where TEdgeData : IGraphEdgeData
+        where TEdgeData : IEdge
     {
         /// <summary>
         /// Returns true if the given vehicle profile is supported by the the data in this data source.

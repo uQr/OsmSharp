@@ -28,7 +28,7 @@ namespace OsmSharp.Routing.Graph
     /// An implementation of an in-memory dynamic graph but with explicitly directed edges.
     /// </summary>
     public class MemoryDirectedGraph<TEdgeData> : IGraph<TEdgeData>
-        where TEdgeData : IGraphEdgeData
+        where TEdgeData : IEdge
     {
         protected const int VERTEX_SIZE = 2; // holds the first edge index and the edge count.
         protected const int FIRST_EDGE = 0;

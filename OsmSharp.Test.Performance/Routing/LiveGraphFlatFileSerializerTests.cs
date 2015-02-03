@@ -34,14 +34,14 @@ namespace OsmSharp.Test.Performance.Routing
     /// <summary>
     /// Holds tests for the live edge serialization code.
     /// </summary>
-    public static class LiveEdgeGraphFlatFileSerializerTests
+    public static class EdgeGraphFlatFileSerializerTests
     {
         /// <summary>
         /// Tests the CH serializer.
         /// </summary>
         public static void Test()
         {
-            LiveEdgeGraphFlatFileSerializerTests.TestSerialization("LiveSerializerFlatFile", "kempen-big.osm.pbf");
+            EdgeGraphFlatFileSerializerTests.TestSerialization("LiveSerializerFlatFile", "kempen-big.osm.pbf");
         }
 
         /// <summary>
@@ -68,17 +68,17 @@ namespace OsmSharp.Test.Performance.Routing
 
             var tagsIndex = new TagsTableCollectionIndex();
             var interpreter = new OsmRoutingInterpreter();
-            var graph = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
-            var routingSerializer = new LiveEdgeFlatfileSerializer();
+            var graph = new RouterDataSource<Edge>(tagsIndex);
+            var routingSerializer = new FlatfileSerializer();
 
             // read from the OSM-stream.
             using (var fileFactory = new MemoryMappedFileFactory(@"d:\temp\"))
             {
-                using (var memoryMappedGraph = new MemoryMappedGraph<LiveEdge>(10000, fileFactory))
+                using (var memoryMappedGraph = new MemoryMappedGraph<Edge>(10000, fileFactory))
                 {
                     using (var coordinates = new HugeCoordinateIndex(fileFactory, 10000))
                     {
-                        var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(memoryMappedGraph, tagsIndex);
+                        var memoryData = new RouterDataSource<Edge>(memoryMappedGraph, tagsIndex);
                         var targetData = new LiveGraphOsmStreamTarget(memoryData, new OsmRoutingInterpreter(), tagsIndex, coordinates);
                         targetData.RegisterSource(progress);
                         targetData.Pull();

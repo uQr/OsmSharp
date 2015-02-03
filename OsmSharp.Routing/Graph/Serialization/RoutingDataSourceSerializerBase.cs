@@ -32,8 +32,8 @@ namespace OsmSharp.Routing.Graph.Serialization
     /// Abstract representation of a routing serializer.
     /// </summary>
     /// <remarks>Versioning is implemented in the file format to guarantee backward compatibility.</remarks>
-    public abstract class RoutingDataSourceSerializer<TEdgeData>
-        where TEdgeData : IGraphEdgeData
+    public abstract class DataSourceSerializerBase<TEdgeData>
+        where TEdgeData : IEdge
     {
         #region Versioning
 
@@ -206,7 +206,7 @@ namespace OsmSharp.Routing.Graph.Serialization
         /// <param name="stream"></param>
         /// <param name="graph"></param>
         /// <param name="metaTags"></param>
-        public void Serialize(Stream stream, DynamicGraphRouterDataSource<TEdgeData> graph, TagsCollectionBase metaTags)
+        public void Serialize(Stream stream, RouterDataSource<TEdgeData> graph, TagsCollectionBase metaTags)
         {
            if (stream == null)
                 throw new ArgumentNullException("stream");
@@ -234,7 +234,7 @@ namespace OsmSharp.Routing.Graph.Serialization
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="graph"></param>
-        protected abstract void DoSerialize(LimitedStream stream, DynamicGraphRouterDataSource<TEdgeData> graph);
+        protected abstract void DoSerialize(LimitedStream stream, RouterDataSource<TEdgeData> graph);
 
         /// <summary>
         /// Deserializes the given stream into a routable graph.

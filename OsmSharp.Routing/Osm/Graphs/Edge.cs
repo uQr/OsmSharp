@@ -1,5 +1,5 @@
 // OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -25,7 +25,7 @@ namespace OsmSharp.Routing.Osm.Graphs
     /// A simple edge containing the orignal OSM-tags and a flag indicating the direction of this edge relative to the 
     /// OSM-direction.
     /// </summary>
-    public struct LiveEdge : IGraphEdgeData
+    public struct Edge : IEdge
     {
         /// <summary>
         /// Contains a value that represents tagsId and forward flag [forwardFlag (true when zero)][tagsIdx].
@@ -108,9 +108,9 @@ namespace OsmSharp.Routing.Osm.Graphs
         /// Creates the exact reverse of this edge.
         /// </summary>
         /// <returns></returns>
-        public IGraphEdgeData Reverse()
+        public IEdge Reverse()
         {
-            return new LiveEdge()
+            return new Edge()
             {
                 Distance = this.Distance,
                 Forward = !this.Forward,
@@ -123,11 +123,11 @@ namespace OsmSharp.Routing.Osm.Graphs
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(IGraphEdgeData other)
+        public bool Equals(IEdge other)
         {
-            if (other is LiveEdge)
+            if (other is Edge)
             { // ok, type is the same.
-                var otherLive = (LiveEdge)other;
+                var otherLive = (Edge)other;
                 if (otherLive._value != this._value)
                 { // basic info different.
                     return false;

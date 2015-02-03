@@ -38,7 +38,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
     /// A v2 routing serializer.
     /// </summary>
     /// <remarks>Versioning is implemented in the file format to guarantee backward compatibility.</remarks>
-    public class CHEdgeDataDataSourceSerializer : RoutingDataSourceSerializer<CHEdgeData>
+    public class CHEdgeDataDataSourceSerializer : DataSourceSerializerBase<CHEdgeData>
     {
         /// <summary>
         /// Holds the zoom-level of the regions.
@@ -159,7 +159,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <param name="graph"></param>
         /// <returns></returns>
         protected override void DoSerialize(LimitedStream stream,
-            DynamicGraphRouterDataSource<CHEdgeData> graph)
+            RouterDataSource<CHEdgeData> graph)
         {
             // sort the graph.
             var sortedGraph = graph;

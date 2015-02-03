@@ -66,7 +66,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
 
             // do the data processing.
             var original =
-                new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
+                new RouterDataSource<Edge>(tagsIndex);
             var targetData = new LiveGraphOsmStreamTarget(
                 original, interpreter, tagsIndex, null, false);
             var dataProcessorSource = new XmlOsmStreamSource(
@@ -87,12 +87,12 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             }
 
             // create serializer.
-            var routingSerializer = new RoutingDataSourceLiveEdgeSerializer(false);
+            var routingSerializer = new TiledDataSourceSerializer(false);
 
             // serialize/deserialize.
             TagsCollectionBase metaData = new TagsCollection();
             metaData.Add("some_key", "some_value");
-            IBasicRouterDataSource<LiveEdge> deserializedVersion;
+            IBasicRouterDataSource<Edge> deserializedVersion;
             byte[] byteArray;
             using (var stream = new MemoryStream())
             {
@@ -156,7 +156,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
 
             // do the data processing.
             var original =
-                new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
+                new RouterDataSource<Edge>(tagsIndex);
             var targetData = new LiveGraphOsmStreamTarget(
                 original, interpreter, tagsIndex, null, false);
             var dataProcessorSource = new XmlOsmStreamSource(
@@ -165,7 +165,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             targetData.Pull();
 
             // create serializer.
-            var routingSerializer = new RoutingDataSourceLiveEdgeSerializer(false);
+            var routingSerializer = new TiledDataSourceSerializer(false);
 
             // serialize/deserialize.
             TagsCollectionBase metaData = new TagsCollection();
@@ -247,7 +247,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
 
             // do the data processing.
             var original =
-                new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
+                new RouterDataSource<Edge>(tagsIndex);
             var targetData = new LiveGraphOsmStreamTarget(
                 original, interpreter, tagsIndex, null, false);
             var dataProcessorSource = new XmlOsmStreamSource(
@@ -256,7 +256,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             targetData.Pull();
 
             // create serializer.
-            var routingSerializer = new RoutingDataSourceLiveEdgeSerializer(true);
+            var routingSerializer = new TiledDataSourceSerializer(true);
 
             // serialize/deserialize.
             TagsCollectionBase metaData = new TagsCollection();
@@ -334,13 +334,11 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             var interpreter = new OsmRoutingInterpreter();
 
             // do the data processing.
-            var original = LiveGraphOsmStreamTarget.Preprocess(new XmlOsmStreamSource(
-                                                                   Assembly.GetExecutingAssembly()
-                                                                           .GetManifestResourceStream(embeddedString)),
-                                                               interpreter);
+            var original = LiveGraphOsmStreamTarget.Preprocess(
+                new XmlOsmStreamSource(Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString)), interpreter);
 
             // create serializer.
-            var routingSerializer = new RoutingDataSourceLiveEdgeSerializer(false);
+            var routingSerializer = new TiledDataSourceSerializer(false);
 
             // serialize/deserialize.
             TagsCollectionBase metaData = new TagsCollection();
@@ -363,7 +361,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
                 }
             }
 
-            IBasicRouterDataSource<LiveEdge> deserializedVersion =
+            IBasicRouterDataSource<Edge> deserializedVersion =
                 routingSerializer.Deserialize(new MemoryStream(byteArray), out metaData);
             Assert.AreEqual(original.TagsIndex.Get(0), deserializedVersion.TagsIndex.Get(0));
 
@@ -414,10 +412,10 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
         }
 
         /// <summary>
-        /// Tests serializing/deserializing DynamicGraphRouterDataSource using the flatfile serializer for LiveEdge data.
+        /// Tests serializing/deserializing DynamicGraphRouterDataSource using the flatfile serializer for Edge data.
         /// </summary>
         [Test]
-        public void RoutingSerializationFlatfileLiveEdge()
+        public void RoutingSerializationFlatfileEdge()
         {
             const string embeddedString = "OsmSharp.Test.Unittests.test_network_real1.osm";
 
@@ -426,10 +424,10 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString)), new OsmRoutingInterpreter());
 
             // serialize network.
-            var routingSerializer = new LiveEdgeFlatfileSerializer();
+            var routingSerializer = new FlatfileSerializer();
             TagsCollectionBase metaData = new TagsCollection();
             metaData.Add("some_key", "some_value");
-            DynamicGraphRouterDataSource<LiveEdge> network;
+            RouterDataSource<Edge> network;
             byte[] byteArray;
             using (var stream = new MemoryStream())
             {
@@ -438,7 +436,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             }
             using (var stream = new MemoryStream(byteArray))
             {
-                network = routingSerializer.Deserialize(stream, out metaData, false) as DynamicGraphRouterDataSource<LiveEdge>;
+                network = routingSerializer.Deserialize(stream, out metaData, false) as RouterDataSource<Edge>;
             }
 
             // compare networks.
@@ -530,7 +528,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             var routingSerializer = new CHEdgeFlatfileSerializer();
             TagsCollectionBase metaData = new TagsCollection();
             metaData.Add("some_key", "some_value");
-            DynamicGraphRouterDataSource<CHEdgeData> network;
+            RouterDataSource<CHEdgeData> network;
             byte[] byteArray;
             using (var stream = new MemoryStream())
             {
@@ -539,7 +537,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             }
             using (var stream = new MemoryStream(byteArray))
             {
-                network = routingSerializer.Deserialize(stream, out metaData, false) as DynamicGraphRouterDataSource<CHEdgeData>;
+                network = routingSerializer.Deserialize(stream, out metaData, false) as RouterDataSource<CHEdgeData>;
             }
             // compare networks.
             Assert.IsNotNull(network);

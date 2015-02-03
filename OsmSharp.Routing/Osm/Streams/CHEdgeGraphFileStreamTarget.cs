@@ -48,7 +48,7 @@ namespace OsmSharp.Routing.Osm.Streams
         /// <param name="interpreter"></param>
         /// <param name="tagsIndex"></param>
         /// <param name="vehicle"></param>
-        public CHEdgeGraphFileStreamTarget(Stream stream, DynamicGraphRouterDataSource<CHEdgeData> dynamicGraph,
+        public CHEdgeGraphFileStreamTarget(Stream stream, RouterDataSource<CHEdgeData> dynamicGraph,
             IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex, Vehicle vehicle)
             :base(dynamicGraph, interpreter, tagsIndex, vehicle)
         {
@@ -59,7 +59,7 @@ namespace OsmSharp.Routing.Osm.Streams
         /// <summary>
         /// Holds the graph.
         /// </summary>
-        private DynamicGraphRouterDataSource<CHEdgeData> _graph;
+        private RouterDataSource<CHEdgeData> _graph;
 
         /// <summary>
         /// Flushes all data.

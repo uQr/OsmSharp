@@ -23,18 +23,18 @@ using OsmSharp.Routing.Osm.Graphs;
 namespace OsmSharp.Routing.Routers
 {
     /// <summary>
-    /// A version of the typedrouter using edges of type LiveEdge.
+    /// A version of the typedrouter using edges of type edge.
     /// </summary>
-    internal class TypedRouterLiveEdge : TypedRouter<LiveEdge>
+    internal class TypedRouter : TypedRouter<Edge>
     {
         /// <summary>
-        /// Creates a new type router using edges of type LiveEdge.
+        /// Creates a new type router using edges of type edge.
         /// </summary>
         /// <param name="graph"></param>
         /// <param name="interpreter"></param>
         /// <param name="router"></param>
-        public TypedRouterLiveEdge(IBasicRouterDataSource<LiveEdge> graph, IRoutingInterpreter interpreter,
-                           IBasicRouter<LiveEdge> router)
+        public TypedRouter(IBasicRouterDataSource<Edge> graph, IRoutingInterpreter interpreter,
+                           IBasicRouter<Edge> router)
             :base(graph, interpreter, router)
         {
             

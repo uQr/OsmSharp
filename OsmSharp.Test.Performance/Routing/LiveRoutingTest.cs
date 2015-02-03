@@ -100,7 +100,7 @@ namespace OsmSharp.Test.Performance.Routing
                 float progress = (float)System.Math.Round(((double)(totalCount - testCount)  / (double)totalCount) * 100);
                 if (progress != latestProgress)
                 {
-                    OsmSharp.Logging.Log.TraceEvent("LiveEdgePreprocessor", TraceEventType.Information,
+                    OsmSharp.Logging.Log.TraceEvent("EdgePreprocessor", TraceEventType.Information,
                         "Routing... {0}%", progress);
                     latestProgress = progress;
                 }

@@ -31,7 +31,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
     /// Contains generic fuctions common to all dykstra routers.
     /// </summary>
     public abstract class DykstraRoutingBase<TEdgeData>
-        where TEdgeData : IGraphEdgeData
+        where TEdgeData : IEdge
     {
         /// <summary>
         /// Creates a new basic dykstra router.

@@ -32,8 +32,8 @@ namespace OsmSharp.Routing.Graph
     /// A router data source that uses a IDynamicGraph as it's main datasource.
     /// </summary>
     /// <typeparam name="TEdgeData"></typeparam>
-    public class DynamicGraphRouterDataSource<TEdgeData> : IDynamicGraphRouterDataSource<TEdgeData>
-        where TEdgeData : IGraphEdgeData
+    public class RouterDataSource<TEdgeData> : IRouterDataSource<TEdgeData>
+        where TEdgeData : IEdge
     {
         /// <summary>
         /// Holds the basic graph.
@@ -58,7 +58,7 @@ namespace OsmSharp.Routing.Graph
         /// Creates a new osm memory router data source.
         /// </summary>
         /// <exception cref="ArgumentNullException"></exception>
-        public DynamicGraphRouterDataSource(ITagsCollectionIndexReadonly tagsIndex)
+        public RouterDataSource(ITagsCollectionIndexReadonly tagsIndex)
         {
             if (tagsIndex == null) throw new ArgumentNullException("tagsIndex");
 
@@ -73,7 +73,7 @@ namespace OsmSharp.Routing.Graph
         /// Creates a new osm memory router data source.
         /// </summary>
         /// <exception cref="ArgumentNullException"></exception>
-        public DynamicGraphRouterDataSource(ITagsCollectionIndexReadonly tagsIndex, int initSize)
+        public RouterDataSource(ITagsCollectionIndexReadonly tagsIndex, int initSize)
         {
             if (tagsIndex == null) throw new ArgumentNullException("tagsIndex");
 
@@ -90,7 +90,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="graph"></param>
         /// <param name="tagsIndex"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public DynamicGraphRouterDataSource(IGraph<TEdgeData> graph, ITagsCollectionIndexReadonly tagsIndex)
+        public RouterDataSource(IGraph<TEdgeData> graph, ITagsCollectionIndexReadonly tagsIndex)
         {
             if (graph == null) throw new ArgumentNullException("graph");
             if (tagsIndex == null) throw new ArgumentNullException("tagsIndex");
@@ -728,7 +728,7 @@ namespace OsmSharp.Routing.Graph
             /// <summary>
             /// Holds the source.
             /// </summary>
-            private DynamicGraphRouterDataSource<TEdgeData> _source;
+            private RouterDataSource<TEdgeData> _source;
 
             /// <summary>
             /// Holds the current position.
@@ -740,7 +740,7 @@ namespace OsmSharp.Routing.Graph
             /// </summary>
             /// <param name="source">The datasource the edges come from.</param>
             /// <param name="neighbours">The neighbour data with tuples (vertex1, vertex2, edgeIdx, edgeData).</param>
-            public NeighbourEnumerator(DynamicGraphRouterDataSource<TEdgeData> source,
+            public NeighbourEnumerator(RouterDataSource<TEdgeData> source,
                 List<Tuple<uint, uint, uint, TEdgeData>> neighbours)
             {
                 _source = source;

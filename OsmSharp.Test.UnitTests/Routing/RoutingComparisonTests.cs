@@ -49,13 +49,13 @@ namespace OsmSharp.Test.Unittests.Routing
         /// Builds a raw data source.
         /// </summary>
         /// <returns></returns>
-        public DynamicGraphRouterDataSource<LiveEdge> BuildDykstraDataSource(
+        public RouterDataSource<Edge> BuildDykstraDataSource(
             IOsmRoutingInterpreter interpreter, string embeddedName)
         {
             var tagsIndex = new TagsTableCollectionIndex();
 
             // do the data processing.
-            var data = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
+            var data = new RouterDataSource<Edge>(tagsIndex);
             var targetData = new ReferenceGraphTarget(
                 data, interpreter, tagsIndex, new Vehicle[] { Vehicle.Car });
             var dataProcessorSource = new XmlOsmStreamSource(
@@ -73,8 +73,8 @@ namespace OsmSharp.Test.Unittests.Routing
         /// Builds a raw router to compare against.
         /// </summary>
         /// <returns></returns>
-        public Router BuildDykstraRouter(IBasicRouterDataSource<LiveEdge> data,
-            IRoutingInterpreter interpreter, IBasicRouter<LiveEdge> basicRouter)
+        public Router BuildDykstraRouter(IBasicRouterDataSource<Edge> data,
+            IRoutingInterpreter interpreter, IBasicRouter<Edge> basicRouter)
         {
             // initialize the router.
             return Router.CreateLiveFrom(data, basicRouter, interpreter);
@@ -143,7 +143,7 @@ namespace OsmSharp.Test.Unittests.Routing
         /// <param name="referenceRouter"></param>
         /// <param name="router"></param>
         protected void TestCompareAll<TEdgeData>(IBasicRouterDataSource<TEdgeData> data, Router referenceRouter, Router router)
-            where TEdgeData : IGraphEdgeData
+            where TEdgeData : IEdge
         {       
             // loop over all nodes and resolve their locations.
             var resolvedReference = new RouterPoint[data.VertexCount - 1];

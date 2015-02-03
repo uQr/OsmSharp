@@ -32,7 +32,7 @@ namespace OsmSharp.Test.Unittests.Routing
     /// Base class with tests around the Router object.
     /// </summary>
     public abstract class SimpleRoutingTests<TEdgeData>
-        where TEdgeData : IGraphEdgeData
+        where TEdgeData : IEdge
     {
         /// <summary>
         /// Builds the router.
