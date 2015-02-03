@@ -163,6 +163,7 @@
     <Compile Include="IO\DelimitedFiles\DelimitedFileHandler.cs" />
     <Compile Include="IO\DelimitedFiles\DelimiterType.cs" />
     <Compile Include="IO\DelimitedFiles\IDelimitedFormat.cs" />
+    <Compile Include="IO\Json\JsonSerializer.cs" />
     <Compile Include="IO\LimitedStream.cs" />
     <Compile Include="IO\MemoryMappedFiles\IMemoryMappedFile.cs" />
     <Compile Include="IO\MemoryMappedFiles\IMemoryMappedViewAccessor.cs" />
