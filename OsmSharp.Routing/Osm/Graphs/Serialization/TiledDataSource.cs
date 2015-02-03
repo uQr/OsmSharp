@@ -338,7 +338,6 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// </summary>
         /// <param name="vertex1"></param>
         /// <param name="vertex2"></param>
-        /// <param name="data"></param>
         /// <returns></returns>
         public IEdgeEnumerator<Edge> GetEdges(uint vertex1, uint vertex2)
         {

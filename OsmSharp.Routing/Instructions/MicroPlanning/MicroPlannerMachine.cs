@@ -22,6 +22,9 @@ using OsmSharp.Math.StateMachines;
 
 namespace OsmSharp.Routing.Instructions.MicroPlanning
 {
+    /// <summary>
+    /// A micro planner machine to generate instructions.
+    /// </summary>
     public abstract class MicroPlannerMachine : FiniteStateMachine<MicroPlannerMessage>
     {
         /// <summary>
@@ -69,9 +72,14 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
             }
         }
 
-
+        /// <summary>
+        /// Holds all the consumed messages.
+        /// </summary>
         private IList<MicroPlannerMessage> _messages;
 
+        /// <summary>
+        /// Gets all the consumed messages.
+        /// </summary>
         public IList<MicroPlannerMessage> FinalMessages
         {
             get

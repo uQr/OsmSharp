@@ -271,7 +271,8 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <summary>
         /// Returns all arcs for the given vertices.
         /// </summary>
-        /// <param name="vertexId"></param>
+        /// <param name="vertex1"></param>
+        /// <param name="vertex2"></param>
         /// <returns></returns>
         private Tuple<uint, uint, uint, CHEdgeData>[] GetEdgePairs(uint vertex1, uint vertex2)
         {
@@ -446,11 +447,6 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// Holds the shapes index.
         /// </summary>
         private CHBlockIndex _shapesIndex;
-
-        /// <summary>
-        /// Holds the shapes index.
-        /// </summary>
-        private uint _shapesSize;
 
         /// <summary>
         /// Initializes the shapes stuff.
@@ -1059,7 +1055,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             /// Creates a new enumerators.
             /// </summary>
             /// <param name="source">The datasource the edges come from.</param>
-            /// <param name="edges">The edge data.</param>
+            /// <param name="neighbours">The neighbour data.</param>
             public NeighbourEnumerator(CHEdgeDataDataSource source,
                 List<Tuple<uint, uint, uint, uint, CHEdgeData>> neighbours)
             {

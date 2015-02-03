@@ -158,6 +158,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="source"></param>
         /// <param name="targets"></param>
         /// <param name="max"></param>
+        /// <param name="geometryOnly"></param>
         /// <returns></returns>
         public virtual Route CalculateToClosest(Vehicle vehicle, RouterPoint source, RouterPoint[] targets, float max = float.MaxValue, bool geometryOnly = false)
         {
@@ -185,6 +186,8 @@ namespace OsmSharp.Routing.Routers
         /// <param name="vehicle"></param>
         /// <param name="source"></param>
         /// <param name="targets"></param>
+        /// <param name="max"></param>
+        /// <param name="geometryOnly"></param>
         /// <returns></returns>
         public virtual Route[] CalculateOneToMany(Vehicle vehicle, RouterPoint source, RouterPoint[] targets, float max = float.MaxValue, bool geometryOnly = false)
         {
@@ -197,6 +200,8 @@ namespace OsmSharp.Routing.Routers
         /// <param name="vehicle"></param>
         /// <param name="sources"></param>
         /// <param name="targets"></param>
+        /// <param name="max"></param>
+        /// <param name="geometryOnly"></param>
         /// <returns></returns>
         public virtual Route[][] CalculateManyToMany(Vehicle vehicle, RouterPoint[] sources, RouterPoint[] targets, float max = float.MaxValue, bool geometryOnly = false)
         {

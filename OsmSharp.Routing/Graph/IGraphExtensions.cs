@@ -80,6 +80,8 @@ namespace OsmSharp.Routing.Graph
         /// <typeparam name="TEdgeData"></typeparam>
         /// <param name="graph"></param>
         /// <param name="n"></param>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
         private static void SortHilbert<TEdgeData>(IGraph<TEdgeData> graph, int n, uint left, uint right)
             where TEdgeData : IEdge
         {

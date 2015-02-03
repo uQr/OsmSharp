@@ -51,6 +51,9 @@ namespace OsmSharp.Routing.Graph
             get;
         }
 
+        /// <summary>
+        /// Gets the inverted edge data.
+        /// </summary>
         TEdgeData InvertedEdgeData
         {
             get;

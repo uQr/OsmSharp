@@ -104,10 +104,8 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration.Defaults
         /// <summary>
         /// Generates an instruction for an indirect turn.
         /// </summary>
-        /// <param name="instruction"></param>
-        /// <param name="streetCountTurn"></param>
-        /// <param name="streetCountBeforeTurn"></param>
-        /// <param name="street_to"></param>
+        /// <param name="countBefore"></param>
+        /// <param name="street"></param>
         /// <param name="direction"></param>
         /// <param name="list"></param>
         /// <returns></returns>
@@ -188,7 +186,6 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration.Defaults
         /// <summary>
         /// Generates an instruction for a simple turn.
         /// </summary>
-        /// <param name="count"></param>
         /// <param name="direction"></param>
         /// <returns></returns>
         protected override string GenerateTurn(RelativeDirection direction)

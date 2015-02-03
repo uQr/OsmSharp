@@ -416,10 +416,9 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <summary>
         /// Adds an edge.
         /// </summary>
-        /// <param name="forward"></param>
+        /// <param name="tags"></param>
         /// <param name="from"></param>
         /// <param name="to"></param>
-        /// <param name="tags"></param>
         /// <param name="intermediates"></param>
         protected virtual void AddRoadEdge(TagsCollectionBase tags, uint from, uint to, List<GeoCoordinateSimple> intermediates)
         {

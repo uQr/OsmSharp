@@ -31,6 +31,10 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
     /// </summary>
     public class ImmidateTurnMachine : MicroPlannerMachine
     {
+        /// <summary>
+        /// Creates a new immidiate turn machine.
+        /// </summary>
+        /// <param name="planner"></param>
         public ImmidateTurnMachine(MicroPlanner planner)
             : base(ImmidateTurnMachine.Initialize(), planner, 101)
         {
@@ -128,6 +132,9 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
             return false;
         }
 
+        /// <summary>
+        /// Executed after this machine was successfull.
+        /// </summary>
         public override void Succes()
         {
             // get the last arc and the last point.
@@ -176,6 +183,11 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
             this.Planner.SentencePlanner.GenerateInstruction(metaData, latestPoint.EntryIdx, box, latestPoint.Points);
         }
 
+        /// <summary>
+        /// Returns true if this objects equals the given one.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
             if (obj is ImmidateTurnMachine)
@@ -186,6 +198,10 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
             return false;
         }
 
+        /// <summary>
+        /// Serves as a hash function.
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {// if the machine can be used more than once 
             // this hashcode will have to be updated.

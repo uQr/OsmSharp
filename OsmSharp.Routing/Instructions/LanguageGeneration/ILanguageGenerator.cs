@@ -29,6 +29,7 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration
         /// Generates text fitting for the the given instruction.
         /// </summary>
         /// <param name="instructionData"></param>
+        /// <param name="text"></param>
         /// <returns></returns>
         bool Generate(Dictionary<string, object> instructionData, out string text);
     }

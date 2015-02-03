@@ -48,6 +48,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <param name="maxSettles"></param>
         /// <param name="forwardExists"></param>
         /// <param name="backwardExists"></param>
+        /// <param name="toIgnore"></param>
         void Exists(IGraph<CHEdgeData> graph, uint from, List<uint> tos, List<float> tosWeights, int maxSettles,
             ref bool[] forwardExists, ref bool[] backwardExists, uint toIgnore);
 

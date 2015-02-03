@@ -167,7 +167,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// </summary>
         /// <param name="tagsIndex"></param>
         /// <param name="tags"></param>
-        /// <param name="directionForward"></param>
+        /// <param name="tagsForward"></param>
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <param name="edgeInterpreter"></param>

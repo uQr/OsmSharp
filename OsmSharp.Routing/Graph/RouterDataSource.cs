@@ -296,23 +296,24 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Returns true if the given vertex has neighbour as a neighbour.
         /// </summary>
-        /// <param name="vertexId"></param>
-        /// <param name="neighbour"></param>
+        /// <param name="vertex1"></param>
+        /// <param name="vertex2"></param>
         /// <returns></returns>
-        public bool ContainsEdge(uint vertexId, uint neighbour)
+        public bool ContainsEdge(uint vertex1, uint vertex2)
         {
-            return _graph.ContainsEdge(vertexId, neighbour);
+            return _graph.ContainsEdge(vertex1, vertex2);
         }
 
         /// <summary>
         /// Returns true if the given vertex has neighbour as a neighbour.
         /// </summary>
-        /// <param name="vertexId"></param>
-        /// <param name="neighbour"></param>
+        /// <param name="vertex1"></param>
+        /// <param name="vertex2"></param>
+        /// <param name="data"></param>
         /// <returns></returns>
-        public bool ContainsEdge(uint vertexId, uint neighbour, TEdgeData data)
+        public bool ContainsEdge(uint vertex1, uint vertex2, TEdgeData data)
         {
-            return _graph.ContainsEdge(vertexId, neighbour);
+            return _graph.ContainsEdge(vertex1, vertex2);
         }
 
         /// <summary>
@@ -320,7 +321,6 @@ namespace OsmSharp.Routing.Graph
         /// </summary>
         /// <param name="vertex1"></param>
         /// <param name="vertex2"></param>
-        /// <param name="data"></param>
         /// <returns></returns>
         public IEdgeEnumerator<TEdgeData> GetEdges(uint vertex1, uint vertex2)
         {
@@ -849,11 +849,17 @@ namespace OsmSharp.Routing.Graph
             }
         }
 
+        /// <summary>
+        /// Returns true if this datasource can contain unidirection edges.
+        /// </summary>
         public bool IsDirected
         {
             get { return _graph.IsDirected; }
         }
 
+        /// <summary>
+        /// Returns true if this datasource can have multiple edge between the two vertices.
+        /// </summary>
         public bool CanHaveDuplicates
         {
             get { return _graph.CanHaveDuplicates; }

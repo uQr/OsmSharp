@@ -30,11 +30,11 @@ namespace OsmSharp.Routing.Graph
     public class MemoryDirectedGraph<TEdgeData> : IGraph<TEdgeData>
         where TEdgeData : IEdge
     {
-        protected const int VERTEX_SIZE = 2; // holds the first edge index and the edge count.
-        protected const int FIRST_EDGE = 0;
-        protected const int EDGE_COUNT = 1;
-        protected const int EDGE_SIZE = 1; // holds only the target vertext.
-        protected const uint NO_EDGE = uint.MaxValue; // a dummy value indication that there is no edge.
+        private const int VERTEX_SIZE = 2; // holds the first edge index and the edge count.
+        private const int FIRST_EDGE = 0;
+        private const int EDGE_COUNT = 1;
+        private const int EDGE_SIZE = 1; // holds only the target vertext.
+        private const uint NO_EDGE = uint.MaxValue; // a dummy value indication that there is no edge.
 
         /// <summary>
         /// Holds the next id.
@@ -749,11 +749,17 @@ namespace OsmSharp.Routing.Graph
             }
         }
 
+        /// <summary>
+        /// Returns true if this graph can contain edges that are undirectional.
+        /// </summary>
         public bool IsDirected
         {
             get { return true; }
         }
 
+        /// <summary>
+        /// Returns true if this graph can contain multiple edges between two vertices.
+        /// </summary>
         public bool CanHaveDuplicates
         {
             get { return true; }

@@ -73,7 +73,6 @@ namespace OsmSharp.Routing.Graph
         /// </summary>
         /// <param name="vertex1"></param>
         /// <param name="vertex2"></param>
-        /// <param name="data"></param>
         /// <returns></returns>
         IEdgeEnumerator<TEdgeData> GetEdges(uint vertex1, uint vertex2);
 

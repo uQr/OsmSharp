@@ -43,6 +43,8 @@ namespace OsmSharp.Routing.Routers
         /// <param name="vehicle">The vehicle profile.</param>
         /// <param name="source">The source point.</param>
         /// <param name="targets">The target point(s).</param>
+        /// <param name="max"></param>
+        /// <param name="geometryOnly"></param>
         /// <returns></returns>
         Route CalculateToClosest(Vehicle vehicle, RouterPoint source, RouterPoint[] targets, float max = float.MaxValue, bool geometryOnly = false);
 
@@ -50,8 +52,10 @@ namespace OsmSharp.Routing.Routers
         /// Calculates all routes between one source and many target points.
         /// </summary>
         /// <param name="vehicle">The vehicle profile.</param>
-        /// <param name="source"></param>
-        /// <param name="targets"></param>
+        /// <param name="source">The source point.</param>
+        /// <param name="targets">The target point(s).</param>
+        /// <param name="max"></param>
+        /// <param name="geometryOnly"></param>
         /// <returns></returns>
         Route[] CalculateOneToMany(Vehicle vehicle, RouterPoint source, RouterPoint[] targets, float max = float.MaxValue, bool geometryOnly = false);
 
@@ -59,8 +63,10 @@ namespace OsmSharp.Routing.Routers
         /// Calculates all routes between many sources/targets.
         /// </summary>
         /// <param name="vehicle">The vehicle profile.</param>
-        /// <param name="sources"></param>
-        /// <param name="targets"></param>
+        /// <param name="sources">The source point.</param>
+        /// <param name="targets">The target point(s).</param>
+        /// <param name="max"></param>
+        /// <param name="geometryOnly"></param>
         /// <returns></returns>
         Route[][] CalculateManyToMany(Vehicle vehicle, RouterPoint[] sources, RouterPoint[] targets, float max = float.MaxValue, bool geometryOnly = false);
 

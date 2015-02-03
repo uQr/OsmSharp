@@ -552,7 +552,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             /// <summary>
             /// Returns a simple array.
             /// </summary>
-            /// <param name="simples"></param>
+            /// <param name="shape"></param>
             /// <returns></returns>
             public static SerializableCoordinate[] FromSimpleArray(ICoordinateCollection shape)
             {

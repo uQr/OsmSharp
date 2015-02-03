@@ -660,11 +660,6 @@ namespace OsmSharp.Routing.CH.PreProcessing
         private BinaryHeap<uint> _queue;
 
         /// <summary>
-        /// Holds the fraction of the 'misses' queue that is required for recalculation.
-        /// </summary>
-        private float _a = 1f;
-
-        /// <summary>
         /// The amount of queue 'misses' to recalculated.
         /// </summary>
         private int _k = 20;

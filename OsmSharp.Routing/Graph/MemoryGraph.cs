@@ -1180,11 +1180,17 @@ namespace OsmSharp.Routing.Graph
             }
         }
 
+        /// <summary>
+        /// Returns true if this graph can contain edges that are undirectional.
+        /// </summary>
         public bool IsDirected
         {
             get { return false; }
         }
 
+        /// <summary>
+        /// Returns true if this graph can contain edges that are undirectional.
+        /// </summary>
         public bool CanHaveDuplicates
         {
             get { return false; }
