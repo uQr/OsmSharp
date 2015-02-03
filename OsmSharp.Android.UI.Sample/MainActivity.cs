@@ -23,8 +23,8 @@ using OsmSharp.Android.UI.Controls;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Routing;
-using OsmSharp.Routing.CH;
-using OsmSharp.Routing.CH.Serialization.Sorted;
+using OsmSharp.Routing.Contracted;
+using OsmSharp.Routing.Contracted.Serialization.Sorted;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.UI;
 using OsmSharp.UI.Animations.Navigation;
@@ -41,7 +41,6 @@ namespace OsmSharp.Android.UI.Sample
     /// <summary>
     /// The main activity.
     /// </summary>
-    // [Activity(ConfigurationChanges = global::Android.Content.PM.ConfigChanges.Orientation | global::Android.Content.PM.ConfigChanges.ScreenLayout)]
     [Activity]
     public class MainActivity : Activity
     {

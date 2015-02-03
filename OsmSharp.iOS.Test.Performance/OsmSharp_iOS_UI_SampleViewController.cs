@@ -13,7 +13,7 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Math.Primitives;
 using OsmSharp.Routing;
-using OsmSharp.Routing.CH;
+using OsmSharp.Routing.Contracted;
 using OsmSharp.Routing.Instructions;
 using OsmSharp.Routing.Navigation;
 using OsmSharp.Routing.Osm.Interpreter;
