@@ -50,7 +50,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="dynamicGraph"></param>
         /// <param name="interpreter">Inteprets the OSM-data.</param>
         /// <param name="tagsIndex">Holds all the tags.</param>
-        public LiveGraphOsmStreamTarget(IRouterDataSource<Edge> dynamicGraph,
+        public LiveGraphOsmStreamTarget(BasicRouterDataSource<Edge> dynamicGraph,
             IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex)
             : this(dynamicGraph, interpreter, tagsIndex, null, true, new CoordinateIndex())
         {
@@ -64,7 +64,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="interpreter">Inteprets the OSM-data.</param>
         /// <param name="tagsIndex">Holds all the tags.</param>
         /// <param name="coordinates"></param>
-        public LiveGraphOsmStreamTarget(IRouterDataSource<Edge> dynamicGraph,
+        public LiveGraphOsmStreamTarget(BasicRouterDataSource<Edge> dynamicGraph,
             IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex, ICoordinateIndex coordinates)
             : this(dynamicGraph, interpreter, tagsIndex, null, true, coordinates)
         {
@@ -78,7 +78,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="interpreter"></param>
         /// <param name="tagsIndex"></param>
         /// <param name="vehicles">The vehicle profiles to build routing information for.</param>
-        public LiveGraphOsmStreamTarget(IRouterDataSource<Edge> dynamicGraph,
+        public LiveGraphOsmStreamTarget(BasicRouterDataSource<Edge> dynamicGraph,
             IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex,
             IEnumerable<Vehicle> vehicles)
             : this(dynamicGraph, interpreter, tagsIndex, vehicles, true, new CoordinateIndex())
@@ -94,7 +94,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="tagsIndex"></param>
         /// <param name="vehicles">The vehicle profiles to build routing information for.</param>
         /// <param name="collectIntermediates"></param>
-        public LiveGraphOsmStreamTarget(IRouterDataSource<Edge> dynamicGraph,
+        public LiveGraphOsmStreamTarget(BasicRouterDataSource<Edge> dynamicGraph,
             IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex,
             IEnumerable<Vehicle> vehicles, bool collectIntermediates)
             : this(dynamicGraph, interpreter, tagsIndex, vehicles, collectIntermediates, new CoordinateIndex())
@@ -111,7 +111,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="vehicles">The vehicle profiles to build routing information for.</param>
         /// <param name="collectIntermediates"></param>
         /// <param name="coordinates"></param>
-        public LiveGraphOsmStreamTarget(IRouterDataSource<Edge> dynamicGraph,
+        public LiveGraphOsmStreamTarget(BasicRouterDataSource<Edge> dynamicGraph,
             IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex,
             IEnumerable<Vehicle> vehicles, bool collectIntermediates, ICoordinateIndex coordinates)
             : base(dynamicGraph, interpreter, tagsIndex, new HugeDictionary<long, uint>(), collectIntermediates, coordinates)
@@ -125,42 +125,6 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                 }
             }
         }
-
-        ///// <summary>
-        ///// Adds an edge.
-        ///// </summary>
-        ///// <param name="forward"></param>
-        ///// <param name="from"></param>
-        ///// <param name="to"></param>
-        ///// <param name="tags"></param>
-        ///// <param name="intermediates"></param>
-        //protected override void AddRoadEdge(TagsCollectionBase tags, bool forward, uint from, uint to, List<GeoCoordinateSimple> intermediates)
-        //{
-        //    float latitude;
-        //    float longitude;
-        //    GeoCoordinate fromCoordinate = null;
-        //    if (this.DynamicGraph.GetVertex(from, out latitude, out longitude))
-        //    { // 
-        //        fromCoordinate = new GeoCoordinate(latitude, longitude);
-        //    }
-        //    GeoCoordinate toCoordinate = null;
-        //    if (this.DynamicGraph.GetVertex(to, out latitude, out longitude))
-        //    { // 
-        //        toCoordinate = new GeoCoordinate(latitude, longitude);
-        //    }
-
-        //    if (fromCoordinate != null && toCoordinate != null)
-        //    { // calculate the edge data.
-        //        var edgeData = this.CalculateEdgeData(this.Interpreter.EdgeInterpreter, this.TagsIndex, tags, forward, fromCoordinate, toCoordinate, intermediates);
-
-        //        ICoordinateCollection intermediatesCollection = null;
-        //        if(intermediates != null)
-        //        {
-        //            intermediatesCollection = new CoordinateArrayCollection<GeoCoordinateSimple>(intermediates.ToArray());
-        //        }
-        //        this.DynamicGraph.AddEdge(from, to, edgeData, intermediatesCollection, this.EdgeComparer);
-        //    }
-        //}
 
         /// <summary>
         /// Calculates edge data.

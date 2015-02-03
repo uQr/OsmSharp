@@ -85,7 +85,7 @@ namespace OsmSharp.Routing.Graph.Serialization
         /// <param name="lazy"></param>
         /// <param name="vehicles"></param>
         /// <returns></returns>
-        protected override IBasicRouterDataSource<TEdgeData> DoDeserialize(
+        protected override BasicRouterDataSource<TEdgeData> DoDeserialize(
             LimitedStream stream, bool lazy, IEnumerable<string> vehicles)
         {
             ITagsCollectionIndex tagsCollectionIndex = this.CreateTagsCollectionIndex();

@@ -24,6 +24,7 @@ using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.UI.Map.Styles;
 using OsmSharp.UI.Renderer;
 using OsmSharp.UI.Renderer.Scene;
+using OsmSharp.Routing.Graph;
 
 namespace OsmSharp.UI.Map.Layers
 {
@@ -35,7 +36,7 @@ namespace OsmSharp.UI.Map.Layers
         /// <summary>
         /// Holds the source of the OSM raw data.
         /// </summary>
-        private readonly IBasicRouterDataSource<Edge> _dataSource;
+        private readonly BasicRouterDataSource<Edge> _dataSource;
         /// <summary>
         /// Holds the style interpreter.
         /// </summary>
@@ -50,8 +51,7 @@ namespace OsmSharp.UI.Map.Layers
         /// </summary>
         /// <param name="dataSource"></param>
         /// <param name="styleInterpreter"></param>
-        public LayerGraph(IBasicRouterDataSource<Edge> dataSource, 
-                                         StyleInterpreter styleInterpreter)
+        public LayerGraph(BasicRouterDataSource<Edge> dataSource, StyleInterpreter styleInterpreter)
         {
             _dataSource = dataSource;
             _styleInterpreter = styleInterpreter;

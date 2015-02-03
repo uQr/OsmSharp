@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -28,7 +28,7 @@ namespace OsmSharp.Routing.Graph.Router
     /// Abstracts a data source of a router that is a dynamic graph with an extra lookup function.
     /// </summary>
     /// <typeparam name="TEdgeData"></typeparam>
-    public interface IBasicRouterDataSource<TEdgeData> : IGraphReadOnly<TEdgeData>
+    public abstract class BasicRouterDataSource<TEdgeData> : Graph<TEdgeData>
         where TEdgeData : IEdge
     {
         /// <summary>
@@ -36,21 +36,21 @@ namespace OsmSharp.Routing.Graph.Router
         /// </summary>
         /// <param name="vehicle"></param>
         /// <returns></returns>
-        bool SupportsProfile(Vehicle vehicle);
+        public abstract bool SupportsProfile(Vehicle vehicle);
 
         /// <summary>
         /// Returns true if the given profile is supported.
         /// </summary>
         /// <param name="vehicle"></param>
         /// <returns></returns>
-        void AddSupportedProfile(Vehicle vehicle);
+        public abstract void AddSupportedProfile(Vehicle vehicle);
 
         /// <summary>
         /// Returns a list of edges and their vertices inside the given bounding box.
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-        INeighbourEnumerator<TEdgeData> GetEdges(GeoCoordinateBox box);
+        public abstract INeighbourEnumerator<TEdgeData> GetEdges(GeoCoordinateBox box);
 
         /// <summary>
         /// Returns all neighbours even the reverse edges in directed graph.
@@ -61,12 +61,12 @@ namespace OsmSharp.Routing.Graph.Router
         /// Only to be used for generating instructions or statistics about a route.
         /// WARNING: could potentially increase memory usage.
         /// </remarks>
-        IEnumerable<Edge<TEdgeData>> GetDirectNeighbours(uint vertex);
+        public abstract IEnumerable<Edge<TEdgeData>> GetDirectNeighbours(uint vertex);
 
         /// <summary>
         /// Returns the tags index.
         /// </summary>
-        ITagsCollectionIndexReadonly TagsIndex
+        public abstract ITagsCollectionIndexReadonly TagsIndex
         {
             get;
         }
@@ -76,14 +76,14 @@ namespace OsmSharp.Routing.Graph.Router
         /// Adds a restriction to this graph by prohibiting the given route.
         /// </summary>
         /// <param name="route"></param>
-        void AddRestriction(uint[] route);
+        public abstract void AddRestriction(uint[] route);
 
         /// <summary>
         /// Adds a restriction to this graph by prohibiting the given route for the given vehicle.
         /// </summary>
         /// <param name="vehicleType"></param>
         /// <param name="route"></param>
-        void AddRestriction(string vehicleType, uint[] route);
+        public abstract void AddRestriction(string vehicleType, uint[] route);
 
         /// <summary>
         /// Returns all restricted routes that start in the given vertex.
@@ -92,7 +92,7 @@ namespace OsmSharp.Routing.Graph.Router
         /// <param name="vertex"></param>
         /// <param name="routes"></param>
         /// <returns></returns>
-        bool TryGetRestrictionAsStart(Vehicle vehicle, uint vertex, out List<uint[]> routes);
+        public abstract bool TryGetRestrictionAsStart(Vehicle vehicle, uint vertex, out List<uint[]> routes);
 
         /// <summary>
         /// Returns true if there is a restriction that ends with the given vertex.
@@ -101,6 +101,6 @@ namespace OsmSharp.Routing.Graph.Router
         /// <param name="vertex"></param>
         /// <param name="routes"></param>
         /// <returns></returns>
-        bool TryGetRestrictionAsEnd(Vehicle vehicle, uint vertex, out List<uint[]> routes);
+        public abstract bool TryGetRestrictionAsEnd(Vehicle vehicle, uint vertex, out List<uint[]> routes);
     }
 }

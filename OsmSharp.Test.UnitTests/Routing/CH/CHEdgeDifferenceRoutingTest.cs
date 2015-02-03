@@ -48,7 +48,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         /// <param name="interpreter"></param>
         /// <param name="basicRouter"></param>
         /// <returns></returns>
-        public override Router BuildRouter(IBasicRouterDataSource<ContractedEdge> data,
+        public override Router BuildRouter(BasicRouterDataSource<ContractedEdge> data,
             IRoutingInterpreter interpreter, IBasicRouter<ContractedEdge> basicRouter)
         {
             return Router.CreateCHFrom(data, basicRouter, interpreter);
@@ -59,7 +59,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public override IBasicRouter<ContractedEdge> BuildBasicRouter(IBasicRouterDataSource<ContractedEdge> data)
+        public override IBasicRouter<ContractedEdge> BuildBasicRouter(BasicRouterDataSource<ContractedEdge> data)
         {
             return new ContractedRouter();
         }
@@ -70,12 +70,12 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         /// <param name="interpreter"></param>
         /// <param name="embeddedString"></param>
         /// <returns></returns>
-        public override IBasicRouterDataSource<ContractedEdge> BuildData(IOsmRoutingInterpreter interpreter, 
+        public override BasicRouterDataSource<ContractedEdge> BuildData(IOsmRoutingInterpreter interpreter, 
             string embeddedString)
         {
             string key = string.Format("CHEdgeDifference.Routing.IBasicRouterDataSource<CHEdgeData>.OSM.{0}",
                 embeddedString);
-            var data = StaticDictionary.Get<IBasicRouterDataSource<ContractedEdge>>(
+            var data = StaticDictionary.Get<BasicRouterDataSource<ContractedEdge>>(
                 key);
             if (data == null)
             {
@@ -99,7 +99,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
                 preProcessor.Start();
 
                 data = memoryData;
-                StaticDictionary.Add<IBasicRouterDataSource<ContractedEdge>>(key, data);
+                StaticDictionary.Add<BasicRouterDataSource<ContractedEdge>>(key, data);
             }
             return data;
         }

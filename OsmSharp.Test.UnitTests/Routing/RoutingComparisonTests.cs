@@ -73,7 +73,7 @@ namespace OsmSharp.Test.Unittests.Routing
         /// Builds a raw router to compare against.
         /// </summary>
         /// <returns></returns>
-        public Router BuildDykstraRouter(IBasicRouterDataSource<Edge> data,
+        public Router BuildDykstraRouter(BasicRouterDataSource<Edge> data,
             IRoutingInterpreter interpreter, IBasicRouter<Edge> basicRouter)
         {
             // initialize the router.
@@ -142,7 +142,7 @@ namespace OsmSharp.Test.Unittests.Routing
         /// <param name="data"></param>
         /// <param name="referenceRouter"></param>
         /// <param name="router"></param>
-        protected void TestCompareAll<TEdgeData>(IBasicRouterDataSource<TEdgeData> data, Router referenceRouter, Router router)
+        protected void TestCompareAll<TEdgeData>(BasicRouterDataSource<TEdgeData> data, Router referenceRouter, Router router)
             where TEdgeData : IEdge
         {       
             // loop over all nodes and resolve their locations.

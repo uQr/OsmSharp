@@ -34,7 +34,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Returns a graph.
         /// </summary>
         /// <returns></returns>
-        protected IGraph<Edge> CreateGraph()
+        protected Graph<Edge> CreateGraph()
         {
             return new MemoryDirectedGraph<Edge>();
         }

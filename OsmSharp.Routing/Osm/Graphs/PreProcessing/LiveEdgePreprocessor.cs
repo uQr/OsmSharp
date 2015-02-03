@@ -35,13 +35,13 @@ namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
         /// <summary>
         /// Holds the graph.
         /// </summary>
-        private IGraph<Edge> _graph;
+        private Graph<Edge> _graph;
 
         /// <summary>
         /// Creates a new pre-processor.
         /// </summary>
         /// <param name="graph"></param>
-        public Preprocessor(IGraph<Edge> graph)
+        public Preprocessor(Graph<Edge> graph)
         {
             _graph = graph;
         }

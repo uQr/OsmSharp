@@ -52,7 +52,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="interpreter"></param>
         /// <param name="tagsIndex"></param>
         /// <param name="vehicle"></param>
-        public CHEdgeGraphOsmStreamTarget(IRouterDataSource<ContractedEdge> dynamicGraph,
+        public CHEdgeGraphOsmStreamTarget(BasicRouterDataSource<ContractedEdge> dynamicGraph,
             IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex, Vehicle vehicle)
             : base(dynamicGraph, interpreter, tagsIndex)
         {

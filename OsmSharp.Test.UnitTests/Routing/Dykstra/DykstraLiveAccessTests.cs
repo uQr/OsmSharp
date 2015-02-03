@@ -43,7 +43,7 @@ namespace OsmSharp.Test.Unittests.Routing.Dykstra
         /// Builds a router.
         /// </summary>
         /// <returns></returns>
-        public override Router BuildRouter(IBasicRouterDataSource<Edge> data,
+        public override Router BuildRouter(BasicRouterDataSource<Edge> data,
             IOsmRoutingInterpreter interpreter,
                 IBasicRouter<Edge> basicRouter)
         {
@@ -56,7 +56,7 @@ namespace OsmSharp.Test.Unittests.Routing.Dykstra
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public override IBasicRouter<Edge> BuildBasicRouter(IBasicRouterDataSource<Edge> data)
+        public override IBasicRouter<Edge> BuildBasicRouter(BasicRouterDataSource<Edge> data)
         {
             return new DykstraRoutingLive();
         }
@@ -68,7 +68,7 @@ namespace OsmSharp.Test.Unittests.Routing.Dykstra
         /// <param name="embeddedString"></param>
         /// <param name="vehicle"></param>
         /// <returns></returns>
-        public override IBasicRouterDataSource<Edge> BuildData(IOsmRoutingInterpreter interpreter,
+        public override BasicRouterDataSource<Edge> BuildData(IOsmRoutingInterpreter interpreter,
                                                                             string embeddedString, Vehicle vehicle)
         {
             var tagsIndex = new TagsTableCollectionIndex();

@@ -32,7 +32,7 @@ namespace OsmSharp.Routing.Graph
         /// <typeparam name="TEdgeData"></typeparam>
         /// <param name="copyTo"></param>
         /// <param name="copyFrom"></param>
-        public static void CopyFrom<TEdgeData>(this IGraph<TEdgeData> copyTo, IGraph<TEdgeData> copyFrom)
+        public static void CopyFrom<TEdgeData>(this Graph<TEdgeData> copyTo, Graph<TEdgeData> copyFrom)
             where TEdgeData : IEdge
         {
             float latitude, longitude;
@@ -62,7 +62,7 @@ namespace OsmSharp.Routing.Graph
         /// <typeparam name="TEdgeData"></typeparam>
         /// <param name="graph"></param>
         /// <param name="n"></param>
-        public static void SortHilbert<TEdgeData>(this IGraph<TEdgeData> graph, int n)
+        public static void SortHilbert<TEdgeData>(this Graph<TEdgeData> graph, int n)
             where TEdgeData : IEdge
         {
             if (graph == null) { throw new ArgumentNullException("graph"); }
@@ -82,7 +82,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="n"></param>
         /// <param name="left"></param>
         /// <param name="right"></param>
-        private static void SortHilbert<TEdgeData>(IGraph<TEdgeData> graph, int n, uint left, uint right)
+        private static void SortHilbert<TEdgeData>(Graph<TEdgeData> graph, int n, uint left, uint right)
             where TEdgeData : IEdge
         {
             if (graph == null) { throw new ArgumentNullException("graph"); }
@@ -108,7 +108,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="left">The first vertex to consider.</param>
         /// <param name="right">The last vertex to consider.</param>
         /// <return>The new left.</return>
-        private static uint SortHilbertPartition<TEdgeData>(IGraph<TEdgeData> graph, int n, uint left, uint right)
+        private static uint SortHilbertPartition<TEdgeData>(Graph<TEdgeData> graph, int n, uint left, uint right)
             where TEdgeData : IEdge
         { // get the pivot value.
             uint start = left;
@@ -151,7 +151,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="n"></param>
         /// <param name="vertex"></param>
         /// <returns></returns>
-        public static ulong HilbertDistance<TEdgeData>(this IGraph<TEdgeData> graph, int n, uint vertex)
+        public static ulong HilbertDistance<TEdgeData>(this Graph<TEdgeData> graph, int n, uint vertex)
             where TEdgeData : IEdge
         {
             float latitude, longitude;
@@ -166,7 +166,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="graph"></param>
         /// <param name="vertex1"></param>
         /// <param name="vertex2"></param>
-        public static void Switch<TEdgeData>(this IGraph<TEdgeData> graph, uint vertex1, uint vertex2)
+        public static void Switch<TEdgeData>(this Graph<TEdgeData> graph, uint vertex1, uint vertex2)
             where TEdgeData : IEdge
         {
             // get all existing data.

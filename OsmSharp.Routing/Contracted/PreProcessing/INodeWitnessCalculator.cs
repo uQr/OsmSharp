@@ -36,7 +36,7 @@ namespace OsmSharp.Routing.Contracted.PreProcessing
         /// <param name="maxSettles"></param>
         /// <param name="toIgnore">The vertex to ingore while calculating, to simulate a pre-contracted situation.</param>
         /// <returns></returns>
-        bool Exists(IGraph<ContractedEdge> graph, uint from, uint to, float maxWeight, int maxSettles, uint toIgnore);
+        bool Exists(Graph<ContractedEdge> graph, uint from, uint to, float maxWeight, int maxSettles, uint toIgnore);
 
         /// <summary>
         /// Calculates all witnesses from one source to multiple targets.
@@ -49,7 +49,7 @@ namespace OsmSharp.Routing.Contracted.PreProcessing
         /// <param name="forwardExists"></param>
         /// <param name="backwardExists"></param>
         /// <param name="toIgnore"></param>
-        void Exists(IGraph<ContractedEdge> graph, uint from, List<uint> tos, List<float> tosWeights, int maxSettles,
+        void Exists(Graph<ContractedEdge> graph, uint from, List<uint> tos, List<float> tosWeights, int maxSettles,
             ref bool[] forwardExists, ref bool[] backwardExists, uint toIgnore);
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace OsmSharp.Routing.Contracted.PreProcessing
         /// <param name="maxWeight"></param>
         /// <param name="maxSettles"></param>
         /// <returns></returns>
-        bool Exists(IGraph<ContractedEdge> graph, uint from, uint to, float maxWeight, int maxSettles);
+        bool Exists(Graph<ContractedEdge> graph, uint from, uint to, float maxWeight, int maxSettles);
 
         /// <summary>
         /// Calculates all witnesses from one source to multiple targets.
@@ -73,7 +73,7 @@ namespace OsmSharp.Routing.Contracted.PreProcessing
         /// <param name="maxSettles"></param>
         /// <param name="forwardExists"></param>
         /// <param name="backwardExists"></param>
-        void Exists(IGraph<ContractedEdge> graph, uint from, List<uint> tos, List<float> tosWeights, int maxSettles,
+        void Exists(Graph<ContractedEdge> graph, uint from, List<uint> tos, List<float> tosWeights, int maxSettles,
             ref bool[] forwardExists, ref bool[] backwardExists);
 
         /// <summary>

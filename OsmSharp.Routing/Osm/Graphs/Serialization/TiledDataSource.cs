@@ -36,7 +36,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
     /// <summary>
     /// A router data source that dynamically loads data.
     /// </summary>
-    internal class TiledDataSource : IBasicRouterDataSource<Edge>
+    internal class TiledDataSource : BasicRouterDataSource<Edge>
     {
         /// <summary>
         /// Holds all graph data.
@@ -112,7 +112,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// </summary>
         /// <param name="vehicle"></param>
         /// <returns></returns>
-        public bool SupportsProfile(Vehicle vehicle)
+        public override bool SupportsProfile(Vehicle vehicle)
         {
             return _vehicles.Contains(vehicle.UniqueName);
         }
@@ -122,7 +122,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// </summary>
         /// <param name="vehicle"></param>
         /// <returns></returns>
-        public void AddSupportedProfile(Vehicle vehicle)
+        public override void AddSupportedProfile(Vehicle vehicle)
         {
             throw new InvalidOperationException("Cannot add extra vehicle profiles to a read-only source.");
         }
@@ -132,7 +132,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-        public INeighbourEnumerator<Edge> GetEdges(
+        public override INeighbourEnumerator<Edge> GetEdges(
             GeoCoordinateBox box)
         {
             // load the missing tiles.
@@ -193,7 +193,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <summary>
         /// Returns the tags index.
         /// </summary>
-        public ITagsCollectionIndexReadonly TagsIndex
+        public override ITagsCollectionIndexReadonly TagsIndex
         {
             get { return _tagsIndex; }
         }
@@ -205,7 +205,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <param name="latitude"></param>
         /// <param name="longitude"></param>
         /// <returns></returns>
-        public bool GetVertex(uint id, out float latitude, out float longitude)
+        public override bool GetVertex(uint id, out float latitude, out float longitude)
         {
             Tile tile;
             if (_tilesPerVertex.TryGetValue(id, out tile))
@@ -244,7 +244,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// </summary>
         /// <param name="vertexId"></param>
         /// <returns></returns>
-        public IEdgeEnumerator<Edge> GetEdges(uint vertexId)
+        public override IEdgeEnumerator<Edge> GetEdges(uint vertexId)
         {
             Tile tile;
             if (_tilesPerVertex.TryGetValue(vertexId, out tile))
@@ -279,7 +279,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <param name="vertexId"></param>
         /// <param name="neighbour"></param>
         /// <returns></returns>
-        public bool ContainsEdge(uint vertexId, uint neighbour)
+        public override bool ContainsEdge(uint vertexId, uint neighbour)
         {
             throw new NotImplementedException();
         }
@@ -291,7 +291,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <param name="neighbour"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        public bool ContainsEdge(uint vertexId, uint neighbour, Edge data)
+        public override bool ContainsEdge(uint vertexId, uint neighbour, Edge data)
         {
             throw new NotImplementedException();
         }
@@ -303,7 +303,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <param name="vertex2"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        public bool GetEdge(uint vertex1, uint vertex2, out Edge data)
+        public override bool GetEdge(uint vertex1, uint vertex2, out Edge data)
         {
             Tile tile;
             if (_tilesPerVertex.TryGetValue(vertex1, out tile))
@@ -339,7 +339,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <param name="vertex1"></param>
         /// <param name="vertex2"></param>
         /// <returns></returns>
-        public IEdgeEnumerator<Edge> GetEdges(uint vertex1, uint vertex2)
+        public override IEdgeEnumerator<Edge> GetEdges(uint vertex1, uint vertex2)
         {
             Tile tile;
             if (_tilesPerVertex.TryGetValue(vertex1, out tile))
@@ -377,7 +377,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <param name="vertex2"></param>
         /// <param name="shape"></param>
         /// <returns></returns>
-        public bool GetEdgeShape(uint vertex1, uint vertex2, out ICoordinateCollection shape)
+        public override bool GetEdgeShape(uint vertex1, uint vertex2, out ICoordinateCollection shape)
         {
             Tile tile;
             if (_tilesPerVertex.TryGetValue(vertex1, out tile))
@@ -415,7 +415,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <summary>
         /// Returns the vertex count.
         /// </summary>
-        public uint VertexCount
+        public override uint VertexCount
         {
             get { throw new NotSupportedException(); }
         }
@@ -499,6 +499,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             /// </summary>
             public int Length { get; set; }
         }
+
         /// <summary>
         /// Resize if needed.
         /// </summary>
@@ -897,41 +898,91 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             }
         }
 
-        public void AddRestriction(uint[] route)
+        public override void AddRestriction(uint[] route)
         {
 
         }
 
-        public void AddRestriction(string vehicleType, uint[] route)
+        public override void AddRestriction(string vehicleType, uint[] route)
         {
 
         }
 
-        public bool TryGetRestrictionAsStart(Vehicle vehicle, uint vertex, out List<uint[]> routes)
-        {
-            routes = null;
-            return false;
-        }
-
-        public bool TryGetRestrictionAsEnd(Vehicle vehicle, uint vertex, out List<uint[]> routes)
+        public override bool TryGetRestrictionAsStart(Vehicle vehicle, uint vertex, out List<uint[]> routes)
         {
             routes = null;
             return false;
         }
 
-        public bool IsDirected
+        public override bool TryGetRestrictionAsEnd(Vehicle vehicle, uint vertex, out List<uint[]> routes)
+        {
+            routes = null;
+            return false;
+        }
+
+        public override bool IsDirected
         {
             get { return false; }
         }
 
-        public bool CanHaveDuplicates
+        public override bool CanHaveDuplicates
         {
             get { return false; }
         }
 
-        public IEnumerable<Edge<Edge>> GetDirectNeighbours(uint vertex)
+        public override IEnumerable<Edge<Edge>> GetDirectNeighbours(uint vertex)
         {
             return this.GetEdges(vertex);
+        }
+
+        public override uint AddVertex(float latitude, float longitude)
+        {
+            throw new Exception("This datasource is readonly.");
+        }
+
+        public override void SetVertex(uint vertex, float latitude, float longitude)
+        {
+            throw new Exception("This datasource is readonly.");
+        }
+
+        public override void AddEdge(uint from, uint to, Edge data)
+        {
+            throw new Exception("This datasource is readonly.");
+        }
+
+        public override void AddEdge(uint from, uint to, Edge data, ICoordinateCollection coordinates)
+        {
+            throw new Exception("This datasource is readonly.");
+        }
+
+        public override void Compress()
+        {
+            throw new Exception("This datasource is readonly.");
+        }
+
+        public override void Trim()
+        {
+            throw new Exception("This datasource is readonly.");
+        }
+
+        public override void Resize(long vertexEstimate, long edgeEstimate)
+        {
+            throw new Exception("This datasource is readonly.");
+        }
+
+        public override void RemoveEdges(uint vertex)
+        {
+            throw new Exception("This datasource is readonly.");
+        }
+
+        public override void RemoveEdge(uint from, uint to)
+        {
+            throw new Exception("This datasource is readonly.");
+        }
+
+        public override void RemoveEdge(uint from, uint to, Edge data)
+        {
+            throw new Exception("This datasource is readonly.");
         }
     }
 }

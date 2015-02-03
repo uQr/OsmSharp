@@ -63,7 +63,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="max"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public PathSegment<long> Calculate(IBasicRouterDataSource<Edge> graph, IRoutingInterpreter interpreter,
+        public PathSegment<long> Calculate(Graph<Edge> graph, IRoutingInterpreter interpreter,
             Vehicle vehicle, PathSegmentVisitList from, PathSegmentVisitList to, double max, Dictionary<string, object> parameters)
         {
             return this.CalculateToClosest(graph, interpreter, vehicle, from,
@@ -81,7 +81,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="maxSearch"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public PathSegment<long>[][] CalculateManyToMany(IBasicRouterDataSource<Edge> graph, IRoutingInterpreter interpreter,
+        public PathSegment<long>[][] CalculateManyToMany(Graph<Edge> graph, IRoutingInterpreter interpreter,
             Vehicle vehicle, PathSegmentVisitList[] sources, PathSegmentVisitList[] targets, double maxSearch, Dictionary<string, object> parameters)
         {
             var results = new PathSegment<long>[sources.Length][];
@@ -104,7 +104,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="max"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public double CalculateWeight(IBasicRouterDataSource<Edge> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
+        public double CalculateWeight(Graph<Edge> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList from, PathSegmentVisitList to, double max, Dictionary<string, object> parameters)
         {
             PathSegment<long> closest = this.CalculateToClosest(graph, interpreter, vehicle, from,
@@ -127,7 +127,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="max"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public PathSegment<long> CalculateToClosest(IBasicRouterDataSource<Edge> graph, IRoutingInterpreter interpreter,
+        public PathSegment<long> CalculateToClosest(Graph<Edge> graph, IRoutingInterpreter interpreter,
             Vehicle vehicle, PathSegmentVisitList from, PathSegmentVisitList[] targets, double max, Dictionary<string, object> parameters)
         {
             PathSegment<long>[] result = this.DoCalculation(graph, interpreter, vehicle,
@@ -150,7 +150,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="max"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public double[] CalculateOneToManyWeight(IBasicRouterDataSource<Edge> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
+        public double[] CalculateOneToManyWeight(Graph<Edge> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList source, PathSegmentVisitList[] targets, double max, Dictionary<string, object> parameters)
         {
             PathSegment<long>[] many = this.DoCalculation(graph, interpreter, vehicle,
@@ -182,7 +182,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="max"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public double[][] CalculateManyToManyWeight(IBasicRouterDataSource<Edge> graph, IRoutingInterpreter interpreter,
+        public double[][] CalculateManyToManyWeight(Graph<Edge> graph, IRoutingInterpreter interpreter,
             Vehicle vehicle, PathSegmentVisitList[] sources, PathSegmentVisitList[] targets, double max, Dictionary<string, object> parameters)
         {
             var results = new double[sources.Length][];
@@ -218,7 +218,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="weight"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public HashSet<long> CalculateRange(IBasicRouterDataSource<Edge> graph, IRoutingInterpreter interpreter,
+        public HashSet<long> CalculateRange(Graph<Edge> graph, IRoutingInterpreter interpreter,
             Vehicle vehicle, PathSegmentVisitList source, double weight, Dictionary<string, object> parameters)
         {
             return this.CalculateRange(graph, interpreter, vehicle, source, weight, true, null);
@@ -235,7 +235,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="forward"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public HashSet<long> CalculateRange(IBasicRouterDataSource<Edge> graph, IRoutingInterpreter interpreter,
+        public HashSet<long> CalculateRange(Graph<Edge> graph, IRoutingInterpreter interpreter,
             Vehicle vehicle, PathSegmentVisitList source, double weight, bool forward, Dictionary<string, object> parameters)
         {
             PathSegment<long>[] result = this.DoCalculation(graph, interpreter, vehicle,
@@ -259,7 +259,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="weight"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public bool CheckConnectivity(IBasicRouterDataSource<Edge> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
+        public bool CheckConnectivity(Graph<Edge> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList source, double weight, Dictionary<string, object> parameters)
         {
             HashSet<long> range = this.CalculateRange(graph, interpreter, vehicle, source, weight, true, null);
@@ -290,7 +290,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="returnAtWeight"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        private PathSegment<long>[] DoCalculation(IBasicRouterDataSource<Edge> graph, IRoutingInterpreter interpreter, 
+        private PathSegment<long>[] DoCalculation(Graph<Edge> graph, IRoutingInterpreter interpreter, 
             Vehicle vehicle, PathSegmentVisitList source, PathSegmentVisitList[] targets, double weight,
             bool stopAtFirst, bool returnAtWeight, Dictionary<string, object> parameters)
         {
@@ -311,7 +311,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="forward"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        private PathSegment<long>[] DoCalculation(IBasicRouterDataSource<Edge> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
+        private PathSegment<long>[] DoCalculation(Graph<Edge> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList sourceList, PathSegmentVisitList[] targetList, double weight,
             bool stopAtFirst, bool returnAtWeight, bool forward, Dictionary<string, object> parameters)
         {
@@ -499,27 +499,27 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                 // check turn-restrictions.
                 List<uint[]> restrictions = null;
                 bool isRestricted = false;
-                if (current.From != null &&
-                    current.From.VertexId > 0 &&
-                    graph.TryGetRestrictionAsStart(vehicle, (uint)current.From.VertexId, out restrictions))
-                { // there are restrictions!
-                    // search for a restriction that ends in the currently selected vertex.
-                    for(int idx = 0; idx < restrictions.Count; idx++)
-                    {
-                        var restriction = restrictions[idx];
-                        if(restriction[restriction.Length - 1] == current.VertexId)
-                        { // oeps, do not consider the neighbours of this vertex.
-                            isRestricted = true;
-                            break;
-                        }
+                //if (current.From != null &&
+                //    current.From.VertexId > 0 &&
+                //    graph.TryGetRestrictionAsStart(vehicle, (uint)current.From.VertexId, out restrictions))
+                //{ // there are restrictions!
+                //    // search for a restriction that ends in the currently selected vertex.
+                //    for(int idx = 0; idx < restrictions.Count; idx++)
+                //    {
+                //        var restriction = restrictions[idx];
+                //        if(restriction[restriction.Length - 1] == current.VertexId)
+                //        { // oeps, do not consider the neighbours of this vertex.
+                //            isRestricted = true;
+                //            break;
+                //        }
 
-                        for(int restrictedIdx = 0; restrictedIdx < restriction.Length; restrictedIdx++)
-                        { // make sure the restricted vertices can be choosen multiple times.
-                            // restrictedVertices.Add(restriction[restrictedIdx]);
-                            visitList.SetRestricted(restriction[restrictedIdx]);
-                        }
-                    }
-                }
+                //        for(int restrictedIdx = 0; restrictedIdx < restriction.Length; restrictedIdx++)
+                //        { // make sure the restricted vertices can be choosen multiple times.
+                //            // restrictedVertices.Add(restriction[restrictedIdx]);
+                //            visitList.SetRestricted(restriction[restrictedIdx]);
+                //        }
+                //    }
+                //}
                 if (!isRestricted)
                 {
                     // update the visited nodes.
@@ -544,17 +544,17 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                         Speed speed = noSpeed;
                         if (!speeds.TryGetValue(neighbour.EdgeData.Tags, out speed))
                         { // speed not there, calculate speed.
-                            var tags = graph.TagsIndex.Get(neighbour.EdgeData.Tags);
-                            speed = noSpeed;
-                            if (vehicle.CanTraverse(tags))
-                            { // can traverse, speed not null!
-                                speed = new Speed()
-                                {
-                                    MeterPerSecond = ((OsmSharp.Units.Speed.MeterPerSecond)vehicle.ProbableSpeed(tags)).Value,
-                                    Direction = vehicle.IsOneWay(tags)
-                                };
-                            }
-                            speeds.Add(neighbour.EdgeData.Tags, speed);
+                            //var tags = graph.TagsIndex.Get(neighbour.EdgeData.Tags);
+                            //speed = noSpeed;
+                            //if (vehicle.CanTraverse(tags))
+                            //{ // can traverse, speed not null!
+                            //    speed = new Speed()
+                            //    {
+                            //        MeterPerSecond = ((OsmSharp.Units.Speed.MeterPerSecond)vehicle.ProbableSpeed(tags)).Value,
+                            //        Direction = vehicle.IsOneWay(tags)
+                            //    };
+                            //}
+                            //speeds.Add(neighbour.EdgeData.Tags, speed);
                         }
 
                         // check the tags against the interpreter.
@@ -585,27 +585,27 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                                 bool constraintsOk = true;
                                 if (restrictionsOk && interpreter.Constraints != null)
                                 { // check if the label is ok.
-                                    var neighbourLabel = interpreter.Constraints.GetLabelFor(
-                                        graph.TagsIndex.Get(neighbour.EdgeData.Tags));
+                                    //var neighbourLabel = interpreter.Constraints.GetLabelFor(
+                                    //    graph.TagsIndex.Get(neighbour.EdgeData.Tags));
 
-                                    // only test labels if there is a change.
-                                    if (currentLabels.Count == 0 || !neighbourLabel.Equals(currentLabels[currentLabels.Count - 1]))
-                                    { // labels are different, test them!
-                                        constraintsOk = interpreter.Constraints.ForwardSequenceAllowed(currentLabels,
-                                            neighbourLabel);
+                                    //// only test labels if there is a change.
+                                    //if (currentLabels.Count == 0 || !neighbourLabel.Equals(currentLabels[currentLabels.Count - 1]))
+                                    //{ // labels are different, test them!
+                                    //    constraintsOk = interpreter.Constraints.ForwardSequenceAllowed(currentLabels,
+                                    //        neighbourLabel);
 
-                                        if (constraintsOk)
-                                        { // update the labels.
-                                            var neighbourLabels = new List<RoutingLabel>(currentLabels);
-                                            neighbourLabels.Add(neighbourLabel);
+                                    //    if (constraintsOk)
+                                    //    { // update the labels.
+                                    //        var neighbourLabels = new List<RoutingLabel>(currentLabels);
+                                    //        neighbourLabels.Add(neighbourLabel);
 
-                                            labels[neighbour.Neighbour] = neighbourLabels;
-                                        }
-                                    }
-                                    else
-                                    { // set the same label(s).
-                                        labels[neighbour.Neighbour] = currentLabels;
-                                    }
+                                    //        labels[neighbour.Neighbour] = neighbourLabels;
+                                    //    }
+                                    //}
+                                    //else
+                                    //{ // set the same label(s).
+                                    //    labels[neighbour.Neighbour] = currentLabels;
+                                    //}
                                 }
 
                                 if (constraintsOk && restrictionsOk)

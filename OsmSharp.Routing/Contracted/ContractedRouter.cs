@@ -65,7 +65,7 @@ namespace OsmSharp.Routing.Contracted
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        public PathSegment<long> Calculate(IGraphReadOnly<ContractedEdge> graph, uint from, uint to)
+        public PathSegment<long> Calculate(Graph<ContractedEdge> graph, uint from, uint to)
         {
             var source = new PathSegmentVisitList();
             source.UpdateVertex(new PathSegment<long>(from));
@@ -97,7 +97,7 @@ namespace OsmSharp.Routing.Contracted
         /// <param name="max"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public PathSegment<long> Calculate(IBasicRouterDataSource<ContractedEdge> graph, IRoutingInterpreter interpreter,
+        public PathSegment<long> Calculate(Graph<ContractedEdge> graph, IRoutingInterpreter interpreter,
             Vehicle vehicle, PathSegmentVisitList source, PathSegmentVisitList target, double max, Dictionary<string, object> parameters)
         {
             // do the basic CH calculations.
@@ -120,7 +120,7 @@ namespace OsmSharp.Routing.Contracted
         /// <param name="graph"></param>
         /// <param name="expandedResult"></param>
         /// <returns></returns>
-        private PathSegment<long> AugmentWithWeights(IGraphReadOnly<ContractedEdge> graph, PathSegment<long> expandedResult)
+        private PathSegment<long> AugmentWithWeights(Graph<ContractedEdge> graph, PathSegment<long> expandedResult)
         {
             ContractedEdge edge;
             var current = expandedResult;
@@ -190,7 +190,7 @@ namespace OsmSharp.Routing.Contracted
         /// <param name="graph"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public PathSegment<long>[][] CalculateManyToMany(IBasicRouterDataSource<ContractedEdge> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
+        public PathSegment<long>[][] CalculateManyToMany(Graph<ContractedEdge> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList[] sources, PathSegmentVisitList[] targets, double maxSearch, Dictionary<string, object> parameters)
         {
             var results = new PathSegment<long>[sources.Length][];
@@ -219,7 +219,7 @@ namespace OsmSharp.Routing.Contracted
         /// <param name="max"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public double CalculateWeight(IBasicRouterDataSource<ContractedEdge> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
+        public double CalculateWeight(Graph<ContractedEdge> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList source, PathSegmentVisitList target, double max, Dictionary<string, object> parameters)
         {
             // do the basic CH calculations.
@@ -243,7 +243,7 @@ namespace OsmSharp.Routing.Contracted
         /// <param name="max"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public PathSegment<long> CalculateToClosest(IBasicRouterDataSource<ContractedEdge> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
+        public PathSegment<long> CalculateToClosest(Graph<ContractedEdge> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList source, PathSegmentVisitList[] targets, double max, Dictionary<string, object> parameters)
         {
             throw new NotSupportedException();
@@ -260,7 +260,7 @@ namespace OsmSharp.Routing.Contracted
         /// <param name="max"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public double[] CalculateOneToManyWeight(IBasicRouterDataSource<ContractedEdge> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
+        public double[] CalculateOneToManyWeight(Graph<ContractedEdge> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList source, PathSegmentVisitList[] targets, double max, Dictionary<string, object> parameters)
         {
             double[][] manyToManyResult = this.CalculateManyToManyWeight(
@@ -280,7 +280,7 @@ namespace OsmSharp.Routing.Contracted
         /// <param name="max"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public double[][] CalculateManyToManyWeight(IBasicRouterDataSource<ContractedEdge> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
+        public double[][] CalculateManyToManyWeight(Graph<ContractedEdge> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList[] sources, PathSegmentVisitList[] targets, double max, Dictionary<string, object> parameters)
         {
             return this.DoCalculateManyToMany(
@@ -305,7 +305,7 @@ namespace OsmSharp.Routing.Contracted
         /// <param name="weight"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public HashSet<long> CalculateRange(IBasicRouterDataSource<ContractedEdge> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
+        public HashSet<long> CalculateRange(Graph<ContractedEdge> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList source, double weight, Dictionary<string, object> parameters)
         {
             throw new NotSupportedException("Check IsCalculateRangeSupported before using this functionality!");
@@ -321,7 +321,7 @@ namespace OsmSharp.Routing.Contracted
         /// <param name="weight"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public bool CheckConnectivity(IBasicRouterDataSource<ContractedEdge> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
+        public bool CheckConnectivity(Graph<ContractedEdge> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList source, double weight, Dictionary<string, object> parameters)
         {
             return this.DoCheckConnectivity(graph, source, weight, int.MaxValue);
@@ -385,7 +385,7 @@ namespace OsmSharp.Routing.Contracted
         /// <param name="buckets"></param>
         /// <param name="toVisitList"></param>
         /// <returns></returns>
-        private long SearchBackwardIntoBucket(IBasicRouterDataSource<ContractedEdge> graph, Dictionary<long, Dictionary<long, double>> buckets,
+        private long SearchBackwardIntoBucket(Graph<ContractedEdge> graph, Dictionary<long, Dictionary<long, double>> buckets,
             PathSegmentVisitList toVisitList)
         {
             long? to = null;
@@ -489,7 +489,7 @@ namespace OsmSharp.Routing.Contracted
         /// <param name="buckets"></param>
         /// <param name="fromVisitList"></param>
         /// <param name="tos"></param>
-        private Dictionary<long, double> SearchForwardFromBucket(IBasicRouterDataSource<ContractedEdge> graph, Dictionary<long, Dictionary<long, double>> buckets,
+        private Dictionary<long, double> SearchForwardFromBucket(Graph<ContractedEdge> graph, Dictionary<long, Dictionary<long, double>> buckets,
             PathSegmentVisitList fromVisitList, long[] tos)
         {
             long? from = null;
@@ -652,7 +652,7 @@ namespace OsmSharp.Routing.Contracted
         /// <param name="max"></param>
         /// <param name="max_settles"></param>
         /// <returns></returns>
-        private CHResult DoCalculate(IGraphReadOnly<ContractedEdge> graph,
+        private CHResult DoCalculate(Graph<ContractedEdge> graph,
             PathSegmentVisitList source, PathSegmentVisitList target, double max, int max_settles)
         {
             // keep settled vertices.
@@ -789,7 +789,7 @@ namespace OsmSharp.Routing.Contracted
         /// <param name="max"></param>
         /// <param name="maxSettles"></param>
         /// <returns></returns>
-        private double[][] DoCalculateManyToMany(IBasicRouterDataSource<ContractedEdge> graph, IRoutingInterpreter interpreter,
+        private double[][] DoCalculateManyToMany(Graph<ContractedEdge> graph, IRoutingInterpreter interpreter,
             PathSegmentVisitList[] sources, PathSegmentVisitList[] targets, double max, int maxSettles)
         {
             // TODO: implement switching of from/to when to < from.
@@ -853,7 +853,7 @@ namespace OsmSharp.Routing.Contracted
         /// <param name="to"></param>
         /// <param name="exception"></param>
         /// <returns></returns>
-        public double CalculateWeight(IBasicRouterDataSource<ContractedEdge> graph, uint from, uint to, uint exception)
+        public double CalculateWeight(Graph<ContractedEdge> graph, uint from, uint to, uint exception)
         {
             return this.CalculateWeight(graph, from, to, exception, double.MaxValue);
         }
@@ -867,7 +867,7 @@ namespace OsmSharp.Routing.Contracted
         /// <param name="exception"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        public double CalculateWeight(IBasicRouterDataSource<ContractedEdge> graph, uint from, uint to, uint exception, double max)
+        public double CalculateWeight(Graph<ContractedEdge> graph, uint from, uint to, uint exception, double max)
         {
             // calculate the result.
             var result = this.CalculateInternal(graph, from, to, exception, max, int.MaxValue);
@@ -890,7 +890,7 @@ namespace OsmSharp.Routing.Contracted
         /// <param name="max"></param>
         /// <param name="maxSettles"></param>
         /// <returns></returns>
-        public double CalculateWeight(IBasicRouterDataSource<ContractedEdge> graph, uint from, uint to, uint exception, double max, int maxSettles)
+        public double CalculateWeight(BasicRouterDataSource<ContractedEdge> graph, uint from, uint to, uint exception, double max, int maxSettles)
         {
             // calculate the result.
             var result = this.CalculateInternal(graph, from, to, exception, max, maxSettles);
@@ -910,7 +910,7 @@ namespace OsmSharp.Routing.Contracted
         /// <param name="source"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        public bool CheckConnectivity(IBasicRouterDataSource<ContractedEdge> graph, PathSegmentVisitList source, double max)
+        public bool CheckConnectivity(BasicRouterDataSource<ContractedEdge> graph, PathSegmentVisitList source, double max)
         {
             return this.DoCheckConnectivity(graph, source, max, int.MaxValue);
         }
@@ -922,7 +922,7 @@ namespace OsmSharp.Routing.Contracted
         /// <param name="source"></param>
         /// <param name="maxSettles"></param>
         /// <returns></returns>
-        public bool CheckConnectivity(IBasicRouterDataSource<ContractedEdge> graph, PathSegmentVisitList source, int maxSettles)
+        public bool CheckConnectivity(Graph<ContractedEdge> graph, PathSegmentVisitList source, int maxSettles)
         {
             return this.DoCheckConnectivity(graph, source, double.MaxValue, maxSettles);
         }
@@ -937,7 +937,7 @@ namespace OsmSharp.Routing.Contracted
         /// <param name="max"></param>
         /// <param name="maxSettles"></param>
         /// <returns></returns>
-        private CHResult CalculateInternal(IGraphReadOnly<ContractedEdge> graph, uint from, uint to, uint exception, double max, int maxSettles)
+        private CHResult CalculateInternal(Graph<ContractedEdge> graph, uint from, uint to, uint exception, double max, int maxSettles)
         {
             // keep settled vertices.
             var settledVertices = new CHQueue();
@@ -1026,7 +1026,7 @@ namespace OsmSharp.Routing.Contracted
         /// <param name="max"></param>
         /// <param name="maxSettles"></param>
         /// <returns></returns>
-        private bool DoCheckConnectivity(IGraphReadOnly<ContractedEdge> graph, PathSegmentVisitList source, double max, int maxSettles)
+        private bool DoCheckConnectivity(Graph<ContractedEdge> graph, PathSegmentVisitList source, double max, int maxSettles)
         {
             // keep settled vertices.
             var settledVertices = new CHQueue();
@@ -1147,7 +1147,7 @@ namespace OsmSharp.Routing.Contracted
         /// <param name="settledQueue"></param>
         /// <param name="queue"></param>
         /// <returns></returns>
-        private void SearchForward(IGraphReadOnly<ContractedEdge> graph, CHQueue settledQueue, IPriorityQueue<PathSegment<long>> queue)
+        private void SearchForward(Graph<ContractedEdge> graph, CHQueue settledQueue, IPriorityQueue<PathSegment<long>> queue)
         {
             // get the current vertex with the smallest weight.
             PathSegment<long> current = queue.Pop();
@@ -1203,7 +1203,7 @@ namespace OsmSharp.Routing.Contracted
         /// <param name="settledQueue"></param>
         /// <param name="queue"></param>
         /// <returns></returns>
-        private void SearchBackward(IGraphReadOnly<ContractedEdge> graph, CHQueue settledQueue, IPriorityQueue<PathSegment<long>> queue)
+        private void SearchBackward(Graph<ContractedEdge> graph, CHQueue settledQueue, IPriorityQueue<PathSegment<long>> queue)
         {
             // get the current vertex with the smallest weight.
             //PathSegment<long> current = queue.Pop();
@@ -1264,7 +1264,7 @@ namespace OsmSharp.Routing.Contracted
         /// <param name="graph"></param>
         /// <param name="result"></param>
         /// <returns></returns>
-        private PathSegment<long> ExpandBestResult(IGraphReadOnly<ContractedEdge> graph, CHResult result)
+        private PathSegment<long> ExpandBestResult(Graph<ContractedEdge> graph, CHResult result)
         {
             // construct the route.
             var forward = result.Forward;
@@ -1293,7 +1293,7 @@ namespace OsmSharp.Routing.Contracted
         /// <param name="graph"></param>
         /// <param name="path"></param>
         /// <returns></returns>
-        private PathSegment<long> ExpandPath(IGraphReadOnly<ContractedEdge> graph, PathSegment<long> path)
+        private PathSegment<long> ExpandPath(Graph<ContractedEdge> graph, PathSegment<long> path)
         {
             // construct the full CH path.
             PathSegment<long> current = path;
@@ -1355,7 +1355,7 @@ namespace OsmSharp.Routing.Contracted
         /// <param name="graph"></param>
         /// <param name="path"></param>
         /// <returns></returns>
-        private PathSegment<long> ExpandEdge(IGraphReadOnly<ContractedEdge> graph, PathSegment<long> path)
+        private PathSegment<long> ExpandEdge(Graph<ContractedEdge> graph, PathSegment<long> path)
         {
             if (path.VertexId < 0 || path.From.VertexId < 0)
             { // these edges are not part of the regular network!
@@ -1402,7 +1402,7 @@ namespace OsmSharp.Routing.Contracted
         /// <param name="to"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        private bool GetEdge(IGraphReadOnly<ContractedEdge> graph, uint from, uint to, out ContractedEdge data)
+        private bool GetEdge(Graph<ContractedEdge> graph, uint from, uint to, out ContractedEdge data)
         {
             var lowestWeight = float.MaxValue;
             data = new ContractedEdge();
@@ -1439,7 +1439,7 @@ namespace OsmSharp.Routing.Contracted
         /// <param name="to"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        private bool GetEdgeShape(IGraphReadOnly<ContractedEdge> graph, uint from, uint to, out ICoordinateCollection data)
+        private bool GetEdgeShape(BasicRouterDataSource<ContractedEdge> graph, uint from, uint to, out ICoordinateCollection data)
         {
             var lowestWeight = float.MaxValue;
             data = null;
@@ -1537,7 +1537,7 @@ namespace OsmSharp.Routing.Contracted
         /// <param name="interpreter"></param>
         /// <param name="pointTags"></param>
         /// <param name="parameters"></param>
-        public SearchClosestResult<ContractedEdge> SearchClosest(IBasicRouterDataSource<ContractedEdge> graph, IRoutingInterpreter interpreter,
+        public SearchClosestResult<ContractedEdge> SearchClosest(BasicRouterDataSource<ContractedEdge> graph, IRoutingInterpreter interpreter,
             Vehicle vehicle, GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollectionBase pointTags, Dictionary<string, object> parameters)
         {
             return this.SearchClosest(graph, interpreter, vehicle, coordinate, delta, matcher, pointTags, false, null);
@@ -1555,7 +1555,7 @@ namespace OsmSharp.Routing.Contracted
         /// <param name="pointTags"></param>
         /// <param name="verticesOnly"></param>
         /// <param name="parameters"></param>
-        public SearchClosestResult<ContractedEdge> SearchClosest(IBasicRouterDataSource<ContractedEdge> graph, IRoutingInterpreter interpreter,
+        public SearchClosestResult<ContractedEdge> SearchClosest(BasicRouterDataSource<ContractedEdge> graph, IRoutingInterpreter interpreter,
             Vehicle vehicle, GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollectionBase pointTags, bool verticesOnly, Dictionary<string, object> parameters)
         {
             //// first try a very small area.
@@ -1580,7 +1580,7 @@ namespace OsmSharp.Routing.Contracted
         /// <param name="pointTags"></param>
         /// <param name="verticesOnly"></param>
         /// <returns></returns>
-        private SearchClosestResult<ContractedEdge> DoSearchClosest(IBasicRouterDataSource<ContractedEdge> graph, IRoutingInterpreter interpreter,
+        private SearchClosestResult<ContractedEdge> DoSearchClosest(BasicRouterDataSource<ContractedEdge> graph, IRoutingInterpreter interpreter,
             Vehicle vehicle, GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollectionBase pointTags, bool verticesOnly)
         {
             Meter distanceEpsilon = .1; // 10cm is the tolerance to distinguish points.

@@ -20,19 +20,19 @@ using OsmSharp.Routing;
 using System.IO;
 using OsmSharp.Osm.PBF.Streams;
 using OsmSharp.Routing.Osm.Interpreter;
-namespace OsmSharp.Test.Performance.Routing.CH
+namespace OsmSharp.Test.Performance.Routing.Contracted
 {
     /// <summary>
     /// Contains test for the CH preprocessing step.
     /// </summary>
-    public static class CHPreProcessorTest
+    public static class ContractedPreProcessorTest
     {
         /// <summary>
         /// Tests the CH pre-processor.
         /// </summary>
         public static void Test()
         {
-            CHPreProcessorTest.TestPreprocessing("CHPreProcessor", "belgium-latest.osm.pbf");
+            ContractedPreProcessorTest.TestPreprocessing("CHPreProcessor", "belgium-latest.osm.pbf");
         }
 
         /// <summary>

@@ -92,7 +92,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             // serialize/deserialize.
             TagsCollectionBase metaData = new TagsCollection();
             metaData.Add("some_key", "some_value");
-            IBasicRouterDataSource<Edge> deserializedVersion;
+            BasicRouterDataSource<Edge> deserializedVersion;
             byte[] byteArray;
             using (var stream = new MemoryStream())
             {
@@ -361,7 +361,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
                 }
             }
 
-            IBasicRouterDataSource<Edge> deserializedVersion =
+            BasicRouterDataSource<Edge> deserializedVersion =
                 routingSerializer.Deserialize(new MemoryStream(byteArray), out metaData);
             Assert.AreEqual(original.TagsIndex.Get(0), deserializedVersion.TagsIndex.Get(0));
 

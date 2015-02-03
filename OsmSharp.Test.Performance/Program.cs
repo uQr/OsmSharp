@@ -79,13 +79,13 @@ namespace OsmSharp.Test.Performance
                 //Routing.EdgeGraphFlatFileSerializerTests.Test();
                 //Routing.LiveRoutingTest.Test();
                 //Routing.CH.CHPreProcessorTest.Test();
-                //Routing.CH.CHEdgeGraphFlatFileSerializerTests.Test();
+                //Routing.Contracted.ContractedEdgeGraphFlatFileSerializerTests.Test();
                 //Routing.CH.CHSerializedRoutingTest.Test();
-                //Routing.CH.CHRoutingTest.Test();
+                Routing.Contracted.ContractedRoutingTest.Test();
 
-                //// test serializer/deseriazation routing performance.
-                var serializedMobileRoutingFile = Routing.CH.CHEdgeGraphFileStreamTargetTests.Test();
-                //Routing.CH.CHSerializedRoutingTest.Test(serializedMobileRoutingFile);
+                ////// test serializer/deseriazation routing performance.
+                //var serializedMobileRoutingFile = Routing.Contracted.ContractedEdgeGraphFileStreamTargetTests.Test();
+                //Routing.Contracted.ContractedSerializedRoutingTest.Test(serializedMobileRoutingFile);
 
                 // tests the mapcss interpretation.
                 //var serializedScene = UI.Styles.MapCSS.MapCSSInterpreterTests.Test();

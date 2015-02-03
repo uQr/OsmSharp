@@ -40,7 +40,7 @@ namespace OsmSharp.Test.Unittests.Routing
         /// <param name="interpreter"></param>
         /// <param name="basicRouter"></param>
         /// <returns></returns>
-        public abstract Router BuildRouter(IBasicRouterDataSource<EdgeData> data,
+        public abstract Router BuildRouter(BasicRouterDataSource<EdgeData> data,
             IRoutingInterpreter interpreter, IBasicRouter<EdgeData> basicRouter);
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace OsmSharp.Test.Unittests.Routing
         /// <param name="data"></param>
         /// <param name="vehicle"></param>
         /// <returns></returns>
-        public abstract IBasicRouter<EdgeData> BuildBasicRouter(IBasicRouterDataSource<EdgeData> data, 
+        public abstract IBasicRouter<EdgeData> BuildBasicRouter(BasicRouterDataSource<EdgeData> data, 
             Vehicle vehicle);
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace OsmSharp.Test.Unittests.Routing
         /// <param name="vehicle"></param>
         /// <param name="accessTags"></param>
         /// <returns></returns>
-        public abstract IBasicRouterDataSource<EdgeData> BuildData(IRoutingInterpreter interpreter, 
+        public abstract BasicRouterDataSource<EdgeData> BuildData(IRoutingInterpreter interpreter, 
             Vehicle vehicle, List<KeyValuePair<string, string>> accessTags);
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace OsmSharp.Test.Unittests.Routing
         protected void DoTestShortestWithAccess(Vehicle vehicle, List<KeyValuePair<string, string>> accessTags)
         {
             var interpreter = new OsmRoutingInterpreter();
-            IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter, vehicle, accessTags);
+            BasicRouterDataSource<EdgeData> data = this.BuildData(interpreter, vehicle, accessTags);
             IBasicRouter<EdgeData> basicRouter = this.BuildBasicRouter(data, vehicle);
             Router router = this.BuildRouter(
                 data, interpreter, basicRouter);
@@ -111,7 +111,7 @@ namespace OsmSharp.Test.Unittests.Routing
         protected void DoTestShortestWithoutAccess(Vehicle vehicle, List<KeyValuePair<string, string>> access_tags)
         {
             var interpreter = new OsmRoutingInterpreter();
-            IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter, vehicle, access_tags);
+            BasicRouterDataSource<EdgeData> data = this.BuildData(interpreter, vehicle, access_tags);
             IBasicRouter<EdgeData> basicRouter = this.BuildBasicRouter(data, vehicle);
             Router router = this.BuildRouter(
                 data, interpreter, basicRouter);

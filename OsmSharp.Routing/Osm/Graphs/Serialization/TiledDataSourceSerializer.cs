@@ -285,7 +285,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <param name="lazy"></param>
         /// <param name="vehicles"></param>
         /// <returns></returns>
-        protected override IBasicRouterDataSource<Edge> DoDeserialize(
+        protected override BasicRouterDataSource<Edge> DoDeserialize(
             LimitedStream stream, bool lazy, IEnumerable<string> vehicles)
         {
             // serialize all tile meta data.

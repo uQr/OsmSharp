@@ -69,11 +69,9 @@ namespace OsmSharp.Routing.Osm.Streams
             base.Flush();            
             
             // compress the graph.
-            INodeWitnessCalculator witnessCalculator = new DykstraWitnessCalculator();
-            var edgeDifference = new EdgeDifferenceContractedSearchSpace(
-                _graph, witnessCalculator);
-            var preProcessor = new ContractedPreProcessor(
-                _graph, edgeDifference, witnessCalculator);
+            var witnessCalculator = new DykstraWitnessCalculator();
+            var edgeDifference = new EdgeDifferenceContractedSearchSpace(_graph, witnessCalculator);
+            var preProcessor = new ContractedPreProcessor(_graph, edgeDifference, witnessCalculator);
             preProcessor.Start();
 
             // create tags.

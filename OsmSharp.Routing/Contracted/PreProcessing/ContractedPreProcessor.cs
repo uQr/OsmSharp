@@ -34,7 +34,7 @@ namespace OsmSharp.Routing.Contracted.PreProcessing
         /// <summary>
         /// Holds the data target.
         /// </summary>
-        private IGraph<ContractedEdge> _target;
+        private Graph<ContractedEdge> _target;
 
         /// <summary>
         /// Creates a new pre-processor.
@@ -42,7 +42,7 @@ namespace OsmSharp.Routing.Contracted.PreProcessing
         /// <param name="target"></param>
         /// <param name="calculator"></param>
         /// <param name="witnessCalculator"></param>
-        public ContractedPreProcessor(IGraph<ContractedEdge> target,
+        public ContractedPreProcessor(Graph<ContractedEdge> target,
                 INodeWeightCalculator calculator,
                 INodeWitnessCalculator witnessCalculator)
         {

@@ -28,12 +28,12 @@ using OsmSharp.Routing.Osm.Streams;
 using OsmSharp.Routing.Osm.Streams.Graphs;
 using System.IO;
 
-namespace OsmSharp.Test.Performance.Routing.CH
+namespace OsmSharp.Test.Performance.Routing.Contracted
 {
     /// <summary>
     /// Holds tests for the CH serialization code.
     /// </summary>
-    public static class CHEdgeGraphFileStreamTargetTests
+    public static class ContractedEdgeGraphFileStreamTargetTests
     {
         /// <summary>
         /// Tests the CH serializer.
@@ -41,7 +41,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
         /// <returns>A stream to the file that was serialized.</returns>
         public static Stream Test()
         {
-            return CHEdgeGraphFileStreamTargetTests.TestSerialization("CHSerializer", "kempen-big.osm.pbf");
+            return ContractedEdgeGraphFileStreamTargetTests.TestSerialization("CHSerializer", "kempen-big.osm.pbf");
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
         /// <returns>A stream to the file that was serialized.</returns>
         public static Stream Test(RouterDataSource<ContractedEdge> data)
         {
-            return CHEdgeGraphFileStreamTargetTests.TestSerialization("CHSerializer", "kempen-big.osm.pbf", data);
+            return ContractedEdgeGraphFileStreamTargetTests.TestSerialization("CHSerializer", "kempen-big.osm.pbf", data);
         }
 
         /// <summary>
@@ -69,9 +69,16 @@ namespace OsmSharp.Test.Performance.Routing.CH
                 source, new OsmRoutingInterpreter(), Vehicle.Car);
             stream.Dispose();
 
-            return CHEdgeGraphFileStreamTargetTests.TestSerialization(name, pbfFile, data);
+            return ContractedEdgeGraphFileStreamTargetTests.TestSerialization(name, pbfFile, data);
         }
 
+        /// <summary>
+        /// Tests serialized routing.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="pbfFile"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public static Stream TestSerialization(string name, string pbfFile, RouterDataSource<ContractedEdge> data)
         {
             var testOutputFile = new FileInfo(@"test.routing");

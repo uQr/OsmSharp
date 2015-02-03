@@ -18,6 +18,7 @@
 
 using NUnit.Framework;
 using OsmSharp.Routing.Graph;
+using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Osm.Graphs;
 using System;
 
@@ -33,7 +34,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Returns a graph.
         /// </summary>
         /// <returns></returns>
-        protected IGraph<Edge> CreateGraph()
+        protected Graph<Edge> CreateGraph()
         {
             return new MemoryGraph<Edge>();
         }

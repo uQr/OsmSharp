@@ -158,8 +158,7 @@ namespace OsmSharp.Routing.Contracted.Serialization.Sorted
         /// <param name="stream"></param>
         /// <param name="graph"></param>
         /// <returns></returns>
-        protected override void DoSerialize(LimitedStream stream,
-            RouterDataSource<ContractedEdge> graph)
+        protected override void DoSerialize(LimitedStream stream, RouterDataSource<ContractedEdge> graph)
         {
             // sort the graph.
             var sortedGraph = graph;
@@ -439,7 +438,7 @@ namespace OsmSharp.Routing.Contracted.Serialization.Sorted
         /// <param name="lazy"></param>
         /// <param name="vehicles"></param>
         /// <returns></returns>
-        protected override IBasicRouterDataSource<ContractedEdge> DoDeserialize(
+        protected override BasicRouterDataSource<ContractedEdge> DoDeserialize(
             LimitedStream stream, bool lazy, IEnumerable<string> vehicles)
         {
             var intBytes = new byte[4];

@@ -89,7 +89,7 @@ namespace OsmSharp.Routing
         /// <param name="data">The data to route on.</param>
         /// <param name="interpreter">The routing interpreter.</param>
         /// <returns></returns>
-        public static Router CreateLiveFrom(IBasicRouterDataSource<Edge> data, IRoutingInterpreter interpreter)
+        public static Router CreateLiveFrom(BasicRouterDataSource<Edge> data, IRoutingInterpreter interpreter)
         {
             // creates the live edge router.
             var liveEdgeRouter = new TypedRouter(
@@ -105,7 +105,7 @@ namespace OsmSharp.Routing
         /// <param name="basicRouter">A custom routing implementation.</param>
         /// <param name="interpreter">The routing interpreter.</param>
         /// <returns></returns>
-        public static Router CreateLiveFrom(IBasicRouterDataSource<Edge> data, IBasicRouter<Edge> basicRouter, 
+        public static Router CreateLiveFrom(BasicRouterDataSource<Edge> data, IBasicRouter<Edge> basicRouter, 
             IRoutingInterpreter interpreter)
         {
             // creates the live edge router.
@@ -140,7 +140,7 @@ namespace OsmSharp.Routing
         /// <param name="basicRouter">A custom routing implementation.</param>
         /// <param name="interpreter">The routing interpreter.</param>
         /// <returns></returns>
-        public static Router CreateCHFrom(IBasicRouterDataSource<ContractedEdge> data, IBasicRouter<ContractedEdge> basicRouter, 
+        public static Router CreateCHFrom(BasicRouterDataSource<ContractedEdge> data, IBasicRouter<ContractedEdge> basicRouter, 
             IRoutingInterpreter interpreter)
         {
             // creates the live edge router.

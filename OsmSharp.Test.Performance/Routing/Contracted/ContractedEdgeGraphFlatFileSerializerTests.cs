@@ -27,19 +27,19 @@ using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
 using System.IO;
 
-namespace OsmSharp.Test.Performance.Routing.CH
+namespace OsmSharp.Test.Performance.Routing.Contracted
 {
     /// <summary>
     /// Holds tests for the CH serialization code.
     /// </summary>
-    public static class CHEdgeGraphFlatFileSerializerTests
+    public static class ContractedEdgeGraphFlatFileSerializerTests
     {
         /// <summary>
         /// Tests the CH serializer.
         /// </summary>
         public static RouterDataSource<ContractedEdge> Test()
         {
-            return CHEdgeGraphFlatFileSerializerTests.TestSerialization("CHSerializerFlatFile", "germany-latest.osm.pbf");
+            return ContractedEdgeGraphFlatFileSerializerTests.TestSerialization("CHSerializerFlatFile", "germany-latest.osm.pbf");
         }
 
         /// <summary>

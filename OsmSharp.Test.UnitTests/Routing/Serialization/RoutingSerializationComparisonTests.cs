@@ -83,7 +83,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
                 }
             }
 
-            IBasicRouterDataSource<ContractedEdge> deserializedVersion =
+            BasicRouterDataSource<ContractedEdge> deserializedVersion =
                 routingSerializer.Deserialize(new MemoryStream(byteArray), out metaData);
             Assert.AreEqual(original.TagsIndex.Get(0), deserializedVersion.TagsIndex.Get(0));
 

@@ -376,8 +376,7 @@ namespace OsmSharp.UI.Map
         /// <param name="dataSource"></param>
         /// <param name="styleInterpreter"></param>
         /// <returns></returns>
-        public LayerGraph AddLayerGraph(IBasicRouterDataSource<Edge> dataSource,
-            StyleInterpreter styleInterpreter)
+        public LayerGraph AddLayerGraph(BasicRouterDataSource<Edge> dataSource, StyleInterpreter styleInterpreter)
         {
             LayerGraph layerGraph = new LayerGraph(dataSource, styleInterpreter);
             this.AddLayer(layerGraph);

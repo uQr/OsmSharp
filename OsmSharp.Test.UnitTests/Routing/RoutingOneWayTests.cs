@@ -39,7 +39,7 @@ namespace OsmSharp.Test.Unittests.Routing
         /// <param name="interpreter"></param>
         /// <param name="basicRouter"></param>
         /// <returns></returns>
-        public abstract Router BuildRouter(IBasicRouterDataSource<EdgeData> data,
+        public abstract Router BuildRouter(BasicRouterDataSource<EdgeData> data,
             IRoutingInterpreter interpreter, IBasicRouter<EdgeData> basicRouter);
 
         /// <summary>
@@ -47,13 +47,13 @@ namespace OsmSharp.Test.Unittests.Routing
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public abstract IBasicRouter<EdgeData> BuildBasicRouter(IBasicRouterDataSource<EdgeData> data);
+        public abstract IBasicRouter<EdgeData> BuildBasicRouter(BasicRouterDataSource<EdgeData> data);
 
         /// <summary>
         /// Builds the data.
         /// </summary>
         /// <returns></returns>
-        public abstract IBasicRouterDataSource<EdgeData> BuildData(IRoutingInterpreter interpreter);
+        public abstract BasicRouterDataSource<EdgeData> BuildData(IRoutingInterpreter interpreter);
 
         /// <summary>
         /// Tests that a router actually finds the shortest route.
@@ -61,7 +61,7 @@ namespace OsmSharp.Test.Unittests.Routing
         protected void DoTestShortestWithDirection()
         {
             var interpreter = new OsmRoutingInterpreter();
-            IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+            BasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
             IBasicRouter<EdgeData> basicRouter = this.BuildBasicRouter(data);
             Router router = this.BuildRouter(
                 data, interpreter, basicRouter);
@@ -100,7 +100,7 @@ namespace OsmSharp.Test.Unittests.Routing
         protected void DoTestShortestAgainstDirection()
         {
             var interpreter = new OsmRoutingInterpreter();
-            IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+            BasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
             IBasicRouter<EdgeData> basicRouter = this.BuildBasicRouter(data);
             Router router = this.BuildRouter(
                 data, interpreter, basicRouter);
@@ -149,7 +149,7 @@ namespace OsmSharp.Test.Unittests.Routing
         protected void DoTestManyToMany1()
         {
             var interpreter = new OsmRoutingInterpreter();
-            IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+            BasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
             IBasicRouter<EdgeData> basicRouter = this.BuildBasicRouter(data);
             Router router = this.BuildRouter(
                 data, interpreter, basicRouter);
@@ -178,7 +178,7 @@ namespace OsmSharp.Test.Unittests.Routing
         protected void DoTestConnectivity1()
         {
             var interpreter = new OsmRoutingInterpreter();
-            IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+            BasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
             IBasicRouter<EdgeData> basicRouter = this.BuildBasicRouter(data);
             Router router = this.BuildRouter(
                 data, interpreter, basicRouter);
@@ -206,7 +206,7 @@ namespace OsmSharp.Test.Unittests.Routing
         protected void DoTestResolveAllNodes()
         {
             var interpreter = new OsmRoutingInterpreter();
-            IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+            BasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
             IBasicRouter<EdgeData> basicRouter = this.BuildBasicRouter(data);
             Router router = this.BuildRouter(
                 data, interpreter, basicRouter);
@@ -227,7 +227,7 @@ namespace OsmSharp.Test.Unittests.Routing
         protected void DoTestResolveBetweenNodes()
         {
             var interpreter = new OsmRoutingInterpreter();
-            IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+            BasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
             IBasicRouter<EdgeData> basicRouter = this.BuildBasicRouter(data);
 
             const float delta = 0.001f;

@@ -27,19 +27,19 @@ using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
 using System.IO;
 
-namespace OsmSharp.Test.Performance.Routing.CH
+namespace OsmSharp.Test.Performance.Routing.Contracted
 {
     /// <summary>
     /// Contains test for the CH routing.
     /// </summary>
-    public static class CHRoutingTest
+    public static class ContractedRoutingTest
     {
         /// <summary>
         /// Tests the live routing.
         /// </summary>
         public static void Test()
         {
-            CHRoutingTest.TestRouting("CHRouting", "kempen-big.osm.pbf", 2500);
+            ContractedRoutingTest.TestRouting("CHRouting", "kempen-big.osm.pbf", 2500);
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
         /// </summary>
         public static void Test(Stream stream, int testCount)
         {
-            CHRoutingTest.TestRouting("CHRouting", stream, testCount);
+            ContractedRoutingTest.TestRouting("CHRouting", stream, testCount);
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
             var testFile = new FileInfo(string.Format(@".\TestFiles\{0}", osmPbfFile));
             var stream = testFile.OpenRead();
 
-            CHRoutingTest.TestRouting(name, stream, testCount);
+            ContractedRoutingTest.TestRouting(name, stream, testCount);
 
             stream.Dispose();
         }

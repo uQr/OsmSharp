@@ -46,7 +46,7 @@ namespace OsmSharp.Routing.Routers
         /// <summary>
         /// Holds the graph object containing the routable network.
         /// </summary>
-        private readonly IBasicRouterDataSource<TEdgeData> _dataGraph;
+        private readonly BasicRouterDataSource<TEdgeData> _dataGraph;
 
         /// <summary>
         /// Holds the basic router that works on the dynamic graph.
@@ -64,7 +64,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="graph"></param>
         /// <param name="interpreter"></param>
         /// <param name="router"></param>
-        public TypedRouter(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter,
+        public TypedRouter(BasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter,
             IBasicRouter<TEdgeData> router)
         {
             _dataGraph = graph;
@@ -86,7 +86,7 @@ namespace OsmSharp.Routing.Routers
         /// <summary>
         /// Returns the data.
         /// </summary>
-        protected IBasicRouterDataSource<TEdgeData> Data
+        protected BasicRouterDataSource<TEdgeData> Data
         {
             get { return _dataGraph; }
         }
@@ -987,7 +987,7 @@ namespace OsmSharp.Routing.Routers
 
             if (vertex1 > 0 && vertex2 > 0)
             { // none of the vertixes was a resolved vertex.
-                ICoordinateCollection shape;
+                ICoordinateCollection shape = null;
                 if (!this.GetEdgeShape(_dataGraph, (uint)vertex1, (uint)vertex2, out shape))
                 { // try the reverse.
                     if (!this.GetEdgeShape(_dataGraph, (uint)vertex2, (uint)vertex1, out shape))
@@ -1070,7 +1070,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="to"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        protected virtual bool GetEdge(IGraphReadOnly<TEdgeData> graph, uint from, uint to, out TEdgeData data)
+        protected virtual bool GetEdge(BasicRouterDataSource<TEdgeData> graph, uint from, uint to, out TEdgeData data)
         {
             if (!graph.CanHaveDuplicates)
             {
@@ -1090,7 +1090,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="to"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        protected virtual bool GetEdgeShape(IGraphReadOnly<TEdgeData> graph, uint from, uint to, out ICoordinateCollection data)
+        protected virtual bool GetEdgeShape(BasicRouterDataSource<TEdgeData> graph, uint from, uint to, out ICoordinateCollection data)
         {
             if (!graph.CanHaveDuplicates)
             {

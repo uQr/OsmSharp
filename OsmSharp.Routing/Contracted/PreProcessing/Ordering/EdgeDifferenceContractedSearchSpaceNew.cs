@@ -38,7 +38,7 @@ namespace OsmSharp.Routing.Contracted.PreProcessing.Ordering
         /// <summary>
         /// Holds the data.
         /// </summary>
-        private IGraph<ContractedEdge> _data;
+        private Graph<ContractedEdge> _data;
 
         /// <summary>
         /// Holds the contracted count.
@@ -55,7 +55,7 @@ namespace OsmSharp.Routing.Contracted.PreProcessing.Ordering
         /// </summary>
         /// <param name="data"></param>
         /// <param name="witnessCalculator"></param>
-        public EdgeDifferenceContractedSearchSpace(IGraph<ContractedEdge> data, INodeWitnessCalculator witnessCalculator)
+        public EdgeDifferenceContractedSearchSpace(Graph<ContractedEdge> data, INodeWitnessCalculator witnessCalculator)
         {
             _data = data;
             _witnessCalculator = witnessCalculator;

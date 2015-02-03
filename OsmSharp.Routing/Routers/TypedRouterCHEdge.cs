@@ -37,7 +37,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="graph"></param>
         /// <param name="interpreter"></param>
         /// <param name="router"></param>
-        public TypedRouterCHEdge(IBasicRouterDataSource<ContractedEdge> graph, IRoutingInterpreter interpreter, IBasicRouter<ContractedEdge> router)
+        public TypedRouterCHEdge(BasicRouterDataSource<ContractedEdge> graph, IRoutingInterpreter interpreter, IBasicRouter<ContractedEdge> router)
             : base(graph, interpreter, router)
         {
             DefaultSearchDelta = 0.1f;
@@ -74,7 +74,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="to"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        protected override bool GetEdge(IGraphReadOnly<ContractedEdge> graph, uint from, uint to, out ContractedEdge data)
+        protected override bool GetEdge(BasicRouterDataSource<ContractedEdge> graph, uint from, uint to, out ContractedEdge data)
         {
             var lowestWeight = float.MaxValue;
             data = new ContractedEdge();
@@ -111,7 +111,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="to"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        protected override bool GetEdgeShape(IGraphReadOnly<ContractedEdge> graph, uint from, uint to, out Collections.Coordinates.Collections.ICoordinateCollection data)
+        protected override bool GetEdgeShape(BasicRouterDataSource<ContractedEdge> graph, uint from, uint to, out Collections.Coordinates.Collections.ICoordinateCollection data)
         {
             var lowestWeight = float.MaxValue;
             data = null;

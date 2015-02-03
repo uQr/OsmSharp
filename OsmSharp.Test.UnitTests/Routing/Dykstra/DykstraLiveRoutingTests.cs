@@ -44,7 +44,7 @@ namespace OsmSharp.Test.Unittests.Routing.Dykstra
         /// Builds a router.
         /// </summary>
         /// <returns></returns>
-        public override Router BuildRouter(IBasicRouterDataSource<Edge> data, IRoutingInterpreter interpreter,
+        public override Router BuildRouter(BasicRouterDataSource<Edge> data, IRoutingInterpreter interpreter,
             IBasicRouter<Edge> basicRouter)
         {
             // initialize the router.
@@ -56,7 +56,7 @@ namespace OsmSharp.Test.Unittests.Routing.Dykstra
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public override IBasicRouter<Edge> BuildBasicRouter(IBasicRouterDataSource<Edge> data)
+        public override IBasicRouter<Edge> BuildBasicRouter(BasicRouterDataSource<Edge> data)
         {
             return new DykstraRoutingLive();
         }
@@ -67,12 +67,12 @@ namespace OsmSharp.Test.Unittests.Routing.Dykstra
         /// <param name="interpreter"></param>
         /// <param name="embeddedString"></param>
         /// <returns></returns>
-        public override IBasicRouterDataSource<Edge> BuildData(IOsmRoutingInterpreter interpreter,
+        public override BasicRouterDataSource<Edge> BuildData(IOsmRoutingInterpreter interpreter,
             string embeddedString)
         {
             string key = string.Format("Dykstra.Routing.IBasicRouterDataSource<SimpleWeighedEdge>.OSM.{0}",
                 embeddedString);
-            var data = StaticDictionary.Get<IBasicRouterDataSource<Edge>>(
+            var data = StaticDictionary.Get<BasicRouterDataSource<Edge>>(
                 key);
             if (data == null)
             {
@@ -89,7 +89,7 @@ namespace OsmSharp.Test.Unittests.Routing.Dykstra
                 targetData.Pull();
 
                 data = memoryData;
-                StaticDictionary.Add<IBasicRouterDataSource<Edge>>(key,
+                StaticDictionary.Add<BasicRouterDataSource<Edge>>(key,
                     data);
             }
             return data;

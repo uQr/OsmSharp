@@ -82,10 +82,8 @@
     <Compile Include="Contracted\Serialization\Sorted\ContractedDataSerializer.cs" />
     <Compile Include="Graph\RouterDataSource.cs" />
     <Compile Include="Graph\IEdgeEnumerator.cs" />
-    <Compile Include="Graph\IGraph.cs" />
+    <Compile Include="Graph\Graph.cs" />
     <Compile Include="Graph\IGraphEdgeData.cs" />
-    <Compile Include="Graph\IGraphReadOnly.cs" />
-    <Compile Include="Graph\IGraphWriteOnly.cs" />
     <Compile Include="Graph\INeighbourEnumerator.cs" />
     <Compile Include="Graph\MemoryDirectedGraph.cs" />
     <Compile Include="Graph\MemoryGraph.cs" />
@@ -96,7 +94,7 @@
     <Compile Include="Graph\Router\Dykstra\DykstraRoutingLive.cs" />
     <Compile Include="Graph\Router\Dykstra\DykstraVisitList.cs" />
     <Compile Include="Graph\Router\IBasicRouter.cs" />
-    <Compile Include="Graph\Router\IBasicRouterDataSource.cs" />
+    <Compile Include="Graph\Router\BasicRouterDataSource.cs" />
     <Compile Include="Graph\Router\IRouterDataSource.cs" />
     <Compile Include="Graph\Router\PathSegment.cs" />
     <Compile Include="Graph\Router\PathSegmentVisitList.cs" />
