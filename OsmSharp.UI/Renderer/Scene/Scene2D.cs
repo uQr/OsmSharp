@@ -108,7 +108,7 @@ namespace OsmSharp.UI.Renderer.Scene
         /// Creates a new scene that keeps objects per zoom factor (and simplifies them accordingly).
         /// </summary>
         /// <param name="projection"></param>
-        /// <param name="zooms"></param>
+        /// <param name="zoomLevels"></param>
         public Scene2D(IProjection projection, List<float> zoomLevels)
             :this(projection, zoomLevels, false)
         {
@@ -632,6 +632,7 @@ namespace OsmSharp.UI.Renderer.Scene
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="compress"></param>
+        /// <param name="metaData"></param>
         public void Serialize(Stream stream, bool compress, TagsCollectionBase metaData)
         {
             SceneSerializer.Serialize(stream, metaData, this, compress);
@@ -642,6 +643,7 @@ namespace OsmSharp.UI.Renderer.Scene
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="compress"></param>
+        /// <param name="metaData"></param>
         /// <returns></returns>
         public static IPrimitives2DSource Deserialize(Stream stream, bool compress, out TagsCollectionBase metaData)
 		{
@@ -679,10 +681,21 @@ namespace OsmSharp.UI.Renderer.Scene
                 this.Y = y;
             }
 
+            /// <summary>
+            /// Gets the X-coordinate.
+            /// </summary>
             public double X { get; set; }
 
+            /// <summary>
+            /// Gets the Y-coordinate.
+            /// </summary>
             public double Y { get; set; }
 
+            /// <summary>
+            /// Returns true if the given object equals this object.
+            /// </summary>
+            /// <param name="obj"></param>
+            /// <returns></returns>
             public override bool Equals(object obj)
             {
                 ScenePoint other = obj as ScenePoint;
@@ -694,6 +707,10 @@ namespace OsmSharp.UI.Renderer.Scene
                 return false;
             }
 
+            /// <summary>
+            /// Returns the hashcode.
+            /// </summary>
+            /// <returns></returns>
             public override int GetHashCode()
             {
                 return this.X.GetHashCode() ^
@@ -706,16 +723,32 @@ namespace OsmSharp.UI.Renderer.Scene
         /// </summary>
         public class ScenePoints
         {
+            /// <summary>
+            /// Creates a new scene points.
+            /// </summary>
+            /// <param name="x"></param>
+            /// <param name="y"></param>
             public ScenePoints(double[] x, double[] y)
             {
                 this.X = x;
                 this.Y = y;
             }
 
+            /// <summary>
+            /// Gets the x-coordinates.
+            /// </summary>
             public double[] X { get; set; }
 
+            /// <summary>
+            /// Gets the y-coordinates.
+            /// </summary>
             public double[] Y { get; set; }
 
+            /// <summary>
+            /// Return true if this object is the same as the given object. 
+            /// </summary>
+            /// <param name="obj"></param>
+            /// <returns></returns>
             public override bool Equals(object obj)
             {
                 ScenePoints other = obj as ScenePoints;
@@ -734,6 +767,10 @@ namespace OsmSharp.UI.Renderer.Scene
                 return false;
             }
 
+            /// <summary>
+            /// Returns the hashcode.
+            /// </summary>
+            /// <returns></returns>
             public override int GetHashCode()
             {
                 int hash = 0;
@@ -843,6 +880,7 @@ namespace OsmSharp.UI.Renderer.Scene
         /// </summary>
         /// <param name="id"></param>
         /// <param name="sceneObject"></param>
+        /// <param name="style"></param>
         /// <returns></returns>
         private Primitive2D ConvertToPrimitive(uint id, ScenePointObject sceneObject, StylePoint style)
         {
@@ -930,6 +968,7 @@ namespace OsmSharp.UI.Renderer.Scene
         /// </summary>
         /// <param name="id"></param>
         /// <param name="sceneObject"></param>
+        /// <param name="style"></param>
         /// <returns></returns>
         private Primitive2D ConvertToPrimitive(uint id, SceneIconObject sceneObject, byte[] style)
         {
@@ -1029,6 +1068,7 @@ namespace OsmSharp.UI.Renderer.Scene
         /// </summary>
         /// <param name="id"></param>
         /// <param name="sceneObject"></param>
+        /// <param name="style"></param>
         /// <returns></returns>
         private Primitive2D ConvertToPrimitive(uint id, SceneTextObject sceneObject, StyleText style)
         {
@@ -1175,7 +1215,6 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <summary>
         /// Returns the line style for the given id.
         /// </summary>
-        /// <param name="styleId"></param>
         /// <returns></returns>
         public StyleLine[] GetStyleLines()
         {
@@ -1197,6 +1236,7 @@ namespace OsmSharp.UI.Renderer.Scene
         /// </summary>
         /// <param name="id"></param>
         /// <param name="sceneObject"></param>
+        /// <param name="style"></param>
         /// <returns></returns>
         private Primitive2D ConvertToPrimitive(uint id, SceneLineObject sceneObject, StyleLine style)
         {
@@ -1293,7 +1333,6 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <summary>
         /// Returns the line text style for the given id.
         /// </summary>
-        /// <param name="styleId"></param>
         /// <returns></returns>
         public StyleText[] GetStyleLineTexts()
         {
@@ -1315,6 +1354,7 @@ namespace OsmSharp.UI.Renderer.Scene
         /// </summary>
         /// <param name="id"></param>
         /// <param name="sceneObject"></param>
+        /// <param name="style"></param>
         /// <returns></returns>
         private Primitive2D ConvertToPrimitive(uint id, SceneLineTextObject sceneObject, StyleText style)
         {
@@ -1406,7 +1446,6 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <summary>
         /// Returns the polygon style of the given id.
         /// </summary>
-        /// <param name="styleId"></param>
         /// <returns></returns>
         public StylePolygon[] GetStylePolygons()
         {
@@ -1428,6 +1467,7 @@ namespace OsmSharp.UI.Renderer.Scene
         /// </summary>
         /// <param name="id"></param>
         /// <param name="sceneObject"></param>
+        /// <param name="style"></param>
         /// <returns></returns>
         private Primitive2D ConvertToPrimitive(uint id, ScenePolygonObject sceneObject, StylePolygon style)
         {

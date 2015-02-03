@@ -59,6 +59,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
         /// <param name="scene"></param>
         /// <param name="compressed"></param>
         /// <param name="sceneAt"></param>
+        /// <param name="scaleFactor"></param>
         public SceneObjectRTreeSerializer(Scene2D scene, bool compressed, int sceneAt, int scaleFactor)
         {
             _scaleFactor = scaleFactor;

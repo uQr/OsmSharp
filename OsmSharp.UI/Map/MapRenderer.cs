@@ -53,7 +53,7 @@ namespace OsmSharp.UI.Map
         /// <param name="target">The target to render on.</param>
         /// <param name="projection">The projection being used to render.</param>
         /// <param name="layers">The layers to rendering in the given order.</param>
-        /// <param name="viewRender">The view to determine what to render and to show.</param>
+        /// <param name="view">The view to determine what to render and to show.</param>
         /// <param name="zoomFactor">The zoom factor relative to the projection.</param>
 		public bool Render(TTarget target, IProjection projection, List<Layer> layers, View2D view, float zoomFactor)
         {

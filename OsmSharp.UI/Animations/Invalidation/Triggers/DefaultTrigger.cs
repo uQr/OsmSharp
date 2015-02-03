@@ -1,5 +1,5 @@
 // OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -75,11 +75,6 @@ namespace OsmSharp.UI.Animations.Invalidation.Triggers
         /// Holds the latest successfully rendered zoom level.
         /// </summary>
         private double _latestZoom;
-
-		/// <summary>
-		/// Holds the latests timestamps after rendering finished.
-		/// </summary>
-		private int _latestTimestamp;
 
         /// <summary>
         /// Holds the latest successfully rendered view.

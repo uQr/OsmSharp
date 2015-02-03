@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,16 +16,15 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Math.Geo.Projections;
+using OsmSharp.Math.Primitives;
+using OsmSharp.Math.Structures;
+using OsmSharp.Math.Structures.QTree;
+using OsmSharp.UI.Renderer.Scene.Primitives;
+using OsmSharp.UI.Renderer.Scene.Styles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using OsmSharp.Math.Geo.Projections;
-using OsmSharp.Math.Primitives;
-using OsmSharp.UI.Renderer.Scene.Primitives;
-using OsmSharp.UI.Renderer.Scene.Styles;
-using OsmSharp.Collections.SpatialIndexes;
-using OsmSharp.Math.Structures.QTree;
-using OsmSharp.Math.Structures;
 
 namespace OsmSharp.UI.Renderer.Scene.Simplification
 {
@@ -35,16 +34,11 @@ namespace OsmSharp.UI.Renderer.Scene.Simplification
     public class Scene2DObjectMerger
     {
         /// <summary>
-        /// Holds the epsilon.
-        /// </summary>
-        private float epsilon;
-
-        /// <summary>
         /// Creates a new scene object merger.
         /// </summary>
         public Scene2DObjectMerger()
         {
-            epsilon = 0.00001f;
+
         }
 
         /// <summary>
@@ -369,20 +363,43 @@ namespace OsmSharp.UI.Renderer.Scene.Simplification
             }
         }
 
+        /// <summary>
+        /// An enumeration of match positions.
+        /// </summary>
         public enum MatchPosition
         {
+            /// <summary>
+            /// No match.
+            /// </summary>
             None,
+            /// <summary>
+            /// First-first match.
+            /// </summary>
             FirstFirst,
+            /// <summary>
+            /// First-last match.
+            /// </summary>
             FirstLast,
+            /// <summary>
+            /// Latst-first match.
+            /// </summary>
             LastFirst,
+            /// <summary>
+            /// Last-last match.
+            /// </summary>
             LastLast
         }
 
         /// <summary>
         /// Try and find matching lines.
         /// </summary>
+        /// <param name="linesIndex"></param>
         /// <param name="lines"></param>
-        /// <param name="points"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="style"></param>
+        /// <param name="epsilon"></param>
+        /// <param name="found"></param>
         /// <returns></returns>
         private MatchPosition FindMatch(ILocatedObjectIndex<PointF2D, Scene2D.ScenePoints> linesIndex, Dictionary<Scene2D.ScenePoints, Scene2DStylesSet> lines, 
             double[] x, double[] y, Scene2DStylesSet style, float epsilon, out Scene2D.ScenePoints found)

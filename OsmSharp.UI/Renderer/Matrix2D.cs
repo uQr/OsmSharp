@@ -7,6 +7,9 @@ using System.Text;
 
 namespace OsmSharp.UI.Renderer
 {
+    /// <summary>
+    /// Represents a 2D matrix.
+    /// </summary>
     public struct Matrix2D
     {
         /// <summary>

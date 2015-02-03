@@ -19,6 +19,9 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
     /// </summary>
     public enum QualifierFontStyleEnum
     {
+        /// <summary>
+        /// Fontstyle.
+        /// </summary>
         FontStyle
     }
 
@@ -27,7 +30,13 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
     /// </summary>
     public enum FontStyleEnum
     {
+        /// <summary>
+        /// Italic.
+        /// </summary>
         Italic,
+        /// <summary>
+        /// Normal.
+        /// </summary>
         Normal
     }
 }

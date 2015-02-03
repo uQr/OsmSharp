@@ -122,7 +122,7 @@ namespace OsmSharp.UI.Map
         /// </summary>
         /// <param name="center">The map center we want to move to.</param>
         /// <param name="boundingBox">A GeoCoordinateBox defining the bounding box.</param>
-        /// <param name="view" The current view.</param>
+        /// <param name="view">The current view.</param>
         /// <returns>Returns a center geo coordinate that is corrected so the view stays within the bounding box.</returns>
         public GeoCoordinate EnsureViewWithinBoundingBox(GeoCoordinate center, GeoCoordinateBox boundingBox, View2D view)
         {

@@ -144,7 +144,6 @@ namespace OsmSharp.UI.Renderer.Primitives
         /// <returns>true</returns>
         /// <c>false</c>
         /// <param name="view">View.</param>
-        /// <param name="zoom"></param>
         public override bool IsVisibleIn(View2D view)
         {
             return view.Contains(this.X, this.Y);

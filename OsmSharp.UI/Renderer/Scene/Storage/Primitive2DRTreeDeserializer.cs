@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -53,6 +53,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
         /// </summary>
         /// <param name="index"></param>
         /// <param name="compressed"></param>
+        /// <param name="scaleFactor"></param>
         public Primitive2DRTreeDeserializer(SceneIndex index, bool compressed, int scaleFactor)
         {
             _scaleFactor = scaleFactor;

@@ -1,4 +1,4 @@
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -15,14 +15,12 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
+using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Math.Primitives;
 using OsmSharp.UI.Renderer.Primitives;
 using OsmSharp.UI.Renderer.Scene;
-using OsmSharp.UI.Renderer.Scene.Primitives;
-using OsmSharp.UI.Renderer.Scene.Styles;
-using OsmSharp.Math.Geo.Projections;
+using System;
+using System.Collections.Generic;
 
 namespace OsmSharp.UI.Renderer
 {
@@ -32,7 +30,7 @@ namespace OsmSharp.UI.Renderer
 	public abstract class Renderer2D<TTarget>
 	{
 	    /// <summary>
-		/// Initializes a new instance of the <see cref="OsmSharp.UI.Renderer.Renderer2D"/> class.
+		/// Initializes a new instance of the Renderer2D class.
 	    /// </summary>
 	    protected Renderer2D()
 		{
@@ -409,7 +407,7 @@ namespace OsmSharp.UI.Renderer
 	    /// <param name="top"></param>
 	    /// <param name="right"></param>
 	    /// <param name="bottom"></param>
-	    /// <param name="imageData"></param>
+	    /// <param name="tag"></param>
         protected abstract void DrawImage(Target2DWrapper<TTarget> target, double left, double top, double right, double bottom, INativeImage tag);
 
 		/// <summary>
@@ -418,7 +416,6 @@ namespace OsmSharp.UI.Renderer
 		/// <returns>The image.</returns>
 		/// <param name="target">Target.</param>
 		/// <param name="bounds">Bounds.</param>
-		/// <param name="imageData">Image data.</param>
 		/// <param name="tag">Tag.</param>
         protected abstract void DrawImage(Target2DWrapper<TTarget> target, RectangleF2D bounds, INativeImage tag);
 
@@ -429,7 +426,11 @@ namespace OsmSharp.UI.Renderer
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="text"></param>
+        /// <param name="color"></param>
         /// <param name="size"></param>
+        /// <param name="haloColor"></param>
+        /// <param name="haloRadius"></param>
+        /// <param name="fontName"></param>
 		protected abstract void DrawText(Target2DWrapper<TTarget> target, double x, double y, string text, int color, double size,
 		                                 int? haloColor, int? haloRadius, string fontName);
 
@@ -441,7 +442,10 @@ namespace OsmSharp.UI.Renderer
         /// <param name="y"></param>
         /// <param name="color"></param>
 		/// <param name="size"></param>
-		/// <param name="text"></param>
+        /// <param name="text"></param>
+        /// <param name="haloColor"></param>
+        /// <param name="haloRadius"></param>
+        /// <param name="fontName"></param>
         protected abstract void DrawLineText(Target2DWrapper<TTarget> target, double[] x, double[] y, string text, int color, 
 		                                     double size, int? haloColor, int? haloRadius, string fontName);
     }

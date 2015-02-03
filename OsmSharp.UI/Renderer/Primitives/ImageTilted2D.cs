@@ -32,10 +32,12 @@ namespace OsmSharp.UI.Renderer.Primitives
         private RectangleF2D _bounds;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="OsmSharp.UI.Renderer.Scene.Scene2DPrimitives.TiltedImage2D"/> class.
+        /// Initializes a new instance of the ImageTilted2D class.
         /// </summary>
         /// <param name="bounds">Bounds.</param>
         /// <param name="nativeImage">Image data.</param>
+        /// <param name="minZoom"></param>
+        /// <param name="maxZoom"></param>
         public ImageTilted2D(RectangleF2D bounds, INativeImage nativeImage, float minZoom, float maxZoom)
         {
             _bounds = bounds;
@@ -166,6 +168,10 @@ namespace OsmSharp.UI.Renderer.Primitives
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// Disposes of all native resources associated with this object.
+        /// </summary>
+        /// <param name="disposing"></param>
         protected virtual void Dispose(bool disposing)
         {            
             if (disposing == true)

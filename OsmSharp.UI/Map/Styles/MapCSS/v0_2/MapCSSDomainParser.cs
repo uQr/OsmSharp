@@ -87,6 +87,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
         /// <summary>
         /// Parses the canvas rule.
         /// </summary>
+        /// <param name="file"></param>
         /// <param name="ruleTree"></param>
         /// <returns></returns>
         private static void ParseCanvasRule(MapCSSFile file, CommonTree ruleTree)
@@ -133,6 +134,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
         /// <summary>
         /// Parses the meta rule.
         /// </summary>
+        /// <param name="file"></param>
         /// <param name="ruleTree"></param>
         /// <returns></returns>
         private static void ParseMetaRule(MapCSSFile file, CommonTree ruleTree)

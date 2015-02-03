@@ -30,9 +30,8 @@ namespace OsmSharp.UI.Renderer.Primitives
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="color"></param>
-        /// <param name="width"></param>
-        /// <param name="lineJoin"></param>
-        /// <param name="dashes"></param>
+        /// <param name="size"></param>
+        /// <param name="text"></param>
         public LineText2D(double[] x, double[] y, int color, float size, string text)
         {
             this.X = x;
@@ -78,9 +77,10 @@ namespace OsmSharp.UI.Renderer.Primitives
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="color"></param>
-        /// <param name="width"></param>
-        /// <param name="lineJoin"></param>
-        /// <param name="dashes"></param>
+        /// <param name="size"></param>
+        /// <param name="text"></param>
+        /// <param name="haloColor"></param>
+        /// <param name="haloRadius"></param>
         /// <param name="minZoom"></param>
         /// <param name="maxZoom"></param>
         public LineText2D(double[] x, double[] y, int color, float size, string text, int? haloColor, int? haloRadius,
@@ -131,8 +131,8 @@ namespace OsmSharp.UI.Renderer.Primitives
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="color"></param>
-        /// <param name="width"></param>
-        /// <param name="lineJoin"></param>
+        /// <param name="size"></param>
+        /// <param name="text"></param>
         /// <param name="minX"></param>
         /// <param name="maxX"></param>
         /// <param name="minY"></param>
@@ -262,7 +262,6 @@ namespace OsmSharp.UI.Renderer.Primitives
         /// <returns>true</returns>
         /// <c>false</c>
         /// <param name="view">View.</param>
-        /// <param name="zoom"></param>
         public override bool IsVisibleIn(View2D view)
         {
             if (view.OverlapsWithBox(MinX, MinY, MaxX, MaxY))

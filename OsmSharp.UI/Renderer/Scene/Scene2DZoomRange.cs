@@ -25,46 +25,11 @@ namespace OsmSharp.UI.Renderer.Scene
     /// </summary>
     public class Scene2DZoomRange
     {
-        ///// <summary>
-        ///// Gets or sets the minimum zoom.
-        ///// </summary>
-        //[ProtoMember(1)]
-        //public float MinZoom { get; set; }
-
-        ///// <summary>
-        ///// Gets or sets the maximum zoom.
-        ///// </summary>
-        //[ProtoMember(2)]
-        //public float MaxZoom { get; set; }
-
-        ///// <summary>
-        ///// Returns the hashcode for this instance.
-        ///// </summary>
-        ///// <returns></returns>
-        //public override int GetHashCode()
-        //{
-        //    return this.MinZoom.GetHashCode() ^
-        //        this.MaxZoom.GetHashCode();
-        //}
-
-        ///// <summary>
-        ///// Determines whether the specified System.Object is equal to the current System.Object.
-        ///// </summary>
-        ///// <param name="obj"></param>
-        ///// <returns></returns>
-        //public override bool Equals(object obj)
-        //{
-        //    if (obj is Scene2DZoomRange)
-        //    {
-        //        return (obj as Scene2DZoomRange).MaxZoom == this.MaxZoom &&
-        //            (obj as Scene2DZoomRange).MinZoom == this.MinZoom;
-        //    }
-        //    return false;
-        //}
-
         /// <summary>
-        /// Returns true 
+        /// Returns true if the given zoom range contains the given zoom. 
         /// </summary>
+        /// <param name="minZoom"></param>
+        /// <param name="maxZoom"></param>
         /// <param name="zoom"></param>
         /// <returns></returns>
         public static bool Contains(float minZoom, float maxZoom, float zoom)

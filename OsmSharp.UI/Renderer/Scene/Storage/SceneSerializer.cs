@@ -75,6 +75,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
         /// Serializes the given scene.
         /// </summary>
         /// <param name="stream"></param>
+        /// <param name="metaTags"></param>
         /// <param name="scene"></param>
         /// <param name="compress"></param>
         public static void Serialize(Stream stream, TagsCollectionBase metaTags, Scene2D scene, bool compress)

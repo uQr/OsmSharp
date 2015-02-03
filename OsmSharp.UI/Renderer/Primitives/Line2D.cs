@@ -133,6 +133,7 @@ namespace OsmSharp.UI.Renderer.Primitives
         /// <param name="color"></param>
         /// <param name="width"></param>
         /// <param name="lineJoin"></param>
+        /// <param name="dashes"></param>
         /// <param name="minX"></param>
         /// <param name="maxX"></param>
         /// <param name="minY"></param>
@@ -299,9 +300,21 @@ namespace OsmSharp.UI.Renderer.Primitives
     /// </summary>
     public enum LineJoin
     {
+        /// <summary>
+        /// Round.
+        /// </summary>
         Round,
+        /// <summary>
+        /// Miter.
+        /// </summary>
         Miter,
+        /// <summary>
+        /// Bevel.
+        /// </summary>
         Bevel,
+        /// <summary>
+        /// None.
+        /// </summary>
         None
     }
 }

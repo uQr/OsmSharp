@@ -213,7 +213,6 @@ namespace OsmSharp.UI.Renderer
         /// <param name="centerY"></param>
         /// <param name="directionX"></param>
         /// <param name="directionY"></param>
-        /// <param name="angleY"></param>
         /// <returns></returns>
         public static View2D CreateFromCenterAndSize(double width, double height, double centerX, double centerY,
             bool directionX, bool directionY)
@@ -293,7 +292,6 @@ namespace OsmSharp.UI.Renderer
 	    /// <param name="zoomFactor"></param>
 	    /// <param name="xInverted"></param>
         /// <param name="yInverted"></param>
-        /// <param name="angleY"></param>
 	    /// <returns></returns>
         public static View2D CreateFrom(double centerX, double centerY, double pixelsWidth, double pixelsHeight,
             double zoomFactor, bool xInverted, bool yInverted)
@@ -509,6 +507,7 @@ namespace OsmSharp.UI.Renderer
         /// <param name="pixelsHeight"></param>
         /// <param name="sceneX"></param>
         /// <param name="sceneY"></param>
+        /// <param name="transformed"></param>
         /// <returns></returns>
         public void ToViewPort(double pixelsWidth, double pixelsHeight, double sceneX, double sceneY, double[] transformed)
         { // the right and going down.
@@ -554,6 +553,7 @@ namespace OsmSharp.UI.Renderer
         /// Fites this view around the given points but keeps aspect ratio and 
         /// </summary>
         /// <param name="points"></param>
+        /// <param name="percentage"></param>
         /// <returns></returns>
         public View2D Fit(PointF2D[] points, double percentage)
         {

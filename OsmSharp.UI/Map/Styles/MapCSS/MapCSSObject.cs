@@ -1,9 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OsmSharp.Osm;
+﻿// OsmSharp - OpenStreetMap (OSM) SDK
+// Copyright (C) 2015 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// OsmSharp is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// OsmSharp is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using OsmSharp.Geo.Geometries;
+using OsmSharp.Osm;
+using System;
 
 namespace OsmSharp.UI.Map.Styles.MapCSS
 {
@@ -142,28 +157,10 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
             }
         }
 
-        ///// <summary>
-        ///// Returns true if the object set in this mapcss object is of the given type.
-        ///// </summary>
-        ///// <param name="type"></param>
-        ///// <returns></returns>
-        //public bool IsType(Type type)
-        //{
-        //    if (this.IsGeo)
-        //    {
-        //        return type.IsInstanceOfType(this.Geometry);
-        //    }
-        //    if (this.OsmGeoComplete != null)
-        //    {
-        //        return type.IsInstanceOfType(this.OsmGeoComplete);
-        //    }
-        //    return type.IsInstanceOfType(this.OsmGeo);
-        //}
-
         /// <summary>
         /// Returns true if the tags- or attributecollection contains the given key.
         /// </summary>
-        /// <param name="p"></param>
+        /// <param name="key"></param>
         /// <returns></returns>
         public bool ContainsKey(string key)
         {

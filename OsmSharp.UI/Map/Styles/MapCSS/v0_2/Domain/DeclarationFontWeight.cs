@@ -19,6 +19,9 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
     /// </summary>
     public enum QualifierFontWeightEnum
     {
+        /// <summary>
+        /// Font weight.
+        /// </summary>
         FontWeight
     }
 
@@ -27,7 +30,13 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
     /// </summary>
     public enum FontWeightEnum
     {
+        /// <summary>
+        /// Bold.
+        /// </summary>
         Bold,
+        /// <summary>
+        /// Normal.
+        /// </summary>
         Normal
     }
 }

@@ -61,7 +61,7 @@ namespace OsmSharp.UI.Renderer.Primitives
         /// <param name="top"></param>
         /// <param name="bottom"></param>
         /// <param name="right"></param>
-        /// <param name="imageData"></param>
+        /// <param name="nativeImage"></param>
         /// <param name="minZoom"></param>
         /// <param name="maxZoom"></param>
         public Image2D(double left, double top, double bottom, double right, INativeImage nativeImage, float minZoom, float maxZoom)
@@ -197,6 +197,10 @@ namespace OsmSharp.UI.Renderer.Primitives
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// Disposes of all native resources associated with this object.
+        /// </summary>
+        /// <param name="disposing"></param>
         protected virtual void Dispose(bool disposing)
         {            
             if (disposing == true)

@@ -1,5 +1,5 @@
 // OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -18,6 +18,7 @@
 
 using OsmSharp.Math.Primitives;
 using System.Collections.Generic;
+
 namespace OsmSharp.UI.Renderer.Primitives
 {
     /// <summary>
@@ -215,7 +216,7 @@ namespace OsmSharp.UI.Renderer.Primitives
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="OsmSharp.UI.Renderer.Scene2DPrimitives.Polygon2D"/> is to be filled.
+        /// Gets or sets a value indicating whether this Polygon2D is to be filled.
         /// </summary>
         /// <value><c>true</c> if fill; otherwise, <c>false</c>.</value>
         public bool Fill
@@ -309,17 +310,19 @@ namespace OsmSharp.UI.Renderer.Primitives
         /// <summary>
         /// Returns true if the given vertex is convex.
         /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
         /// <param name="vertexIdx"></param>
         /// <returns></returns>
-        public static bool IsEar(List<double> X, List<double> Y, int vertexIdx)
+        public static bool IsEar(List<double> x, List<double> y, int vertexIdx)
         {
-            int previousIdx = vertexIdx == 0 ? X.Count - 1 : vertexIdx - 1;
-            int nextIdx = vertexIdx == X.Count - 1 ? 0 : vertexIdx + 1;
+            int previousIdx = vertexIdx == 0 ? x.Count - 1 : vertexIdx - 1;
+            int nextIdx = vertexIdx == x.Count - 1 ? 0 : vertexIdx + 1;
 
-            return (Polygon2D.Contains(X, Y,
+            return (Polygon2D.Contains(x, y,
                 new double[] { 
-                    (X[previousIdx] + X[nextIdx]) / 2, 
-                    (Y[previousIdx] + Y[nextIdx]) / 2 }));
+                    (x[previousIdx] + x[nextIdx]) / 2, 
+                    (y[previousIdx] + y[nextIdx]) / 2 }));
         }
 
         /// <summary>
@@ -498,27 +501,28 @@ namespace OsmSharp.UI.Renderer.Primitives
         /// <summary>
         /// Tessellates the given LineairRings.
         /// </summary>
-        /// <param name="polygon"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
         /// <returns>A list of coordinates grouped per three.</returns>
-        public static double[][] Tessellate(List<double> X, List<double> Y)
+        public static double[][] Tessellate(List<double> x, List<double> y)
         {
             // TODO: yes i know this can be more efficient; proof of concept!
             // TODO: yes i know we know the number of triangles beforehand.
             // TODO: yes i know we can create a strip instead of duplicating coordinates!!
 
             List<double[]> triangles = new List<double[]>();
-            if (X.Count < 3)
+            if (x.Count < 3)
             {
                 return new double[0][];
             }
-            while (X.Count > 3)
+            while (x.Count > 3)
             { // cut an ear.
                 int earIdx = 0;
-                while (!Polygon2D.IsEar(X, Y, earIdx))
+                while (!Polygon2D.IsEar(x, y, earIdx))
                 {
                     earIdx++;
 
-                    if (X.Count <= earIdx)
+                    if (x.Count <= earIdx)
                     {
                         OsmSharp.Logging.Log.TraceEvent("", OsmSharp.Logging.TraceEventType.Information, "");
                         return triangles.ToArray();
@@ -526,20 +530,20 @@ namespace OsmSharp.UI.Renderer.Primitives
                 }
 
                 // ear should be found, cut it!
-                double[][] neighbours = Polygon2D.GetNeigbours(X, Y, earIdx);
+                double[][] neighbours = Polygon2D.GetNeigbours(x, y, earIdx);
                 triangles.Add(neighbours[0]);
                 triangles.Add(neighbours[1]);
-                triangles.Add(new double[] { X[earIdx], Y[earIdx] });
+                triangles.Add(new double[] { x[earIdx], y[earIdx] });
 
                 // remove ear and update workring.
-                X.RemoveAt(earIdx);
-                Y.RemoveAt(earIdx);
+                x.RemoveAt(earIdx);
+                y.RemoveAt(earIdx);
             }
-            if (X.Count == 3)
+            if (x.Count == 3)
             { // this ring is already a triangle.
-                triangles.Add(new double[] { X[0], Y[0] });
-                triangles.Add(new double[] { X[1], Y[1] });
-                triangles.Add(new double[] { X[2], Y[2] });
+                triangles.Add(new double[] { x[0], y[0] });
+                triangles.Add(new double[] { x[1], y[1] });
+                triangles.Add(new double[] { x[2], y[2] });
             }
             return triangles.ToArray();
         }

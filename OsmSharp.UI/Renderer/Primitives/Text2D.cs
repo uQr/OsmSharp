@@ -39,6 +39,7 @@ namespace OsmSharp.UI.Renderer.Primitives
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="text"></param>
+        /// <param name="color"></param>
         /// <param name="size"></param>
         public Text2D(float x, float y, string text, int color, float size)
         {

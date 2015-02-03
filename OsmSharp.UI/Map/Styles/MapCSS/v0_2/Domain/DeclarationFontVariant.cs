@@ -19,6 +19,9 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
     /// </summary>
     public enum QualifierFontVariantEnum
     {
+        /// <summary>
+        /// Font variant.
+        /// </summary>
         FontVariant
     }
 
@@ -27,7 +30,13 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
     /// </summary>
     public enum FontVariantEnum
     {
+        /// <summary>
+        /// Small caps.
+        /// </summary>
         SmallCaps,
+        /// <summary>
+        /// Normal.
+        /// </summary>
         Normal
     }
 }
