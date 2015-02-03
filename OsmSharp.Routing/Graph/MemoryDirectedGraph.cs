@@ -413,7 +413,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="vertex2"></param>
         /// <returns></returns>
         /// <remarks>Returns true ONLY when edge vertex1->vertex2 is there NOT when only vertex2->vertex1.</remarks>
-        public bool ContainsEdges(uint vertex1, uint vertex2)
+        public bool ContainsEdge(uint vertex1, uint vertex2)
         {
             if (_nextVertexId <= vertex1) { throw new ArgumentOutOfRangeException("vertex1", "vertex1 is not part of this graph."); }
             if (_nextVertexId <= vertex2) { throw new ArgumentOutOfRangeException("vertex2", "vertex2 is not part of this graph."); }

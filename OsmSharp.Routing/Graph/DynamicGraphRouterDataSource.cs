@@ -299,9 +299,9 @@ namespace OsmSharp.Routing.Graph
         /// <param name="vertexId"></param>
         /// <param name="neighbour"></param>
         /// <returns></returns>
-        public bool ContainsEdges(uint vertexId, uint neighbour)
+        public bool ContainsEdge(uint vertexId, uint neighbour)
         {
-            return _graph.ContainsEdges(vertexId, neighbour);
+            return _graph.ContainsEdge(vertexId, neighbour);
         }
 
         /// <summary>
@@ -312,7 +312,7 @@ namespace OsmSharp.Routing.Graph
         /// <returns></returns>
         public bool ContainsEdge(uint vertexId, uint neighbour, TEdgeData data)
         {
-            return _graph.ContainsEdges(vertexId, neighbour);
+            return _graph.ContainsEdge(vertexId, neighbour);
         }
 
         /// <summary>

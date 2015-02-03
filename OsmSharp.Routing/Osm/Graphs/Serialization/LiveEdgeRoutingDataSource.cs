@@ -279,7 +279,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <param name="vertexId"></param>
         /// <param name="neighbour"></param>
         /// <returns></returns>
-        public bool ContainsEdges(uint vertexId, uint neighbour)
+        public bool ContainsEdge(uint vertexId, uint neighbour)
         {
             throw new NotImplementedException();
         }

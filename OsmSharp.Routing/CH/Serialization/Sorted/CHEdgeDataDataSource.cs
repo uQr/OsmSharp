@@ -201,7 +201,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <param name="vertexId"></param>
         /// <param name="neighbour"></param>
         /// <returns></returns>
-        public bool ContainsEdges(uint vertexId, uint neighbour)
+        public bool ContainsEdge(uint vertexId, uint neighbour)
         {
             return this.GetEdges(vertexId, neighbour).MoveNext();
         }

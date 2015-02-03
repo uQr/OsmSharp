@@ -50,7 +50,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="vertexId"></param>
         /// <param name="neighbour"></param>
         /// <returns></returns>
-        bool ContainsEdges(uint vertexId, uint neighbour);
+        bool ContainsEdge(uint vertexId, uint neighbour);
 
         /// <summary>
         /// Returns true if the given edge exists.
