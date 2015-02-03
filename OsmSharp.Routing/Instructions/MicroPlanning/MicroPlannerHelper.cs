@@ -18,7 +18,7 @@
 
 using System.Collections.Generic;
 using OsmSharp.Math.Geo.Meta;
-using OsmSharp.Routing.ArcAggregation.Output;
+using OsmSharp.Routing.EdgeAggregation.Output;
 using OsmSharp.Routing.Interpreter;
 
 namespace OsmSharp.Routing.Instructions.MicroPlanning
@@ -78,7 +78,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
             int straight = 0;
             if (point.Point.ArcsNotTaken != null)
             {
-                foreach (KeyValuePair<RelativeDirection, AggregatedArc> arc_pair in point.Point.ArcsNotTaken)
+                foreach (KeyValuePair<RelativeDirection, AggregatedEdge> arc_pair in point.Point.ArcsNotTaken)
                 {
                     if (!MicroPlannerHelper.IsTurn(arc_pair.Key.Direction, interpreter))
                     {
@@ -111,7 +111,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
             int left = 0;
             if (point.Point.ArcsNotTaken != null)
             {
-                foreach (KeyValuePair<RelativeDirection, AggregatedArc> arc_pair in point.Point.ArcsNotTaken)
+                foreach (KeyValuePair<RelativeDirection, AggregatedEdge> arc_pair in point.Point.ArcsNotTaken)
                 {
                     if (MicroPlannerHelper.IsLeft(arc_pair.Key.Direction, interpreter))
                     {
@@ -144,7 +144,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
             int right = 0;
             if (point.Point.ArcsNotTaken != null)
             {
-                foreach (KeyValuePair<RelativeDirection, AggregatedArc> arc_pair in point.Point.ArcsNotTaken)
+                foreach (KeyValuePair<RelativeDirection, AggregatedEdge> arc_pair in point.Point.ArcsNotTaken)
                 {
                     if (MicroPlannerHelper.IsRight(arc_pair.Key.Direction, interpreter))
                     {

@@ -18,7 +18,7 @@
 
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo.Meta;
-using OsmSharp.Routing.ArcAggregation.Output;
+using OsmSharp.Routing.EdgeAggregation.Output;
 using System;
 using System.Collections.Generic;
 using System.Linq;

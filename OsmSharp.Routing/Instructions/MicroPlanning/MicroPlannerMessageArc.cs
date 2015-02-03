@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using OsmSharp.Routing.ArcAggregation.Output;
+using OsmSharp.Routing.EdgeAggregation.Output;
 
 namespace OsmSharp.Routing.Instructions.MicroPlanning
 {
@@ -25,7 +25,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         /// <summary>
         /// Gets or sets the aggregated arc.
         /// </summary>
-        public AggregatedArc Arc { get; set; }
+        public AggregatedEdge Arc { get; set; }
 
         /// <summary>
         /// Returns a System.String that represents the current System.Object.

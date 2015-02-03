@@ -20,11 +20,11 @@ using System.Collections.Generic;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Meta;
-using OsmSharp.Routing.ArcAggregation.Output;
+using OsmSharp.Routing.EdgeAggregation.Output;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Units.Distance;
 
-namespace OsmSharp.Routing.ArcAggregation
+namespace OsmSharp.Routing.EdgeAggregation
 {
     /// <summary>
     /// An arc aggregator.
@@ -59,7 +59,7 @@ namespace OsmSharp.Routing.ArcAggregation
             AggregatedRoutePoint current = null;
             AggregatedRoutePoint next = null;
             AggregatedPoint previousPoint = null;
-            AggregatedArc previousArc = null;
+            AggregatedEdge previousArc = null;
             AggregatedPoint p = null;
 
             // loop over all aggregated points.
@@ -87,7 +87,7 @@ namespace OsmSharp.Routing.ArcAggregation
         /// Processes a part of the route.
         /// </summary>
         private void Process(Route route, AggregatedRoutePoint previous, AggregatedRoutePoint current, 
-            AggregatedRoutePoint next, ref AggregatedPoint p, ref AggregatedArc previousArc, ref AggregatedPoint previousPoint)
+            AggregatedRoutePoint next, ref AggregatedPoint p, ref AggregatedEdge previousArc, ref AggregatedPoint previousPoint)
         {
             // process the current point.
             if (current != null)
@@ -158,7 +158,7 @@ namespace OsmSharp.Routing.ArcAggregation
         /// <param name="next_arc"></param>
         /// <param name="vehicle"></param>
         /// <returns></returns>
-        protected virtual bool IsSignificant(Vehicle vehicle, AggregatedArc previous_arc, AggregatedArc next_arc)
+        protected virtual bool IsSignificant(Vehicle vehicle, AggregatedEdge previous_arc, AggregatedEdge next_arc)
         {
             if (previous_arc.Next.Points != null && previous_arc.Next.Points.Count > 0)
             { // the point has at least one important point.
@@ -199,10 +199,10 @@ namespace OsmSharp.Routing.ArcAggregation
         /// <param name="current"></param>
         /// <param name="next"></param>
         /// <returns></returns>
-        internal AggregatedArc CreateArcAndPoint(AggregatedRoutePoint previous, AggregatedRoutePoint current, AggregatedRoutePoint next)
+        internal AggregatedEdge CreateArcAndPoint(AggregatedRoutePoint previous, AggregatedRoutePoint current, AggregatedRoutePoint next)
         {
             // create the arc.
-            AggregatedArc a = new AggregatedArc();
+            AggregatedEdge a = new AggregatedEdge();
             a.Name = current.Entry.Name;
             a.Names = current.Entry.Names.ConvertTo();
             a.Tags = current.Entry.Tags.ConvertToTagsCollection();
@@ -233,10 +233,10 @@ namespace OsmSharp.Routing.ArcAggregation
             }
             if (current.Entry.SideStreets != null && current.Entry.SideStreets.Length > 0)
             {
-                p.ArcsNotTaken = new List<KeyValuePair<RelativeDirection, AggregatedArc>>();
+                p.ArcsNotTaken = new List<KeyValuePair<RelativeDirection, AggregatedEdge>>();
                 foreach (RouteSegmentBranch sideStreet in current.Entry.SideStreets)
                 {
-                    AggregatedArc side = new AggregatedArc();
+                    AggregatedEdge side = new AggregatedEdge();
                     side.Name = sideStreet.Name;
                     side.Names = sideStreet.Names.ConvertTo();
                     side.Tags = sideStreet.Tags.ConvertToTagsCollection();
@@ -252,7 +252,7 @@ namespace OsmSharp.Routing.ArcAggregation
                         side_direction = RelativeDirectionCalculator.Calculate(previous_coordinate, p.Location, next_coordinate);
                     }
 
-                    p.ArcsNotTaken.Add(new KeyValuePair<RelativeDirection, AggregatedArc>(side_direction, side));
+                    p.ArcsNotTaken.Add(new KeyValuePair<RelativeDirection, AggregatedEdge>(side_direction, side));
                 }
             }
             if (current.Entry.Points != null)

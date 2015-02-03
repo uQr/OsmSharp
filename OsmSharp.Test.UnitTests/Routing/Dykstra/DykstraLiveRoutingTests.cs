@@ -117,9 +117,9 @@ namespace OsmSharp.Test.Unittests.Routing.Dykstra
         /// Tests if the raw router preserves tags on arcs/ways.
         /// </summary>
         [Test]
-        public void TestDykstraLiveArcTags()
+        public void TestDykstraLiveEdgeTags()
         {
-            this.DoTestArcTags();
+            this.DoTestEdgeTags();
         }
 
         /// <summary>

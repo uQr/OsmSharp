@@ -22,8 +22,8 @@ using System.Text;
 using OsmSharp.Units.Speed;
 using OsmSharp.Units.Time;
 using OsmSharp.Routing;
-using OsmSharp.Routing.ArcAggregation.Output;
-using OsmSharp.Routing.ArcAggregation;
+using OsmSharp.Routing.EdgeAggregation.Output;
+using OsmSharp.Routing.EdgeAggregation;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp;
 
@@ -74,9 +74,9 @@ namespace OsmSharp.Routing.Metrics.Time
                     AggregatedPoint point = (next as AggregatedPoint);
                     this.CalculatePointMetrics(vehicle, result, point);
                 }
-                if (next is AggregatedArc)
+                if (next is AggregatedEdge)
                 {
-                    AggregatedArc arc = (next as AggregatedArc);
+                    AggregatedEdge arc = (next as AggregatedEdge);
                     this.CalculateArcMetrics(vehicle, result, arc);
                 }
 
@@ -143,7 +143,7 @@ namespace OsmSharp.Routing.Metrics.Time
         /// <param name="vehicle"></param>
         /// <param name="result"></param>
         /// <param name="arc"></param>
-        private void CalculateArcMetrics(Vehicle vehicle, Dictionary<string, double> result, AggregatedArc arc)
+        private void CalculateArcMetrics(Vehicle vehicle, Dictionary<string, double> result, AggregatedEdge arc)
         {
             // update the distance.
             result[DISTANCE_KEY] = result[DISTANCE_KEY] + arc.Distance.Value;

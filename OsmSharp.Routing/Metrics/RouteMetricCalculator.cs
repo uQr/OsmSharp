@@ -21,7 +21,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using OsmSharp.Routing.ArcAggregation.Output;
+using OsmSharp.Routing.EdgeAggregation.Output;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Interpreter;
 
@@ -53,7 +53,7 @@ namespace OsmSharp.Routing.Metrics
         /// <returns></returns>
         public Dictionary<string, double> Calculate(Route route)
         {
-            var aggregator =  new OsmSharp.Routing.ArcAggregation.ArcAggregator(_interpreter);
+            var aggregator =  new OsmSharp.Routing.EdgeAggregation.ArcAggregator(_interpreter);
             var p = aggregator.Aggregate(route);
             return this.Calculate(Vehicle.GetByUniqueName(route.Vehicle), p);
         }

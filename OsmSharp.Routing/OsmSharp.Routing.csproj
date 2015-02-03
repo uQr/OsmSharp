@@ -60,11 +60,11 @@
     <Compile Include="..\SharedAssemblyVersion.cs">
       <Link>Properties\SharedAssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="ArcAggregation\AggregatedHelper.cs" />
-    <Compile Include="ArcAggregation\ArcAggregator.cs" />
-    <Compile Include="ArcAggregation\Output\Aggregated.cs" />
-    <Compile Include="ArcAggregation\Output\AggregatedArc.cs" />
-    <Compile Include="ArcAggregation\Output\AggregatedPoint.cs" />
+    <Compile Include="EdgeAggregation\AggregatedHelper.cs" />
+    <Compile Include="EdgeAggregation\ArcAggregator.cs" />
+    <Compile Include="EdgeAggregation\Output\Aggregated.cs" />
+    <Compile Include="EdgeAggregation\Output\AggregatedEdge.cs" />
+    <Compile Include="EdgeAggregation\Output\AggregatedPoint.cs" />
     <Compile Include="CH\CHEdgeData.cs" />
     <Compile Include="CH\CHQueue.cs" />
     <Compile Include="CH\CHRouter.cs" />

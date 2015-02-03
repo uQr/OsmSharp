@@ -17,7 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections.Generic;
-using OsmSharp.Routing.ArcAggregation.Output;
+using OsmSharp.Routing.EdgeAggregation.Output;
 using OsmSharp.Routing.Instructions.LanguageGeneration;
 using OsmSharp.Routing.Instructions.MicroPlanning.Machines;
 using OsmSharp.Routing.Interpreter;
@@ -130,10 +130,10 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
 
                 message = point;
             }
-            else if (aggregated is AggregatedArc)
+            else if (aggregated is AggregatedEdge)
             {
                 MicroPlannerMessageArc arc = new MicroPlannerMessageArc();
-                arc.Arc = aggregated as AggregatedArc;
+                arc.Arc = aggregated as AggregatedEdge;
 
                 message = arc;
             }

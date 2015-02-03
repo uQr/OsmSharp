@@ -20,9 +20,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Math.Geo.Meta;
-using OsmSharp.Routing.ArcAggregation.Output;
+using OsmSharp.Routing.EdgeAggregation.Output;
 
-namespace OsmSharp.Routing.ArcAggregation
+namespace OsmSharp.Routing.EdgeAggregation
 {
     /// <summary>
     /// Contains some helper functions for arc aggregation.

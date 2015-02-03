@@ -118,9 +118,9 @@ namespace OsmSharp.Test.Unittests.Routing.Live
         /// Tests if the raw router preserves tags on arcs/ways.
         /// </summary>
         [Test]
-        public void TestLiveEdgeArcTags()
+        public void TestLiveEdgeEdgeTags()
         {
-            this.DoTestArcTags();
+            this.DoTestEdgeTags();
         }
 
         /// <summary>
