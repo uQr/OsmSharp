@@ -19,10 +19,10 @@
 using System.Reflection;
 using NUnit.Framework;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.CH.PreProcessing;
-using OsmSharp.Routing.CH.PreProcessing.Witnesses;
-using OsmSharp.Routing.CH.PreProcessing.Ordering;
-using OsmSharp.Routing.CH;
+using OsmSharp.Routing.Contracted.PreProcessing;
+using OsmSharp.Routing.Contracted.PreProcessing.Witnesses;
+using OsmSharp.Routing.Contracted.PreProcessing.Ordering;
+using OsmSharp.Routing.Contracted;
 
 namespace OsmSharp.Test.Unittests.Routing.CH
 {
@@ -52,18 +52,18 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         [Test]
         public void TestVerifiedContraction1NoWitnesses()
         {
-            var graph = new MemoryDirectedGraph<CHEdgeData>();
+            var graph = new MemoryDirectedGraph<ContractedEdge>();
             var vertex1 = graph.AddVertex(1, 0);
             var vertex2 = graph.AddVertex(2, 0);
             var vertex3 = graph.AddVertex(3, 0);
 
-            graph.AddEdge(vertex1, vertex3, new CHEdgeData(1, true, true, true, 10));
-            graph.AddEdge(vertex3, vertex1, new CHEdgeData(1, false, true, true, 10));
-            graph.AddEdge(vertex2, vertex3, new CHEdgeData(1, true, true, true, 10));
-            graph.AddEdge(vertex3, vertex2, new CHEdgeData(1, false, true, true, 10));
+            graph.AddEdge(vertex1, vertex3, new ContractedEdge(1, true, true, true, 10));
+            graph.AddEdge(vertex3, vertex1, new ContractedEdge(1, false, true, true, 10));
+            graph.AddEdge(vertex2, vertex3, new ContractedEdge(1, true, true, true, 10));
+            graph.AddEdge(vertex3, vertex2, new ContractedEdge(1, false, true, true, 10));
 
             var witnessCalculator = new DykstraWitnessCalculator();
-            var preProcessor = new CHPreProcessor(graph,
+            var preProcessor = new ContractedPreProcessor(graph,
                 new EdgeDifferenceContractedSearchSpace(graph, witnessCalculator), witnessCalculator);
             preProcessor.Contract(3);
 
@@ -71,7 +71,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             Assert.IsFalse(graph.ContainsEdge(1, 3));
             Assert.IsFalse(graph.ContainsEdge(2, 3));
 
-            var router = new CHRouter();
+            var router = new ContractedRouter();
             // expected: (1)-10s-(3)-10s-(2) (20s in total).
             var path = router.Calculate(graph, 1, 2);
             Assert.IsNotNull(path);
@@ -126,24 +126,24 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         [Test]
         public void TestVerifiedContraction2Witness()
         {
-            var graph = new MemoryDirectedGraph<CHEdgeData>();
+            var graph = new MemoryDirectedGraph<ContractedEdge>();
             var vertex1 = graph.AddVertex(1, 0);
             var vertex2 = graph.AddVertex(2, 0);
             var vertex3 = graph.AddVertex(3, 0);
 
-            graph.AddEdge(vertex1, vertex2, new CHEdgeData(1, true, true, true, 15));
-            graph.AddEdge(vertex2, vertex1, new CHEdgeData(1, false, true, true, 15));
-            graph.AddEdge(vertex1, vertex3, new CHEdgeData(1, true, true, true, 10));
-            graph.AddEdge(vertex3, vertex1, new CHEdgeData(1, false, true, true, 10));
-            graph.AddEdge(vertex2, vertex3, new CHEdgeData(1, true, true, true, 10));
-            graph.AddEdge(vertex3, vertex2, new CHEdgeData(1, false, true, true, 10));
+            graph.AddEdge(vertex1, vertex2, new ContractedEdge(1, true, true, true, 15));
+            graph.AddEdge(vertex2, vertex1, new ContractedEdge(1, false, true, true, 15));
+            graph.AddEdge(vertex1, vertex3, new ContractedEdge(1, true, true, true, 10));
+            graph.AddEdge(vertex3, vertex1, new ContractedEdge(1, false, true, true, 10));
+            graph.AddEdge(vertex2, vertex3, new ContractedEdge(1, true, true, true, 10));
+            graph.AddEdge(vertex3, vertex2, new ContractedEdge(1, false, true, true, 10));
 
             var witnessCalculator = new DykstraWitnessCalculator();
-            var preProcessor = new CHPreProcessor(graph,
+            var preProcessor = new ContractedPreProcessor(graph,
                 new EdgeDifferenceContractedSearchSpace(graph, witnessCalculator), witnessCalculator);
             preProcessor.Contract(3);
 
-            var router = new CHRouter();
+            var router = new ContractedRouter();
             // expected: (1)-15s-(2) (15s in total).
             var path = router.Calculate(graph, 1, 2);
             Assert.IsNotNull(path);
@@ -192,23 +192,23 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         [Test]
         public void TestVerifiedContraction3TinyOneWay()
         {
-            var graph = new MemoryDirectedGraph<CHEdgeData>();
+            var graph = new MemoryDirectedGraph<ContractedEdge>();
             var vertex1 = graph.AddVertex(1, 0);
             var vertex2 = graph.AddVertex(2, 0);
             var vertex3 = graph.AddVertex(3, 0);
             var vertex4 = graph.AddVertex(4, 0);
             var vertex5 = graph.AddVertex(5, 0);
 
-            graph.AddEdge(vertex1, vertex4, new CHEdgeData(1, true, true, true, 10));
-            graph.AddEdge(vertex4, vertex1, new CHEdgeData(1, false, true, true, 10));
-            graph.AddEdge(vertex1, vertex2, new CHEdgeData(1, true, true, false, 10)); // oneway forward
-            graph.AddEdge(vertex2, vertex1, new CHEdgeData(1, false, false, true, 10)); // oneway backward.
-            graph.AddEdge(vertex1, vertex3, new CHEdgeData(1, true, true, true, 10));
-            graph.AddEdge(vertex3, vertex1, new CHEdgeData(1, false, true, true, 10));
-            graph.AddEdge(vertex2, vertex3, new CHEdgeData(1, true, true, true, 10));
-            graph.AddEdge(vertex3, vertex2, new CHEdgeData(1, false, true, true, 10));
-            graph.AddEdge(vertex2, vertex5, new CHEdgeData(1, true, true, true, 10));
-            graph.AddEdge(vertex5, vertex2, new CHEdgeData(1, false, true, true, 10));
+            graph.AddEdge(vertex1, vertex4, new ContractedEdge(1, true, true, true, 10));
+            graph.AddEdge(vertex4, vertex1, new ContractedEdge(1, false, true, true, 10));
+            graph.AddEdge(vertex1, vertex2, new ContractedEdge(1, true, true, false, 10)); // oneway forward
+            graph.AddEdge(vertex2, vertex1, new ContractedEdge(1, false, false, true, 10)); // oneway backward.
+            graph.AddEdge(vertex1, vertex3, new ContractedEdge(1, true, true, true, 10));
+            graph.AddEdge(vertex3, vertex1, new ContractedEdge(1, false, true, true, 10));
+            graph.AddEdge(vertex2, vertex3, new ContractedEdge(1, true, true, true, 10));
+            graph.AddEdge(vertex3, vertex2, new ContractedEdge(1, false, true, true, 10));
+            graph.AddEdge(vertex2, vertex5, new ContractedEdge(1, true, true, true, 10));
+            graph.AddEdge(vertex5, vertex2, new ContractedEdge(1, false, true, true, 10));
 
             Assert.IsFalse(graph.ContainsEdge(vertex1, vertex1));
             Assert.IsTrue(graph.ContainsEdge(vertex2, vertex1));
@@ -237,11 +237,11 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             Assert.IsFalse(graph.ContainsEdge(vertex5, vertex5));
 
             var witnessCalculator = new DykstraWitnessCalculator();
-            var preProcessor = new CHPreProcessor(graph, 
+            var preProcessor = new ContractedPreProcessor(graph, 
                 new EdgeDifferenceContractedSearchSpace(graph, witnessCalculator), witnessCalculator);
             preProcessor.Start();
 
-            var router = new CHRouter();
+            var router = new ContractedRouter();
             // expected: (4)-10s-(1)-10s-(2)-10s-(3) (30s in total).
             var path = router.Calculate(graph, 4, 5);
             Assert.IsNotNull(path);
@@ -309,34 +309,34 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         [Test]
         public void TestVerifiedContraction4ReplacePrevious()
         {
-            var graph = new MemoryDirectedGraph<CHEdgeData>();
+            var graph = new MemoryDirectedGraph<ContractedEdge>();
             var vertex1 = graph.AddVertex(1, 0);
             var vertex2 = graph.AddVertex(2, 0);
             var vertex3 = graph.AddVertex(3, 0);
             var vertex4 = graph.AddVertex(4, 0);
 
-            graph.AddEdge(vertex1, vertex4, new CHEdgeData(1, true, true, true, 15));
-            graph.AddEdge(vertex4, vertex1, new CHEdgeData(1, false, true, true, 15));
-            graph.AddEdge(vertex2, vertex4, new CHEdgeData(1, true, true, true, 15));
-            graph.AddEdge(vertex4, vertex2, new CHEdgeData(1, false, true, true, 15));
+            graph.AddEdge(vertex1, vertex4, new ContractedEdge(1, true, true, true, 15));
+            graph.AddEdge(vertex4, vertex1, new ContractedEdge(1, false, true, true, 15));
+            graph.AddEdge(vertex2, vertex4, new ContractedEdge(1, true, true, true, 15));
+            graph.AddEdge(vertex4, vertex2, new ContractedEdge(1, false, true, true, 15));
 
             var witnessCalculator = new DykstraWitnessCalculator();
-            var preProcessor = new CHPreProcessor(graph,
+            var preProcessor = new ContractedPreProcessor(graph,
                 new EdgeDifferenceContractedSearchSpace(graph, witnessCalculator), witnessCalculator);
             preProcessor.Contract(4);
 
-            Assert.IsTrue(graph.ContainsEdge(vertex1, vertex2, new CHEdgeData(4, true, true, 30)));
-            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex1, new CHEdgeData(4, true, true, 30)));
+            Assert.IsTrue(graph.ContainsEdge(vertex1, vertex2, new ContractedEdge(4, true, true, 30)));
+            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex1, new ContractedEdge(4, true, true, 30)));
 
             // add edges later to prevent witnesses from being found!
-            graph.AddEdge(vertex1, vertex3, new CHEdgeData(1, true, true, true, 10));
-            graph.AddEdge(vertex3, vertex1, new CHEdgeData(1, false, true, true, 10));
-            graph.AddEdge(vertex2, vertex3, new CHEdgeData(1, true, true, true, 10));
-            graph.AddEdge(vertex3, vertex2, new CHEdgeData(1, false, true, true, 10));
+            graph.AddEdge(vertex1, vertex3, new ContractedEdge(1, true, true, true, 10));
+            graph.AddEdge(vertex3, vertex1, new ContractedEdge(1, false, true, true, 10));
+            graph.AddEdge(vertex2, vertex3, new ContractedEdge(1, true, true, true, 10));
+            graph.AddEdge(vertex3, vertex2, new ContractedEdge(1, false, true, true, 10));
 
             preProcessor.Contract(3);
-            Assert.IsTrue(graph.ContainsEdge(vertex1, vertex2, new CHEdgeData(3, true, true, 20)));
-            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex1, new CHEdgeData(3, true, true, 20)));
+            Assert.IsTrue(graph.ContainsEdge(vertex1, vertex2, new ContractedEdge(3, true, true, 20)));
+            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex1, new ContractedEdge(3, true, true, 20)));
         }
 
         /// <summary>
@@ -363,9 +363,9 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         [Test]
         public void TestVerifiedContraction5KeepPrevious()
         {
-            var graph = new MemoryDirectedGraph<CHEdgeData>();
+            var graph = new MemoryDirectedGraph<ContractedEdge>();
             var witnessCalculator = new DykstraWitnessCalculator();
-            var preProcessor = new CHPreProcessor(graph,
+            var preProcessor = new ContractedPreProcessor(graph,
                 new EdgeDifferenceContractedSearchSpace(graph, witnessCalculator), witnessCalculator);
 
             var vertex1 = graph.AddVertex(1, 0);
@@ -373,23 +373,23 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             var vertex3 = graph.AddVertex(3, 0);
             var vertex4 = graph.AddVertex(4, 0);
 
-            graph.AddEdge(vertex1, vertex3, new CHEdgeData(1, true, true, true, 10));
-            graph.AddEdge(vertex3, vertex1, new CHEdgeData(1, false, true, true, 10));
-            graph.AddEdge(vertex2, vertex3, new CHEdgeData(1, true, true, true, 10));
-            graph.AddEdge(vertex3, vertex2, new CHEdgeData(1, false, true, true, 10));
+            graph.AddEdge(vertex1, vertex3, new ContractedEdge(1, true, true, true, 10));
+            graph.AddEdge(vertex3, vertex1, new ContractedEdge(1, false, true, true, 10));
+            graph.AddEdge(vertex2, vertex3, new ContractedEdge(1, true, true, true, 10));
+            graph.AddEdge(vertex3, vertex2, new ContractedEdge(1, false, true, true, 10));
 
             preProcessor.Contract(3);
-            Assert.IsTrue(graph.ContainsEdge(vertex1, vertex2, new CHEdgeData(3, true, true, 20)));
-            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex1, new CHEdgeData(3, true, true, 20)));
+            Assert.IsTrue(graph.ContainsEdge(vertex1, vertex2, new ContractedEdge(3, true, true, 20)));
+            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex1, new ContractedEdge(3, true, true, 20)));
 
-            graph.AddEdge(vertex1, vertex4, new CHEdgeData(1, true, true, true, 15));
-            graph.AddEdge(vertex4, vertex1, new CHEdgeData(1, false, true, true, 15));
-            graph.AddEdge(vertex2, vertex4, new CHEdgeData(1, true, true, true, 15));
-            graph.AddEdge(vertex4, vertex2, new CHEdgeData(1, false, true, true, 15));
+            graph.AddEdge(vertex1, vertex4, new ContractedEdge(1, true, true, true, 15));
+            graph.AddEdge(vertex4, vertex1, new ContractedEdge(1, false, true, true, 15));
+            graph.AddEdge(vertex2, vertex4, new ContractedEdge(1, true, true, true, 15));
+            graph.AddEdge(vertex4, vertex2, new ContractedEdge(1, false, true, true, 15));
 
             preProcessor.Contract(4);
-            Assert.IsTrue(graph.ContainsEdge(vertex1, vertex2, new CHEdgeData(3, true, true, 20)));
-            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex1, new CHEdgeData(3, true, true, 20)));
+            Assert.IsTrue(graph.ContainsEdge(vertex1, vertex2, new ContractedEdge(3, true, true, 20)));
+            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex1, new ContractedEdge(3, true, true, 20)));
         }
 
         /// <summary>
@@ -416,9 +416,9 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         [Test]
         public void TestVerifiedContraction6DuplicateBackward()
         {
-            var graph = new MemoryDirectedGraph<CHEdgeData>();
+            var graph = new MemoryDirectedGraph<ContractedEdge>();
             var witnessCalculator = new DykstraWitnessCalculator();
-            var preProcessor = new CHPreProcessor(graph,
+            var preProcessor = new ContractedPreProcessor(graph,
                 new EdgeDifferenceContractedSearchSpace(graph, witnessCalculator), witnessCalculator);
 
             var vertex1 = graph.AddVertex(1, 0);
@@ -426,25 +426,25 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             var vertex3 = graph.AddVertex(3, 0);
             var vertex4 = graph.AddVertex(4, 0);
 
-            graph.AddEdge(vertex1, vertex3, new CHEdgeData(1, true, false, true, 10));
-            graph.AddEdge(vertex3, vertex1, new CHEdgeData(1, false, true, false, 10));
-            graph.AddEdge(vertex2, vertex3, new CHEdgeData(1, true, true, false, 10));
-            graph.AddEdge(vertex3, vertex2, new CHEdgeData(1, false, false, true, 10));
+            graph.AddEdge(vertex1, vertex3, new ContractedEdge(1, true, false, true, 10));
+            graph.AddEdge(vertex3, vertex1, new ContractedEdge(1, false, true, false, 10));
+            graph.AddEdge(vertex2, vertex3, new ContractedEdge(1, true, true, false, 10));
+            graph.AddEdge(vertex3, vertex2, new ContractedEdge(1, false, false, true, 10));
 
-            graph.AddEdge(vertex1, vertex4, new CHEdgeData(1, true, true, false, 15));
-            graph.AddEdge(vertex4, vertex1, new CHEdgeData(1, false, false, true, 15));
-            graph.AddEdge(vertex2, vertex4, new CHEdgeData(1, true, false, true, 15));
-            graph.AddEdge(vertex4, vertex2, new CHEdgeData(1, false, true, false, 15));
+            graph.AddEdge(vertex1, vertex4, new ContractedEdge(1, true, true, false, 15));
+            graph.AddEdge(vertex4, vertex1, new ContractedEdge(1, false, false, true, 15));
+            graph.AddEdge(vertex2, vertex4, new ContractedEdge(1, true, false, true, 15));
+            graph.AddEdge(vertex4, vertex2, new ContractedEdge(1, false, true, false, 15));
 
             preProcessor.Contract(4);
-            Assert.IsTrue(graph.ContainsEdge(vertex1, vertex2, new CHEdgeData(4, true, false, 30)));
-            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex1, new CHEdgeData(4, false, true, 30)));
+            Assert.IsTrue(graph.ContainsEdge(vertex1, vertex2, new ContractedEdge(4, true, false, 30)));
+            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex1, new ContractedEdge(4, false, true, 30)));
 
             preProcessor.Contract(3);
-            Assert.IsTrue(graph.ContainsEdge(vertex1, vertex2, new CHEdgeData(4, true, false, 30)));
-            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex1, new CHEdgeData(4, false, true, 30)));
-            Assert.IsTrue(graph.ContainsEdge(vertex1, vertex2, new CHEdgeData(3, false, true, 20)));
-            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex1, new CHEdgeData(3, true, false, 20)));
+            Assert.IsTrue(graph.ContainsEdge(vertex1, vertex2, new ContractedEdge(4, true, false, 30)));
+            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex1, new ContractedEdge(4, false, true, 30)));
+            Assert.IsTrue(graph.ContainsEdge(vertex1, vertex2, new ContractedEdge(3, false, true, 20)));
+            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex1, new ContractedEdge(3, true, false, 20)));
         }
 
         /// <summary>
@@ -471,9 +471,9 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         [Test]
         public void TestVerifiedContraction6DuplicateForward()
         {
-            var graph = new MemoryDirectedGraph<CHEdgeData>();
+            var graph = new MemoryDirectedGraph<ContractedEdge>();
             var witnessCalculator = new DykstraWitnessCalculator();
-            var preProcessor = new CHPreProcessor(graph,
+            var preProcessor = new ContractedPreProcessor(graph,
                 new EdgeDifferenceContractedSearchSpace(graph, witnessCalculator), witnessCalculator);
 
             var vertex1 = graph.AddVertex(1, 0);
@@ -481,25 +481,25 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             var vertex3 = graph.AddVertex(3, 0);
             var vertex4 = graph.AddVertex(4, 0);
 
-            graph.AddEdge(vertex1, vertex3, new CHEdgeData(1, true, false, true, 10));
-            graph.AddEdge(vertex3, vertex1, new CHEdgeData(1, false, true, false, 10));
-            graph.AddEdge(vertex2, vertex3, new CHEdgeData(1, true, true, false, 10));
-            graph.AddEdge(vertex3, vertex2, new CHEdgeData(1, false, false, true, 10));
+            graph.AddEdge(vertex1, vertex3, new ContractedEdge(1, true, false, true, 10));
+            graph.AddEdge(vertex3, vertex1, new ContractedEdge(1, false, true, false, 10));
+            graph.AddEdge(vertex2, vertex3, new ContractedEdge(1, true, true, false, 10));
+            graph.AddEdge(vertex3, vertex2, new ContractedEdge(1, false, false, true, 10));
 
-            graph.AddEdge(vertex1, vertex4, new CHEdgeData(1, true, true, false, 15));
-            graph.AddEdge(vertex4, vertex1, new CHEdgeData(1, false, false, true, 15));
-            graph.AddEdge(vertex2, vertex4, new CHEdgeData(1, true, false, true, 15));
-            graph.AddEdge(vertex4, vertex2, new CHEdgeData(1, false, true, false, 15));
+            graph.AddEdge(vertex1, vertex4, new ContractedEdge(1, true, true, false, 15));
+            graph.AddEdge(vertex4, vertex1, new ContractedEdge(1, false, false, true, 15));
+            graph.AddEdge(vertex2, vertex4, new ContractedEdge(1, true, false, true, 15));
+            graph.AddEdge(vertex4, vertex2, new ContractedEdge(1, false, true, false, 15));
 
             preProcessor.Contract(3);
-            Assert.IsTrue(graph.ContainsEdge(vertex1, vertex2, new CHEdgeData(3, false, true, 20)));
-            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex1, new CHEdgeData(3, true, false, 20)));
+            Assert.IsTrue(graph.ContainsEdge(vertex1, vertex2, new ContractedEdge(3, false, true, 20)));
+            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex1, new ContractedEdge(3, true, false, 20)));
 
             preProcessor.Contract(4);
-            Assert.IsTrue(graph.ContainsEdge(vertex1, vertex2, new CHEdgeData(4, true, false, 30)));
-            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex1, new CHEdgeData(4, false, true, 30)));
-            Assert.IsTrue(graph.ContainsEdge(vertex1, vertex2, new CHEdgeData(3, false, true, 20)));
-            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex1, new CHEdgeData(3, true, false, 20)));
+            Assert.IsTrue(graph.ContainsEdge(vertex1, vertex2, new ContractedEdge(4, true, false, 30)));
+            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex1, new ContractedEdge(4, false, true, 30)));
+            Assert.IsTrue(graph.ContainsEdge(vertex1, vertex2, new ContractedEdge(3, false, true, 20)));
+            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex1, new ContractedEdge(3, true, false, 20)));
         }
 
         /// <summary>

@@ -20,13 +20,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Routing.CH.Routing;
+using OsmSharp.Routing.Contracted.Routing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Collections.PriorityQueues;
 using OsmSharp.Collections;
 
-namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
+namespace OsmSharp.Routing.Contracted.PreProcessing.Witnesses
 {
     /// <summary>
     /// A simple dykstra witness calculator.
@@ -67,7 +67,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
         /// <param name="to"></param>
         /// <param name="maxWeight"></param>
         /// <param name="maxSettles"></param>
-        public bool Exists(IGraph<CHEdgeData> graph, uint from, uint to, float maxWeight, int maxSettles)
+        public bool Exists(IGraph<ContractedEdge> graph, uint from, uint to, float maxWeight, int maxSettles)
         {
             return this.Exists(graph, from, to, maxWeight, maxSettles, uint.MaxValue);
         }
@@ -82,7 +82,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
         /// <param name="maxSettles"></param>
         /// <param name="toSkip"></param>
         /// <returns></returns>
-        public bool Exists(IGraph<CHEdgeData> graph, uint from, uint to, float maxWeight, int maxSettles, uint toSkip)
+        public bool Exists(IGraph<ContractedEdge> graph, uint from, uint to, float maxWeight, int maxSettles, uint toSkip)
         {
             var tos = new List<uint>(1);
             tos.Add(to);
@@ -105,7 +105,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
         /// <param name="maxSettles"></param>
         /// <param name="forwardExists"></param>
         /// <param name="backwardExists"></param>
-        public void Exists(IGraph<CHEdgeData> graph, uint from, List<uint> tos, List<float> tosWeights, int maxSettles,
+        public void Exists(IGraph<ContractedEdge> graph, uint from, List<uint> tos, List<float> tosWeights, int maxSettles,
             ref bool[] forwardExists, ref bool[] backwardExists)
         {
             this.Exists(graph, from, tos, tosWeights, maxSettles, ref forwardExists, ref backwardExists, uint.MaxValue);
@@ -122,7 +122,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
         /// <param name="forwardExists"></param>
         /// <param name="backwardExists"></param>
         /// <param name="toSkip"></param>
-        public void Exists(IGraph<CHEdgeData> graph, uint from, List<uint> tos, List<float> tosWeights, int maxSettles,
+        public void Exists(IGraph<ContractedEdge> graph, uint from, List<uint> tos, List<float> tosWeights, int maxSettles,
             ref bool[] forwardExists, ref bool[] backwardExists, uint toSkip)
         {
             int maxHops = _hopLimit;
@@ -304,7 +304,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
         /// <param name="maxSettles"></param>
         /// <param name="forwardExists"></param>
         /// <param name="backwardExists"></param>
-        private void ExistsOneHop(IGraph<CHEdgeData> graph, uint from, List<uint> tos, List<float> tosWeights, int maxSettles,
+        private void ExistsOneHop(IGraph<ContractedEdge> graph, uint from, List<uint> tos, List<float> tosWeights, int maxSettles,
             ref bool[] forwardExists, ref bool[] backwardExists)
         {
             var toSet = new HashSet<uint>();

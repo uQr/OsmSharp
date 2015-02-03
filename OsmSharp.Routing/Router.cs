@@ -20,8 +20,8 @@ using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Streams;
-using OsmSharp.Routing.CH;
-using OsmSharp.Routing.CH.PreProcessing;
+using OsmSharp.Routing.Contracted;
+using OsmSharp.Routing.Contracted.PreProcessing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Graph.Router.Dykstra;
@@ -140,7 +140,7 @@ namespace OsmSharp.Routing
         /// <param name="basicRouter">A custom routing implementation.</param>
         /// <param name="interpreter">The routing interpreter.</param>
         /// <returns></returns>
-        public static Router CreateCHFrom(IBasicRouterDataSource<CHEdgeData> data, IBasicRouter<CHEdgeData> basicRouter, 
+        public static Router CreateCHFrom(IBasicRouterDataSource<ContractedEdge> data, IBasicRouter<ContractedEdge> basicRouter, 
             IRoutingInterpreter interpreter)
         {
             // creates the live edge router.
@@ -168,7 +168,7 @@ namespace OsmSharp.Routing
 
             // creates the live edge router.
             var liveEdgeRouter = new TypedRouterCHEdge(
-                data, interpreter, new CHRouter());
+                data, interpreter, new ContractedRouter());
 
             return new Router(liveEdgeRouter); // create the actual router.
         }

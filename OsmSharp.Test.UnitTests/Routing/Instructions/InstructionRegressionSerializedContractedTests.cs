@@ -22,17 +22,17 @@ using OsmSharp.Collections.Tags;
 using OsmSharp.Osm.Streams.Filters;
 using OsmSharp.Osm.Xml.Streams;
 using OsmSharp.Routing;
-using OsmSharp.Routing.CH;
-using OsmSharp.Routing.CH.PreProcessing;
-using OsmSharp.Routing.CH.PreProcessing.Ordering;
-using OsmSharp.Routing.CH.PreProcessing.Witnesses;
+using OsmSharp.Routing.Contracted;
+using OsmSharp.Routing.Contracted.PreProcessing;
+using OsmSharp.Routing.Contracted.PreProcessing.Ordering;
+using OsmSharp.Routing.Contracted.PreProcessing.Witnesses;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
 using OsmSharp.Math.Geo;
 using OsmSharp.Collections.Tags.Index;
 using System.IO;
-using OsmSharp.Routing.CH.Serialization.Sorted;
+using OsmSharp.Routing.Contracted.Serialization.Sorted;
 
 namespace OsmSharp.Test.Unittests.Routing.Instructions
 {
@@ -69,7 +69,7 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
 
             var deserialized = routingSerializer.Deserialize(memoryStream);
 
-            return Router.CreateCHFrom(deserialized, new CHRouter(), new OsmRoutingInterpreter());
+            return Router.CreateCHFrom(deserialized, new ContractedRouter(), new OsmRoutingInterpreter());
         }
 
         /// <summary>

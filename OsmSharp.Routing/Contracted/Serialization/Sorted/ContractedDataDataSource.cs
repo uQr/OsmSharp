@@ -22,19 +22,19 @@ using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Osm.Tiles;
-using OsmSharp.Routing.CH.PreProcessing;
+using OsmSharp.Routing.Contracted.PreProcessing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace OsmSharp.Routing.CH.Serialization.Sorted
+namespace OsmSharp.Routing.Contracted.Serialization.Sorted
 {
     /// <summary>
     /// A basic router datasource.
     /// </summary>
-    internal class CHEdgeDataDataSource : IBasicRouterDataSource<CHEdgeData>
+    internal class ContractedDataDataSource : IBasicRouterDataSource<ContractedEdge>
     {
         /// <summary>
         /// Holds the tags index.
@@ -59,11 +59,11 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <summary>
         /// Creates a new CH edge data source.
         /// </summary>
-        public CHEdgeDataDataSource(Stream stream, CHEdgeDataDataSourceSerializer serializer, IEnumerable<string> vehicles,
-            int startOfRegions, CHVertexRegionIndex regionIndex, int zoom,
-            int startOfBlocks, CHBlockIndex blockIndex, uint blockSize,
-            int startOfShapes, CHBlockIndex shapeIndex,
-            int startOfReverses, CHBlockIndex reversesIndex,
+        public ContractedDataDataSource(Stream stream, CHEdgeDataDataSourceSerializer serializer, IEnumerable<string> vehicles,
+            int startOfRegions, ContractedVertexRegionIndex regionIndex, int zoom,
+            int startOfBlocks, ContractedBlockIndex blockIndex, uint blockSize,
+            int startOfShapes, ContractedBlockIndex shapeIndex,
+            int startOfReverses, ContractedBlockIndex reversesIndex,
             ITagsCollectionIndexReadonly tagsIndex)
         {
             _stream = stream;
@@ -75,10 +75,10 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             this.InitializeShapes(startOfShapes, shapeIndex);
             this.InitializeReverses(startOfReverses, reversesIndex);
 
-            _blocks = new LRUCache<uint, CHBlock>(5000);
-            _blockShapes = new LRUCache<uint, CHBlockCoordinates>(1000);
-            _blockReverses = new LRUCache<uint, CHBlockReverse>(1000);
-            _regions = new LRUCache<ulong, CHVertexRegion>(1000);
+            _blocks = new LRUCache<uint, ContractedBlock>(5000);
+            _blockShapes = new LRUCache<uint, ContractedBlockCoordinates>(1000);
+            _blockReverses = new LRUCache<uint, ContractedBlockReverse>(1000);
+            _regions = new LRUCache<ulong, ContractedVertexRegion>(1000);
             _tagsIndex = tagsIndex;
         }
 
@@ -107,19 +107,19 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-        public INeighbourEnumerator<CHEdgeData> GetEdges(GeoCoordinateBox box)
+        public INeighbourEnumerator<ContractedEdge> GetEdges(GeoCoordinateBox box)
         {
             // get all the vertices in the given box.
             var vertices = this.LoadVerticesIn(box);
 
             // loop over all vertices and get the arcs.
-            var neighbours = new List<Tuple<uint, uint, uint, uint, CHEdgeData>>();
+            var neighbours = new List<Tuple<uint, uint, uint, uint, ContractedEdge>>();
             foreach (uint vertexId in vertices)
             {
                 var arcs = this.LoadArcs(vertexId);
                 for (int arcIdx = 0; arcIdx < arcs.Length; arcIdx++)
                 {
-                    neighbours.Add(new Tuple<uint, uint, uint, uint, CHEdgeData>(arcs[arcIdx].Item1, arcs[arcIdx].Item2,
+                    neighbours.Add(new Tuple<uint, uint, uint, uint, ContractedEdge>(arcs[arcIdx].Item1, arcs[arcIdx].Item2,
                         vertexId, arcs[arcIdx].Item3, arcs[arcIdx].Item4));
                 }
             }
@@ -160,7 +160,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// </summary>
         /// <param name="vertexId"></param>
         /// <returns></returns>
-        public IEdgeEnumerator<CHEdgeData> GetEdges(uint vertexId)
+        public IEdgeEnumerator<ContractedEdge> GetEdges(uint vertexId)
         {
             return new EdgeEnumerator(this, this.GetEdgePairs(vertexId));
         }
@@ -170,9 +170,9 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// </summary>
         /// <param name="vertex"></param>
         /// <returns></returns>
-        public IEnumerable<Edge<CHEdgeData>> GetDirectNeighbours(uint vertex)
+        public IEnumerable<Edge<ContractedEdge>> GetDirectNeighbours(uint vertex)
         {
-            var edgeList = new List<Edge<CHEdgeData>>(this.GetEdges(vertex));
+            var edgeList = new List<Edge<ContractedEdge>>(this.GetEdges(vertex));
             var reverses = this.LoadVertexReverses(vertex);
             for (int i = 0; i < reverses.Length; i++)
             {
@@ -182,12 +182,12 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                     var intermediates = reverseEdges.Intermediates;
                     if (intermediates == null)
                     {
-                        edgeList.Add(new Edge<CHEdgeData>(reverses[i],
+                        edgeList.Add(new Edge<ContractedEdge>(reverses[i],
                             reverseEdges.InvertedEdgeData, null));
                     }
                     else
                     {
-                        edgeList.Add(new Edge<CHEdgeData>(reverses[i],
+                        edgeList.Add(new Edge<ContractedEdge>(reverses[i],
                             reverseEdges.InvertedEdgeData, reverseEdges.Intermediates.Reverse()));
                     }
                 }
@@ -212,7 +212,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <param name="vertex1"></param>
         /// <param name="vertex2"></param>
         /// <returns></returns>
-        public IEdgeEnumerator<CHEdgeData> GetEdges(uint vertex1, uint vertex2)
+        public IEdgeEnumerator<ContractedEdge> GetEdges(uint vertex1, uint vertex2)
         {
             return new EdgeEnumerator(this, this.GetEdgePairs(vertex1, vertex2));
         }
@@ -238,7 +238,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             { // calculate the number of vertices from the block-count and the content of the last block.
                 var lastBlockId = (uint)(_blocksIndex.BlockLocationIndex.Length - 1);
                 var count = lastBlockId * _blockSize;
-                CHBlock block;
+                ContractedBlock block;
                 if (!_blocks.TryGet(lastBlockId, out block))
                 { // damn block not cached!
                     block = this.DeserializeBlock(lastBlockId);
@@ -274,10 +274,10 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <param name="vertex1"></param>
         /// <param name="vertex2"></param>
         /// <returns></returns>
-        private Tuple<uint, uint, uint, CHEdgeData>[] GetEdgePairs(uint vertex1, uint vertex2)
+        private Tuple<uint, uint, uint, ContractedEdge>[] GetEdgePairs(uint vertex1, uint vertex2)
         {
             var arcs = this.LoadArcs(vertex1);
-            var selectedArcs = new List<Tuple<uint, uint, uint, CHEdgeData>>(arcs.Length);
+            var selectedArcs = new List<Tuple<uint, uint, uint, ContractedEdge>>(arcs.Length);
             for(int idx = 0; idx < arcs.Length; idx++)
             {
                 if(arcs[idx].Item3 == vertex2)
@@ -294,7 +294,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// </summary>
         /// <param name="vertexId"></param>
         /// <returns></returns>
-        private Tuple<uint, uint, uint, CHEdgeData>[] GetEdgePairs(uint vertexId)
+        private Tuple<uint, uint, uint, ContractedEdge>[] GetEdgePairs(uint vertexId)
         {
             return this.LoadArcs(vertexId);
         }
@@ -309,7 +309,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <summary>
         /// Holds the regions.
         /// </summary>
-        private LRUCache<ulong, CHVertexRegion> _regions;
+        private LRUCache<ulong, ContractedVertexRegion> _regions;
 
         /// <summary>
         /// Holds the region stream parts.
@@ -322,7 +322,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <param name="startOfRegions"></param>
         /// <param name="regionIndex"></param>
         /// <param name="zoom"></param>
-        private void InitializeRegions(int startOfRegions, CHVertexRegionIndex regionIndex, int zoom)
+        private void InitializeRegions(int startOfRegions, ContractedVertexRegionIndex regionIndex, int zoom)
         {
             _zoom = zoom;
             _regionStreamParts = new Dictionary<ulong, StreamPart>();
@@ -356,7 +356,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             var range = TileRange.CreateAroundBoundingBox(box, _zoom);
             foreach (Tile tile in range)
             {
-                CHVertexRegion region;
+                ContractedVertexRegion region;
                 if (!_regions.TryGet(tile.Id, out region))
                 {
                     region = this.DeserializeRegion(tile.Id);
@@ -381,7 +381,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        private CHVertexRegion DeserializeRegion(ulong id)
+        private ContractedVertexRegion DeserializeRegion(ulong id)
         {
             StreamPart part;
             if (_regionStreamParts.TryGetValue(id, out part))
@@ -403,17 +403,17 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <summary>
         /// Holds the cached blocks.
         /// </summary>
-        private LRUCache<uint, CHBlock> _blocks;
+        private LRUCache<uint, ContractedBlock> _blocks;
 
         /// <summary>
         /// Holds the cached block shapes.
         /// </summary>
-        private LRUCache<uint, CHBlockCoordinates> _blockShapes;
+        private LRUCache<uint, ContractedBlockCoordinates> _blockShapes;
 
         /// <summary>
         /// Holds the cached block reverses.
         /// </summary>
-        private LRUCache<uint, CHBlockReverse> _blockReverses;
+        private LRUCache<uint, ContractedBlockReverse> _blockReverses;
 
         /// <summary>
         /// Holds the start-position of the blocks.
@@ -423,7 +423,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <summary>
         /// Holds the blocks index.
         /// </summary>
-        private CHBlockIndex _blocksIndex;
+        private ContractedBlockIndex _blocksIndex;
 
         /// <summary>
         /// Initializes the blocks stuff.
@@ -431,7 +431,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <param name="startOfBlocks"></param>
         /// <param name="blocksIndex"></param>
         /// <param name="blockSize"></param>
-        private void InitializeBlocks(int startOfBlocks, CHBlockIndex blocksIndex, uint blockSize)
+        private void InitializeBlocks(int startOfBlocks, ContractedBlockIndex blocksIndex, uint blockSize)
         {
             _startOfBlocks = startOfBlocks;
             _blocksIndex = blocksIndex;
@@ -446,14 +446,14 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <summary>
         /// Holds the shapes index.
         /// </summary>
-        private CHBlockIndex _shapesIndex;
+        private ContractedBlockIndex _shapesIndex;
 
         /// <summary>
         /// Initializes the shapes stuff.
         /// </summary>
         /// <param name="startOfShapes"></param>
         /// <param name="shapesIndex"></param>
-        private void InitializeShapes(int startOfShapes, CHBlockIndex shapesIndex)
+        private void InitializeShapes(int startOfShapes, ContractedBlockIndex shapesIndex)
         {
             _startOfShapes = startOfShapes;
             _shapesIndex = shapesIndex;
@@ -467,14 +467,14 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <summary>
         /// Holds the reverses index.
         /// </summary>
-        private CHBlockIndex _reversesIndex;
+        private ContractedBlockIndex _reversesIndex;
 
         /// <summary>
         /// Initializes the shapes stuff.
         /// </summary>
         /// <param name="startOfReverses"></param>
         /// <param name="reversesIndex"></param>
-        private void InitializeReverses(int startOfReverses, CHBlockIndex reversesIndex)
+        private void InitializeReverses(int startOfReverses, ContractedBlockIndex reversesIndex)
         {
             _startOfReverses = startOfReverses;
             _reversesIndex = reversesIndex;
@@ -489,8 +489,8 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <returns></returns>
         private bool LoadVertex(uint vertexId, out float latitude, out float longitude)
         {
-            uint blockId = CHBlock.CalculateId(vertexId, _blockSize);
-            CHBlock block;
+            uint blockId = ContractedBlock.CalculateId(vertexId, _blockSize);
+            ContractedBlock block;
             if (!_blocks.TryGet(blockId, out block))
             { // damn block not cached!
                 block = this.DeserializeBlock(blockId);
@@ -523,16 +523,16 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <param name="vertex2"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        private bool LoadArc(uint vertex1, uint vertex2, out CHEdgeData data)
+        private bool LoadArc(uint vertex1, uint vertex2, out ContractedEdge data)
         {
-            uint blockId = CHBlock.CalculateId(vertex1, _blockSize);
-            CHBlock block;
+            uint blockId = ContractedBlock.CalculateId(vertex1, _blockSize);
+            ContractedBlock block;
             if (!_blocks.TryGet(blockId, out block))
             { // damn block not cached!
                 block = this.DeserializeBlock(blockId);
                 if (block == null)
                 { // oops even now the block is not found!
-                    data = new CHEdgeData();
+                    data = new ContractedEdge();
                     return false;
                 }
                 _blocks.Add(blockId, block);
@@ -541,24 +541,24 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             if (block.Vertices != null &&
                 blockIdx < block.Vertices.Length)
             { // block is found and the vertex is there!
-                for (int arcIdx = block.Vertices[blockIdx].ArcIndex;
-                    arcIdx < block.Vertices[blockIdx].ArcIndex + block.Vertices[blockIdx].ArcCount; arcIdx++)
+                for (int arcIdx = block.Vertices[blockIdx].EdgeIndex;
+                    arcIdx < block.Vertices[blockIdx].EdgeIndex + block.Vertices[blockIdx].EdgeCount; arcIdx++)
                 { // loop over all arcs.
-                    var chArc = block.Arcs[arcIdx];
+                    var chArc = block.Edges[arcIdx];
                     if (chArc.TargetId == vertex2)
                     {
-                        data = new CHEdgeData(chArc.Value, chArc.Weight, chArc.Meta);
+                        data = new ContractedEdge(chArc.Value, chArc.Weight, chArc.Meta);
                         return true;
                     }
                 }
             }
-            blockId = CHBlock.CalculateId(vertex2, _blockSize);
+            blockId = ContractedBlock.CalculateId(vertex2, _blockSize);
             if (!_blocks.TryGet(blockId, out block))
             { // damn block not cached!
                 block = this.DeserializeBlock(blockId);
                 if (block == null)
                 { // oops even now the block is not found!
-                    data = new CHEdgeData();
+                    data = new ContractedEdge();
                     return false;
                 }
                 _blocks.Add(blockId, block);
@@ -567,18 +567,18 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             if (block.Vertices != null &&
                 blockIdx < block.Vertices.Length)
             { // block is found and the vertex is there!
-                for (int arcIdx = block.Vertices[blockIdx].ArcIndex;
-                    arcIdx < block.Vertices[blockIdx].ArcIndex + block.Vertices[blockIdx].ArcCount; arcIdx++)
+                for (int arcIdx = block.Vertices[blockIdx].EdgeIndex;
+                    arcIdx < block.Vertices[blockIdx].EdgeIndex + block.Vertices[blockIdx].EdgeCount; arcIdx++)
                 { // loop over all arcs.
-                    var chArc = block.Arcs[arcIdx];
+                    var chArc = block.Edges[arcIdx];
                     if (chArc.TargetId == vertex1)
                     {
-                        data = new CHEdgeData(chArc.Value, chArc.Weight, chArc.Meta);
+                        data = new ContractedEdge(chArc.Value, chArc.Weight, chArc.Meta);
                         return true;
                     }
                 }
             }
-            data = new CHEdgeData();
+            data = new ContractedEdge();
             return false;
         }
 
@@ -591,8 +591,8 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <returns></returns>
         private bool LoadArcShape(uint vertex1, uint vertex2, out ICoordinateCollection shape)
         {
-            uint blockId = CHBlock.CalculateId(vertex1, _blockSize);
-            CHBlockCoordinates blockCoordinates;
+            uint blockId = ContractedBlock.CalculateId(vertex1, _blockSize);
+            ContractedBlockCoordinates blockCoordinates;
             if (!_blockShapes.TryGet(blockId, out blockCoordinates))
             { // damn block not cached!
                 blockCoordinates = this.DeserializeShape(blockId);
@@ -603,7 +603,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                 }
                 _blockShapes.Add(blockId, blockCoordinates);
             }
-            CHBlock block;
+            ContractedBlock block;
             if (!_blocks.TryGet(blockId, out block))
             { // damn block not cached!
                 block = this.DeserializeBlock(blockId);
@@ -618,13 +618,13 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             if (block.Vertices != null &&
                 blockIdx < block.Vertices.Length)
             { // block is found and the vertex is there!
-                for (int arcIdx = block.Vertices[blockIdx].ArcIndex;
-                    arcIdx < block.Vertices[blockIdx].ArcIndex + block.Vertices[blockIdx].ArcCount; arcIdx++)
+                for (int arcIdx = block.Vertices[blockIdx].EdgeIndex;
+                    arcIdx < block.Vertices[blockIdx].EdgeIndex + block.Vertices[blockIdx].EdgeCount; arcIdx++)
                 { // loop over all arcs.
-                    var chArc = block.Arcs[arcIdx];
+                    var chArc = block.Edges[arcIdx];
                     if (chArc.TargetId == vertex2)
                     {
-                        var arcCoordinates = blockCoordinates.Arcs[arcIdx];
+                        var arcCoordinates = blockCoordinates.Edges[arcIdx];
                         shape = null;
                         if (arcCoordinates.Coordinates != null)
                         {
@@ -634,7 +634,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                     }
                 }
             }
-            blockId = CHBlock.CalculateId(vertex2, _blockSize);
+            blockId = ContractedBlock.CalculateId(vertex2, _blockSize);
             if (!_blocks.TryGet(blockId, out block))
             { // damn block not cached!
                 block = this.DeserializeBlock(blockId);
@@ -659,13 +659,13 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             if (block.Vertices != null &&
                 blockIdx < block.Vertices.Length)
             { // block is found and the vertex is there!
-                for (int arcIdx = block.Vertices[blockIdx].ArcIndex;
-                    arcIdx < block.Vertices[blockIdx].ArcIndex + block.Vertices[blockIdx].ArcCount; arcIdx++)
+                for (int arcIdx = block.Vertices[blockIdx].EdgeIndex;
+                    arcIdx < block.Vertices[blockIdx].EdgeIndex + block.Vertices[blockIdx].EdgeCount; arcIdx++)
                 { // loop over all arcs.
-                    var chArc = block.Arcs[arcIdx];
+                    var chArc = block.Edges[arcIdx];
                     if (chArc.TargetId == vertex1)
                     {
-                        var arcCoordinates = blockCoordinates.Arcs[arcIdx];
+                        var arcCoordinates = blockCoordinates.Edges[arcIdx];
                         shape = null;
                         if (arcCoordinates.Coordinates != null)
                         {
@@ -684,16 +684,16 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// </summary>
         /// <param name="vertex">The vertex to get all incident edges for.</param>
         /// <returns>A tuple with (block index, arc index, neighbour, neighbour data).</returns>
-        private Tuple<uint, uint, uint, CHEdgeData>[] LoadArcs(uint vertex)
+        private Tuple<uint, uint, uint, ContractedEdge>[] LoadArcs(uint vertex)
         {
-            uint blockId = CHBlock.CalculateId(vertex, _blockSize);
-            CHBlock block;
+            uint blockId = ContractedBlock.CalculateId(vertex, _blockSize);
+            ContractedBlock block;
             if (!_blocks.TryGet(blockId, out block))
             { // damn block not cached!
                 block = this.DeserializeBlock(blockId);
                 if (block == null)
                 { // oops the block is not found!
-                    return new Tuple<uint, uint, uint, CHEdgeData>[0];
+                    return new Tuple<uint, uint, uint, ContractedEdge>[0];
                 }
                 _blocks.Add(blockId, block);
             }
@@ -701,20 +701,20 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             if (block.Vertices != null &&
                 blockIdx < block.Vertices.Length)
             { // block is found and the vertex is there!
-                var arcs = new Tuple<uint, uint, uint, CHEdgeData>[block.Vertices[blockIdx].ArcCount];
-                for (uint arcIdx = block.Vertices[blockIdx].ArcIndex;
-                    arcIdx < block.Vertices[blockIdx].ArcIndex + block.Vertices[blockIdx].ArcCount; arcIdx++)
+                var arcs = new Tuple<uint, uint, uint, ContractedEdge>[block.Vertices[blockIdx].EdgeCount];
+                for (uint arcIdx = block.Vertices[blockIdx].EdgeIndex;
+                    arcIdx < block.Vertices[blockIdx].EdgeIndex + block.Vertices[blockIdx].EdgeCount; arcIdx++)
                 { // loop over all arcs.
-                    var chArc = block.Arcs[arcIdx];
-                    var edgeData = new CHEdgeData(chArc.Value, chArc.Weight, chArc.Meta);
+                    var chArc = block.Edges[arcIdx];
+                    var edgeData = new ContractedEdge(chArc.Value, chArc.Weight, chArc.Meta);
 
-                    arcs[arcIdx - block.Vertices[blockIdx].ArcIndex] =
-                        new Tuple<uint, uint, uint, CHEdgeData>(blockId, arcIdx, chArc.TargetId, edgeData);
+                    arcs[arcIdx - block.Vertices[blockIdx].EdgeIndex] =
+                        new Tuple<uint, uint, uint, ContractedEdge>(blockId, arcIdx, chArc.TargetId, edgeData);
                 }
                 return arcs;
             }
             // oops even now the block is not found!
-            return new Tuple<uint, uint, uint, CHEdgeData>[0];
+            return new Tuple<uint, uint, uint, ContractedEdge>[0];
         }
 
         /// <summary>
@@ -726,7 +726,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <returns>True if there was a shape.</returns>
         private bool GetShapeForArc(uint blockId, uint arcIdx, out ICoordinateCollection shape)
         {
-            CHBlockCoordinates blockCoordinates;
+            ContractedBlockCoordinates blockCoordinates;
             if (!_blockShapes.TryGet(blockId, out blockCoordinates))
             { // damn block not cached!
                 blockCoordinates = this.DeserializeShape(blockId);
@@ -737,7 +737,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                 }
                 _blockShapes.Add(blockId, blockCoordinates);
             }
-            var arcCoordinates = blockCoordinates.Arcs[arcIdx];
+            var arcCoordinates = blockCoordinates.Edges[arcIdx];
             shape = null;
             if (arcCoordinates.Coordinates != null)
             {
@@ -751,16 +751,16 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// </summary>
         /// <param name="vertexId"></param>
         /// <returns></returns>
-        private KeyValuePair<uint, CHEdgeData>[] LoadArcsNoShapes(uint vertexId)
+        private KeyValuePair<uint, ContractedEdge>[] LoadArcsNoShapes(uint vertexId)
         {
-            uint blockId = CHBlock.CalculateId(vertexId, _blockSize);
-            CHBlock block;
+            uint blockId = ContractedBlock.CalculateId(vertexId, _blockSize);
+            ContractedBlock block;
             if (!_blocks.TryGet(blockId, out block))
             { // damn block not cached!
                 block = this.DeserializeBlock(blockId);
                 if (block == null)
                 { // oops even now the block is not found!
-                    return new KeyValuePair<uint, CHEdgeData>[0];
+                    return new KeyValuePair<uint, ContractedEdge>[0];
                 }
                 _blocks.Add(blockId, block);
             }
@@ -768,20 +768,20 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             if (block.Vertices != null &&
                 blockIdx < block.Vertices.Length)
             { // block is found and the vertex is there!
-                var arcs = new KeyValuePair<uint, CHEdgeData>[
-                    block.Vertices[blockIdx].ArcCount];
-                for (int arcIdx = block.Vertices[blockIdx].ArcIndex;
-                    arcIdx < block.Vertices[blockIdx].ArcIndex + block.Vertices[blockIdx].ArcCount; arcIdx++)
+                var arcs = new KeyValuePair<uint, ContractedEdge>[
+                    block.Vertices[blockIdx].EdgeCount];
+                for (int arcIdx = block.Vertices[blockIdx].EdgeIndex;
+                    arcIdx < block.Vertices[blockIdx].EdgeIndex + block.Vertices[blockIdx].EdgeCount; arcIdx++)
                 { // loop over all arcs.
-                    var chArc = block.Arcs[arcIdx];
-                    var edgeData = new CHEdgeData(chArc.Value, chArc.Weight, chArc.Meta);
-                    arcs[arcIdx - block.Vertices[blockIdx].ArcIndex] = new KeyValuePair<uint, CHEdgeData>(
+                    var chArc = block.Edges[arcIdx];
+                    var edgeData = new ContractedEdge(chArc.Value, chArc.Weight, chArc.Meta);
+                    arcs[arcIdx - block.Vertices[blockIdx].EdgeIndex] = new KeyValuePair<uint, ContractedEdge>(
                         chArc.TargetId, edgeData);
                 }
                 return arcs;
             }
             // oops even now the block is not found!
-            return new KeyValuePair<uint, CHEdgeData>[0];
+            return new KeyValuePair<uint, ContractedEdge>[0];
         }
 
         /// <summary>
@@ -789,7 +789,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// </summary>
         /// <param name="blockId"></param>
         /// <returns></returns>
-        private CHBlock DeserializeBlock(uint blockId)
+        private ContractedBlock DeserializeBlock(uint blockId)
         {
             int blockOffset;
             int blockSize;
@@ -813,7 +813,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// </summary>
         /// <param name="blockId"></param>
         /// <returns></returns>
-        private CHBlockCoordinates DeserializeShape(uint blockId)
+        private ContractedBlockCoordinates DeserializeShape(uint blockId)
         {
             int blockOffset;
             int blockSize;
@@ -837,7 +837,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// </summary>
         /// <param name="blockId"></param>
         /// <returns></returns>
-        private CHBlockReverse DeserializeReverse(uint blockId)
+        private ContractedBlockReverse DeserializeReverse(uint blockId)
         {
             int blockOffset;
             int blockSize;
@@ -864,8 +864,8 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <returns></returns>
         private uint[] LoadVertexReverses(uint vertex)
         {
-            uint blockId = CHBlock.CalculateId(vertex, _blockSize);
-            CHBlockReverse blockReverses;
+            uint blockId = ContractedBlock.CalculateId(vertex, _blockSize);
+            ContractedBlockReverse blockReverses;
             if (!_blockReverses.TryGet(blockId, out blockReverses))
             { // damn block not cached!
                 blockReverses = this.DeserializeReverse(blockId);
@@ -889,17 +889,17 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <summary>
         /// An edge enumerator.
         /// </summary>
-        private class EdgeEnumerator : IEdgeEnumerator<CHEdgeData>
+        private class EdgeEnumerator : IEdgeEnumerator<ContractedEdge>
         {
             /// <summary>
             /// Holds the edges.
             /// </summary>
-            private Tuple<uint, uint, uint, CHEdgeData>[] _edges;
+            private Tuple<uint, uint, uint, ContractedEdge>[] _edges;
 
             /// <summary>
             /// Holds the source.
             /// </summary>
-            private CHEdgeDataDataSource _source;
+            private ContractedDataDataSource _source;
 
             /// <summary>
             /// Holds the current position.
@@ -911,7 +911,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             /// </summary>
             /// <param name="source">The datasource the edges come from.</param>
             /// <param name="edges">The edge data.</param>
-            public EdgeEnumerator(CHEdgeDataDataSource source, Tuple<uint, uint, uint, CHEdgeData>[] edges)
+            public EdgeEnumerator(ContractedDataDataSource source, Tuple<uint, uint, uint, ContractedEdge>[] edges)
             {
                 _source = source;
                 _edges = edges;
@@ -938,7 +938,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             /// <summary>
             /// Returns the current edge data.
             /// </summary>
-            public CHEdgeData EdgeData
+            public ContractedEdge EdgeData
             {
                 get { return _edges[_current].Item4; }
             }
@@ -954,9 +954,9 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             /// <summary>
             /// Returns the inverted edge data.
             /// </summary>
-            public CHEdgeData InvertedEdgeData
+            public ContractedEdge InvertedEdgeData
             {
-                get { return (CHEdgeData)this.EdgeData.Reverse(); }
+                get { return (ContractedEdge)this.EdgeData.Reverse(); }
             }
 
             /// <summary>
@@ -992,7 +992,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                 _current = -1;
             }
 
-            public IEnumerator<Edge<CHEdgeData>> GetEnumerator()
+            public IEnumerator<Edge<ContractedEdge>> GetEnumerator()
             {
                 this.Reset();
                 return this;
@@ -1004,9 +1004,9 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                 return this;
             }
 
-            public Edge<CHEdgeData> Current
+            public Edge<ContractedEdge> Current
             {
-                get { return new Edge<CHEdgeData>(this); }
+                get { return new Edge<ContractedEdge>(this); }
             }
 
             object System.Collections.IEnumerator.Current
@@ -1025,7 +1025,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                 get { return true; }
             }
 
-            int IEdgeEnumerator<CHEdgeData>.Count
+            int IEdgeEnumerator<ContractedEdge>.Count
             {
                 get { return _edges.Length; }
             }
@@ -1034,17 +1034,17 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <summary>
         /// A neighbour enumerators.
         /// </summary>
-        private class NeighbourEnumerator : INeighbourEnumerator<CHEdgeData>
+        private class NeighbourEnumerator : INeighbourEnumerator<ContractedEdge>
         {
             /// <summary>
             /// Holds the edge and neighbours.
             /// </summary>
-            private List<Tuple<uint, uint, uint, uint, CHEdgeData>> _neighbours;
+            private List<Tuple<uint, uint, uint, uint, ContractedEdge>> _neighbours;
 
             /// <summary>
             /// Holds the source.
             /// </summary>
-            private CHEdgeDataDataSource _source;
+            private ContractedDataDataSource _source;
 
             /// <summary>
             /// Holds the current position.
@@ -1056,8 +1056,8 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             /// </summary>
             /// <param name="source">The datasource the edges come from.</param>
             /// <param name="neighbours">The neighbour data.</param>
-            public NeighbourEnumerator(CHEdgeDataDataSource source,
-                List<Tuple<uint, uint, uint, uint, CHEdgeData>> neighbours)
+            public NeighbourEnumerator(ContractedDataDataSource source,
+                List<Tuple<uint, uint, uint, uint, ContractedEdge>> neighbours)
             {
                 _source = source;
                 _neighbours = neighbours;
@@ -1092,7 +1092,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             /// <summary>
             /// Gets the edge data.
             /// </summary>
-            public CHEdgeData EdgeData
+            public ContractedEdge EdgeData
             {
                 get { return _neighbours[_current].Item5; }
             }
@@ -1137,7 +1137,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                 _current = -1;
             }
 
-            public IEnumerator<Neighbour<CHEdgeData>> GetEnumerator()
+            public IEnumerator<Neighbour<ContractedEdge>> GetEnumerator()
             {
                 this.Reset();
                 return this;
@@ -1149,9 +1149,9 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                 return this;
             }
 
-            public Neighbour<CHEdgeData> Current
+            public Neighbour<ContractedEdge> Current
             {
-                get { return new Neighbour<CHEdgeData>(this); }
+                get { return new Neighbour<ContractedEdge>(this); }
             }
 
             object System.Collections.IEnumerator.Current
@@ -1196,13 +1196,13 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             get { throw new NotImplementedException(); }
         }
 
-        public bool ContainsEdge(uint vertexId, uint neighbour, CHEdgeData data)
+        public bool ContainsEdge(uint vertexId, uint neighbour, ContractedEdge data)
         {
             throw new NotImplementedException();
         }
 
 
-        public bool GetEdge(uint vertex1, uint vertex2, out CHEdgeData data)
+        public bool GetEdge(uint vertex1, uint vertex2, out ContractedEdge data)
         {
             throw new NotImplementedException();
         }

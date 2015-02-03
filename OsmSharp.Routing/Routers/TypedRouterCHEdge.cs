@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using OsmSharp.Routing.CH.PreProcessing;
+using OsmSharp.Routing.Contracted.PreProcessing;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Interpreter;
 using System;
@@ -29,7 +29,7 @@ namespace OsmSharp.Routing.Routers
     /// <summary>
     /// A version of the typedrouter using edges of type CHEdgeData.
     /// </summary>
-    internal class TypedRouterCHEdge : TypedRouter<CHEdgeData>
+    internal class TypedRouterCHEdge : TypedRouter<ContractedEdge>
     {
         /// <summary>
         /// Creates a new type router using edges of type CHEdgeData.
@@ -37,7 +37,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="graph"></param>
         /// <param name="interpreter"></param>
         /// <param name="router"></param>
-        public TypedRouterCHEdge(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter, IBasicRouter<CHEdgeData> router)
+        public TypedRouterCHEdge(IBasicRouterDataSource<ContractedEdge> graph, IRoutingInterpreter interpreter, IBasicRouter<ContractedEdge> router)
             : base(graph, interpreter, router)
         {
             DefaultSearchDelta = 0.1f;
@@ -59,7 +59,7 @@ namespace OsmSharp.Routing.Routers
         /// </summary>
         /// <param name="vertex1"></param>
         /// <returns></returns>
-        protected override List<Edge<CHEdgeData>> GetNeighboursUndirected(long vertex1)
+        protected override List<Edge<ContractedEdge>> GetNeighboursUndirected(long vertex1)
         {
             var arcs = this.Data.GetDirectNeighbours(Convert.ToUInt32(vertex1)).ToList();
             return arcs.KeepUncontracted();
@@ -74,10 +74,10 @@ namespace OsmSharp.Routing.Routers
         /// <param name="to"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        protected override bool GetEdge(IGraphReadOnly<CHEdgeData> graph, uint from, uint to, out CHEdgeData data)
+        protected override bool GetEdge(IGraphReadOnly<ContractedEdge> graph, uint from, uint to, out ContractedEdge data)
         {
             var lowestWeight = float.MaxValue;
-            data = new CHEdgeData();
+            data = new ContractedEdge();
             var edges = graph.GetEdges(from, to);
             while (edges.MoveNext())
             {
@@ -111,7 +111,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="to"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        protected override bool GetEdgeShape(IGraphReadOnly<CHEdgeData> graph, uint from, uint to, out Collections.Coordinates.Collections.ICoordinateCollection data)
+        protected override bool GetEdgeShape(IGraphReadOnly<ContractedEdge> graph, uint from, uint to, out Collections.Coordinates.Collections.ICoordinateCollection data)
         {
             var lowestWeight = float.MaxValue;
             data = null;

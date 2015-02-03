@@ -22,10 +22,10 @@ using OsmSharp.Collections.Tags;
 using OsmSharp.Osm.Streams.Filters;
 using OsmSharp.Osm.Xml.Streams;
 using OsmSharp.Routing;
-using OsmSharp.Routing.CH;
-using OsmSharp.Routing.CH.PreProcessing;
-using OsmSharp.Routing.CH.PreProcessing.Ordering;
-using OsmSharp.Routing.CH.PreProcessing.Witnesses;
+using OsmSharp.Routing.Contracted;
+using OsmSharp.Routing.Contracted.PreProcessing;
+using OsmSharp.Routing.Contracted.PreProcessing.Ordering;
+using OsmSharp.Routing.Contracted.PreProcessing.Witnesses;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Interpreter;
@@ -39,7 +39,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
     /// Tests the sparse node ordering CH.
     /// </summary>
     [TestFixture]
-    public class CHEdgeDifferenceRoutingTest : SimpleRoutingTests<CHEdgeData>
+    public class CHEdgeDifferenceRoutingTest : SimpleRoutingTests<ContractedEdge>
     {
         /// <summary>
         /// Returns a new router.
@@ -48,8 +48,8 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         /// <param name="interpreter"></param>
         /// <param name="basicRouter"></param>
         /// <returns></returns>
-        public override Router BuildRouter(IBasicRouterDataSource<CHEdgeData> data,
-            IRoutingInterpreter interpreter, IBasicRouter<CHEdgeData> basicRouter)
+        public override Router BuildRouter(IBasicRouterDataSource<ContractedEdge> data,
+            IRoutingInterpreter interpreter, IBasicRouter<ContractedEdge> basicRouter)
         {
             return Router.CreateCHFrom(data, basicRouter, interpreter);
         }
@@ -59,9 +59,9 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public override IBasicRouter<CHEdgeData> BuildBasicRouter(IBasicRouterDataSource<CHEdgeData> data)
+        public override IBasicRouter<ContractedEdge> BuildBasicRouter(IBasicRouterDataSource<ContractedEdge> data)
         {
-            return new CHRouter();
+            return new ContractedRouter();
         }
 
         /// <summary>
@@ -70,19 +70,19 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         /// <param name="interpreter"></param>
         /// <param name="embeddedString"></param>
         /// <returns></returns>
-        public override IBasicRouterDataSource<CHEdgeData> BuildData(IOsmRoutingInterpreter interpreter, 
+        public override IBasicRouterDataSource<ContractedEdge> BuildData(IOsmRoutingInterpreter interpreter, 
             string embeddedString)
         {
             string key = string.Format("CHEdgeDifference.Routing.IBasicRouterDataSource<CHEdgeData>.OSM.{0}",
                 embeddedString);
-            var data = StaticDictionary.Get<IBasicRouterDataSource<CHEdgeData>>(
+            var data = StaticDictionary.Get<IBasicRouterDataSource<ContractedEdge>>(
                 key);
             if (data == null)
             {
                 var tagsIndex = new TagsTableCollectionIndex();
 
                 // do the data processing.
-                var memoryData = new RouterDataSource<CHEdgeData>(new MemoryDirectedGraph<CHEdgeData>(), tagsIndex);
+                var memoryData = new RouterDataSource<ContractedEdge>(new MemoryDirectedGraph<ContractedEdge>(), tagsIndex);
                 var targetData = new CHEdgeGraphOsmStreamTarget(
                     memoryData, interpreter, tagsIndex, Vehicle.Car);
                 var dataProcessorSource = new XmlOsmStreamSource(
@@ -94,12 +94,12 @@ namespace OsmSharp.Test.Unittests.Routing.CH
 
                 // do the pre-processing part.
                 var witnessCalculator = new DykstraWitnessCalculator();
-                var preProcessor = new CHPreProcessor(memoryData,
+                var preProcessor = new ContractedPreProcessor(memoryData,
                     new EdgeDifferenceContractedSearchSpace(memoryData, witnessCalculator), witnessCalculator);
                 preProcessor.Start();
 
                 data = memoryData;
-                StaticDictionary.Add<IBasicRouterDataSource<CHEdgeData>>(key, data);
+                StaticDictionary.Add<IBasicRouterDataSource<ContractedEdge>>(key, data);
             }
             return data;
         }

@@ -22,9 +22,9 @@ using OsmSharp.Collections.Tags;
 using OsmSharp.Osm.Streams.Filters;
 using OsmSharp.Osm.Xml.Streams;
 using OsmSharp.Routing;
-using OsmSharp.Routing.CH.PreProcessing;
-using OsmSharp.Routing.CH.PreProcessing.Ordering;
-using OsmSharp.Routing.CH.PreProcessing.Witnesses;
+using OsmSharp.Routing.Contracted.PreProcessing;
+using OsmSharp.Routing.Contracted.PreProcessing.Ordering;
+using OsmSharp.Routing.Contracted.PreProcessing.Witnesses;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
@@ -60,15 +60,15 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         [Test]
         public void TestPriorityCalculation1NoWitnesses()
         {
-            var graph = new MemoryDirectedGraph<CHEdgeData>();
+            var graph = new MemoryDirectedGraph<ContractedEdge>();
             var vertex1 = graph.AddVertex(1, 0);
             var vertex2 = graph.AddVertex(2, 0);
             var vertex3 = graph.AddVertex(3, 0);
 
-            graph.AddEdge(vertex1, vertex3, new CHEdgeData(1, true, true, true, 10));
-            graph.AddEdge(vertex3, vertex1, new CHEdgeData(1, false, true, true, 10));
-            graph.AddEdge(vertex2, vertex3, new CHEdgeData(1, true, true, true, 10));
-            graph.AddEdge(vertex3, vertex2, new CHEdgeData(1, false, true, true, 10));
+            graph.AddEdge(vertex1, vertex3, new ContractedEdge(1, true, true, true, 10));
+            graph.AddEdge(vertex3, vertex1, new ContractedEdge(1, false, true, true, 10));
+            graph.AddEdge(vertex2, vertex3, new ContractedEdge(1, true, true, true, 10));
+            graph.AddEdge(vertex3, vertex2, new ContractedEdge(1, false, true, true, 10));
 
             var witnessCalculator = new DykstraWitnessCalculator(int.MaxValue);
             var priorityCalculator = new EdgeDifferenceContractedSearchSpace(graph, witnessCalculator);

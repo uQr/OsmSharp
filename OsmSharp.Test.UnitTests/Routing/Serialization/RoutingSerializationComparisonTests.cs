@@ -29,8 +29,8 @@ using OsmSharp.Routing.Osm.Streams.Graphs;
 using OsmSharp.Routing;
 using System.Diagnostics;
 using OsmSharp.Routing.Graph.Router;
-using OsmSharp.Routing.CH.PreProcessing;
-using OsmSharp.Routing.CH;
+using OsmSharp.Routing.Contracted.PreProcessing;
+using OsmSharp.Routing.Contracted;
 using OsmSharp.Collections.Tags;
 
 namespace OsmSharp.Test.Unittests.Routing.Serialization
@@ -60,7 +60,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
                                                                Vehicle.Car);
 
             // create serializer.
-            var routingSerializer = new OsmSharp.Routing.CH.Serialization.Sorted.CHEdgeDataDataSourceSerializer();
+            var routingSerializer = new OsmSharp.Routing.Contracted.Serialization.Sorted.CHEdgeDataDataSourceSerializer();
 
             // serialize/deserialize.
             TagsCollectionBase metaData = new TagsCollection();
@@ -83,7 +83,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
                 }
             }
 
-            IBasicRouterDataSource<CHEdgeData> deserializedVersion =
+            IBasicRouterDataSource<ContractedEdge> deserializedVersion =
                 routingSerializer.Deserialize(new MemoryStream(byteArray), out metaData);
             Assert.AreEqual(original.TagsIndex.Get(0), deserializedVersion.TagsIndex.Get(0));
 
@@ -93,12 +93,12 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
                                                                            .GetManifestResourceStream(embeddedString)),
                                                                interpreter,
                                                                Vehicle.Car);
-            var basicRouterOriginal = new CHRouter();
+            var basicRouterOriginal = new ContractedRouter();
             Router referenceRouter = Router.CreateCHFrom(
                 original, basicRouterOriginal, interpreter);
 
             // try to do some routing on the deserialized version.
-            var basicRouter = new CHRouter();
+            var basicRouter = new ContractedRouter();
             Router router = Router.CreateCHFrom(
                 deserializedVersion, basicRouter, interpreter);
 

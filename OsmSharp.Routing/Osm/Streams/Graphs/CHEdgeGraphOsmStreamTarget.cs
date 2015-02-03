@@ -23,9 +23,9 @@ using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Osm.Streams;
-using OsmSharp.Routing.CH.PreProcessing;
-using OsmSharp.Routing.CH.PreProcessing.Ordering;
-using OsmSharp.Routing.CH.PreProcessing.Witnesses;
+using OsmSharp.Routing.Contracted.PreProcessing;
+using OsmSharp.Routing.Contracted.PreProcessing.Ordering;
+using OsmSharp.Routing.Contracted.PreProcessing.Witnesses;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Interpreter.Roads;
@@ -38,7 +38,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
     /// <summary>
     /// A pre-processing target for OSM-data to a CH data structure.
     /// </summary>
-    public class CHEdgeGraphOsmStreamTarget : DynamicGraphOsmStreamWriter<CHEdgeData>
+    public class CHEdgeGraphOsmStreamTarget : DynamicGraphOsmStreamWriter<ContractedEdge>
     {
         /// <summary>
         /// Holds the vehicle profile this pre-processing target is for.
@@ -52,7 +52,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="interpreter"></param>
         /// <param name="tagsIndex"></param>
         /// <param name="vehicle"></param>
-        public CHEdgeGraphOsmStreamTarget(IRouterDataSource<CHEdgeData> dynamicGraph,
+        public CHEdgeGraphOsmStreamTarget(IRouterDataSource<ContractedEdge> dynamicGraph,
             IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex, Vehicle vehicle)
             : base(dynamicGraph, interpreter, tagsIndex)
         {
@@ -82,7 +82,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="to"></param>
         /// <param name="intermediates"></param>
         /// <returns></returns>
-        protected override CHEdgeData CalculateEdgeData(IEdgeInterpreter edgeInterpreter, ITagsCollectionIndex tagsIndex,
+        protected override ContractedEdge CalculateEdgeData(IEdgeInterpreter edgeInterpreter, ITagsCollectionIndex tagsIndex,
             TagsCollectionBase tags, bool tagsForward, GeoCoordinate from, GeoCoordinate to, List<GeoCoordinateSimple> intermediates)
         {
             var direction = _vehicle.IsOneWay(tags);
@@ -125,7 +125,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             weight = weight + (float)_vehicle.Weight(tags, previous, to);
 
             // initialize the edge data.
-            return new CHEdgeData(tagsId, tagsForward, forward, backward, weight);
+            return new ContractedEdge(tagsId, tagsForward, forward, backward, weight);
         }
 
         /// <summary>
@@ -151,11 +151,11 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="interpreter"></param>
         /// <param name="vehicle"></param>
         /// <returns></returns>
-        public static RouterDataSource<CHEdgeData> Preprocess(OsmStreamSource reader,
+        public static RouterDataSource<ContractedEdge> Preprocess(OsmStreamSource reader,
             ITagsCollectionIndex tagsIndex, IOsmRoutingInterpreter interpreter, Vehicle vehicle)
         {
             // pull in the data.
-            var graph = new RouterDataSource<CHEdgeData>(new MemoryDirectedGraph<CHEdgeData>(), tagsIndex);
+            var graph = new RouterDataSource<ContractedEdge>(new MemoryDirectedGraph<ContractedEdge>(), tagsIndex);
             var targetData = new CHEdgeGraphOsmStreamTarget(
                 graph, interpreter, tagsIndex, vehicle);
             targetData.RegisterSource(reader);
@@ -164,7 +164,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             // compress the graph.
             var witnessCalculator = new DykstraWitnessCalculator();
             var edgeDifference = new EdgeDifferenceContractedSearchSpace(graph, witnessCalculator);
-            var preProcessor = new CHPreProcessor(graph, edgeDifference, witnessCalculator);
+            var preProcessor = new ContractedPreProcessor(graph, edgeDifference, witnessCalculator);
             preProcessor.Start();
 
             return graph;
@@ -177,7 +177,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="interpreter"></param>
         /// <param name="vehicle"></param>
         /// <returns></returns>
-        public static RouterDataSource<CHEdgeData> Preprocess(OsmStreamSource reader,
+        public static RouterDataSource<ContractedEdge> Preprocess(OsmStreamSource reader,
             IOsmRoutingInterpreter interpreter, Vehicle vehicle)
         {
             return CHEdgeGraphOsmStreamTarget.Preprocess(reader, new TagsTableCollectionIndex(), interpreter, vehicle);

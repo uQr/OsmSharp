@@ -20,8 +20,8 @@ using NUnit.Framework;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Osm.Xml.Streams;
 using OsmSharp.Routing;
-using OsmSharp.Routing.CH;
-using OsmSharp.Routing.CH.PreProcessing;
+using OsmSharp.Routing.Contracted;
+using OsmSharp.Routing.Contracted.PreProcessing;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
@@ -88,7 +88,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH.Serialization.Sorted
                     interpreter, Vehicle.Car);
 
             // create serializer.
-            var routingSerializer = new OsmSharp.Routing.CH.Serialization.Sorted.CHEdgeDataDataSourceSerializer(false);
+            var routingSerializer = new OsmSharp.Routing.Contracted.Serialization.Sorted.CHEdgeDataDataSourceSerializer(false);
 
             // serialize/deserialize.
             TagsCollectionBase metaData = new TagsCollection();
@@ -120,11 +120,11 @@ namespace OsmSharp.Test.Unittests.Routing.CH.Serialization.Sorted
             original = CHEdgeGraphOsmStreamTarget.Preprocess(new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString)),
                     interpreter, Vehicle.Car);
-            var basicRouterOriginal = new CHRouter();
+            var basicRouterOriginal = new ContractedRouter();
             var referenceRouter = Router.CreateCHFrom(original, basicRouterOriginal, interpreter);
 
             // try to do some routing on the deserialized version.
-            var basicRouter = new CHRouter();
+            var basicRouter = new ContractedRouter();
             var router = Router.CreateCHFrom(deserializedVersion, basicRouter, interpreter);
 
             this.TestCompareAll(original, referenceRouter, router);

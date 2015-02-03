@@ -21,10 +21,10 @@ using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Osm.Streams.Filters;
 using OsmSharp.Osm.Xml.Streams;
 using OsmSharp.Routing;
-using OsmSharp.Routing.CH;
-using OsmSharp.Routing.CH.PreProcessing;
-using OsmSharp.Routing.CH.PreProcessing.Ordering;
-using OsmSharp.Routing.CH.PreProcessing.Witnesses;
+using OsmSharp.Routing.Contracted;
+using OsmSharp.Routing.Contracted.PreProcessing;
+using OsmSharp.Routing.Contracted.PreProcessing.Ordering;
+using OsmSharp.Routing.Contracted.PreProcessing.Witnesses;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
@@ -42,7 +42,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         /// <summary>
         /// Holds the data.
         /// </summary>
-        private Dictionary<string, RouterDataSource<CHEdgeData>> _data = null;
+        private Dictionary<string, RouterDataSource<ContractedEdge>> _data = null;
 
         /// <summary>
         /// Returns a new router.
@@ -55,15 +55,15 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         {
             if (_data == null)
             {
-                _data = new Dictionary<string, RouterDataSource<CHEdgeData>>();
+                _data = new Dictionary<string, RouterDataSource<ContractedEdge>>();
             }
-            RouterDataSource<CHEdgeData> data = null;
+            RouterDataSource<ContractedEdge> data = null;
             if (!_data.TryGetValue(embeddedName, out data))
             {
                 var tagsIndex = new TagsTableCollectionIndex();
 
                 // do the data processing.
-                data = new RouterDataSource<CHEdgeData>(new MemoryDirectedGraph<CHEdgeData>(), tagsIndex);
+                data = new RouterDataSource<ContractedEdge>(new MemoryDirectedGraph<ContractedEdge>(), tagsIndex);
                 var targetData = new CHEdgeGraphOsmStreamTarget(
                     data, interpreter, tagsIndex, Vehicle.Car);
                 var dataProcessorSource = new XmlOsmStreamSource(
@@ -78,14 +78,14 @@ namespace OsmSharp.Test.Unittests.Routing.CH
                 {
                     // do the pre-processing part.
                     var witnessCalculator = new DykstraWitnessCalculator();
-                    var preProcessor = new CHPreProcessor(data,
+                    var preProcessor = new ContractedPreProcessor(data,
                         new EdgeDifferenceContractedSearchSpace(data, witnessCalculator), witnessCalculator);
                     preProcessor.Start();
                 }
 
                 _data[embeddedName] = data;
             }
-            return Router.CreateCHFrom(data, new CHRouter(), interpreter);
+            return Router.CreateCHFrom(data, new ContractedRouter(), interpreter);
         }
 
         /// <summary>

@@ -21,8 +21,8 @@ using System.IO;
 using OsmSharp.Osm.PBF.Streams;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Math.Geo;
-using OsmSharp.Routing.CH.Serialization.Sorted;
-using OsmSharp.Routing.CH;
+using OsmSharp.Routing.Contracted.Serialization.Sorted;
+using OsmSharp.Routing.Contracted;
 using OsmSharp.Routing.Instructions;
 using System.Collections.Generic;
 using OsmSharp.Collections.Tags;
@@ -101,7 +101,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
                 stream, out metaData, true);
 
             var router = Router.CreateCHFrom(
-                graphDeserialized, new CHRouter(),
+                graphDeserialized, new ContractedRouter(),
                 new OsmRoutingInterpreter());
 
             CHSerializedRoutingTest.TestRouting(router, box, testCount);
@@ -193,7 +193,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
 
             var interpreter = new OsmRoutingInterpreter();
             var router = Router.CreateCHFrom(
-                graphDeserialized, new CHRouter(),
+                graphDeserialized, new ContractedRouter(),
                 interpreter);
 
             var fromPoint = router.Resolve(Vehicle.Car, from);

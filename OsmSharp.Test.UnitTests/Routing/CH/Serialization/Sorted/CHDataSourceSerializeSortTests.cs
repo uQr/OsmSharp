@@ -23,10 +23,10 @@
 //using OsmSharp.Routing.Osm.Interpreter;
 //using OsmSharp.Routing.Osm.Streams.Graphs;
 //using OsmSharp.Routing;
-//using OsmSharp.Routing.CH.Serialization.Sorted;
-//using OsmSharp.Routing.CH;
+//using OsmSharp.Routing.Contracted.Serialization.Sorted;
+//using OsmSharp.Routing.Contracted;
 //using OsmSharp.Routing.Graph;
-//using OsmSharp.Routing.CH.PreProcessing;
+//using OsmSharp.Routing.Contracted.PreProcessing;
 
 //namespace OsmSharp.Test.Unittests.Routing.CH.Serialization.Sorted
 //{

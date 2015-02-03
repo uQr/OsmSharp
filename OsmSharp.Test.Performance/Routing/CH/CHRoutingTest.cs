@@ -21,8 +21,8 @@ using OsmSharp.Logging;
 using OsmSharp.Math.Geo;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.CH;
-using OsmSharp.Routing.CH.PreProcessing;
+using OsmSharp.Routing.Contracted;
+using OsmSharp.Routing.Contracted.PreProcessing;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
 using System.IO;
@@ -68,7 +68,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
             var data = CHEdgeGraphOsmStreamTarget.Preprocess(source,
                 new OsmRoutingInterpreter(), vehicle);
 
-            var router = new CHRouter();
+            var router = new ContractedRouter();
 
             var performanceInfo = new PerformanceInfoConsumer("CHRouting");
             performanceInfo.Start();

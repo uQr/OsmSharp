@@ -16,20 +16,16 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using ProtoBuf;
 using OsmSharp.Math.Geo.Simple;
+using ProtoBuf;
 
-namespace OsmSharp.Routing.CH.Serialization.Sorted
+namespace OsmSharp.Routing.Contracted.Serialization.Sorted
 {
     /// <summary>
     /// Represents an index of all CH blocks.
     /// </summary>
     [ProtoContract]
-    public class CHBlockIndex
+    public class ContractedBlockIndex
     {
         /// <summary>
         /// Holds all relative block locations in the file.
@@ -42,19 +38,19 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
     /// Represents a block containing sorted nodes and their respective arcs.
     /// </summary>
     [ProtoContract]
-    public class CHBlock
+    public class ContractedBlock
     {
         /// <summary>
         /// Holds lower/higher index of arcs.
         /// </summary>
         [ProtoMember(1)]
-        public CHVertex[] Vertices { get; set; }
+        public ContractedVertex[] Vertices { get; set; }
 
         /// <summary>
         /// Holds the array of arcs for all nodes in this block.
         /// </summary>
         [ProtoMember(2)]
-        public CHArc[] Arcs { get; set; }
+        public ContractedEdgeSimple[] Edges { get; set; }
 
         /// <summary>
         /// Calculates the block id for the given vertex id using the block size.
@@ -72,20 +68,20 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
     /// Represents a block containing arc shapes in the same position compared to the regular blocks.
     /// </summary>
     [ProtoContract]
-    public class CHBlockCoordinates
+    public class ContractedBlockCoordinates
     {
         /// <summary>
         /// Holds the array of arcs shapes for all nodes in this block.
         /// </summary>
         [ProtoMember(1)]
-        public CHArcCoordinates[] Arcs { get; set; }
+        public ContractedEdgeCoordinates[] Edges { get; set; }
     }
 
     /// <summary>
     /// Represents a block containing arc shapes.
     /// </summary>
     [ProtoContract]
-    public struct CHArcCoordinates
+    public struct ContractedEdgeCoordinates
     {
         /// <summary>
         /// Gets or sets the coordinates.
@@ -98,20 +94,20 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
     /// Represents a block containing reverse neighbours.
     /// </summary>
     [ProtoContract]
-    public class CHBlockReverse
+    public class ContractedBlockReverse
     {
         /// <summary>
         /// Holds the array of arcs reverse neighbours for all nodes in this block.
         /// </summary>
         [ProtoMember(1)]
-        public CHArcReverse[] Vertices { get; set; }
+        public ContractedEdgeReverse[] Vertices { get; set; }
     }
 
     /// <summary>
     /// Represents an arc containing reverse neighbours.
     /// </summary>
     [ProtoContract]
-    public class CHArcReverse
+    public class ContractedEdgeReverse
     {
         /// <summary>
         /// Holds an array of reverse neighbours.
@@ -124,19 +120,19 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
     /// Represents a CH vertex.
     /// </summary>
     [ProtoContract]
-    public struct CHVertex
+    public struct ContractedVertex
     {
         /// <summary>
         /// The lower index of the arcs associated with this vertex.
         /// </summary>
         [ProtoMember(1)]
-        public ushort ArcIndex { get; set; }
+        public ushort EdgeIndex { get; set; }
 
         /// <summary>
         /// The number of arcs associated with this vertex.
         /// </summary>
         [ProtoMember(2)]
-        public ushort ArcCount { get; set; }
+        public ushort EdgeCount { get; set; }
 
         /// <summary>
         /// Holds the vertex latitude.
@@ -155,7 +151,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
     /// Represents CH arc.
     /// </summary>
     [ProtoContract]
-    public struct CHArc
+    public struct ContractedEdgeSimple
     {
         /// <summary>
         /// The id of the target-vertex when not in this block.
@@ -186,7 +182,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
     /// Represents an index of all CH regions.
     /// </summary>
     [ProtoContract]
-    public class CHVertexRegionIndex
+    public class ContractedVertexRegionIndex
     {
         /// <summary>
         /// Holds all region ids.
@@ -205,7 +201,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
     /// Represents a region containing a list of vertices.
     /// </summary>
     [ProtoContract]
-    public class CHVertexRegion
+    public class ContractedVertexRegion
     {
         /// <summary>
         /// The list of vertices in this region.

@@ -22,8 +22,8 @@
 //using NUnit.Framework;
 //using OsmSharp.Osm.Xml.Streams;
 //using OsmSharp.Routing;
-//using OsmSharp.Routing.CH.PreProcessing;
-//using OsmSharp.Routing.CH.Serialization.Sorted;
+//using OsmSharp.Routing.Contracted.PreProcessing;
+//using OsmSharp.Routing.Contracted.Serialization.Sorted;
 //using OsmSharp.Routing.Osm.Interpreter;
 //using OsmSharp.Routing.Osm.Streams.Graphs;
 

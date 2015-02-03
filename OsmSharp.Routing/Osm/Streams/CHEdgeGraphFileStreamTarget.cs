@@ -18,10 +18,10 @@
 
 using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Index;
-using OsmSharp.Routing.CH.PreProcessing;
-using OsmSharp.Routing.CH.PreProcessing.Ordering;
-using OsmSharp.Routing.CH.PreProcessing.Witnesses;
-using OsmSharp.Routing.CH.Serialization.Sorted;
+using OsmSharp.Routing.Contracted.PreProcessing;
+using OsmSharp.Routing.Contracted.PreProcessing.Ordering;
+using OsmSharp.Routing.Contracted.PreProcessing.Witnesses;
+using OsmSharp.Routing.Contracted.Serialization.Sorted;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
@@ -48,7 +48,7 @@ namespace OsmSharp.Routing.Osm.Streams
         /// <param name="interpreter"></param>
         /// <param name="tagsIndex"></param>
         /// <param name="vehicle"></param>
-        public CHEdgeGraphFileStreamTarget(Stream stream, RouterDataSource<CHEdgeData> dynamicGraph,
+        public CHEdgeGraphFileStreamTarget(Stream stream, RouterDataSource<ContractedEdge> dynamicGraph,
             IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex, Vehicle vehicle)
             :base(dynamicGraph, interpreter, tagsIndex, vehicle)
         {
@@ -59,7 +59,7 @@ namespace OsmSharp.Routing.Osm.Streams
         /// <summary>
         /// Holds the graph.
         /// </summary>
-        private RouterDataSource<CHEdgeData> _graph;
+        private RouterDataSource<ContractedEdge> _graph;
 
         /// <summary>
         /// Flushes all data.
@@ -72,7 +72,7 @@ namespace OsmSharp.Routing.Osm.Streams
             INodeWitnessCalculator witnessCalculator = new DykstraWitnessCalculator();
             var edgeDifference = new EdgeDifferenceContractedSearchSpace(
                 _graph, witnessCalculator);
-            var preProcessor = new CHPreProcessor(
+            var preProcessor = new ContractedPreProcessor(
                 _graph, edgeDifference, witnessCalculator);
             preProcessor.Start();
 

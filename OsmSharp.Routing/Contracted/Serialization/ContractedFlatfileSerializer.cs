@@ -20,7 +20,7 @@ using OsmSharp.Collections.Coordinates.Collections;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.IO;
 using OsmSharp.Math.Geo.Simple;
-using OsmSharp.Routing.CH.PreProcessing;
+using OsmSharp.Routing.Contracted.PreProcessing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Serialization;
 using ProtoBuf;
@@ -28,21 +28,21 @@ using ProtoBuf.Meta;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace OsmSharp.Routing.CH.Serialization
+namespace OsmSharp.Routing.Contracted.Serialization
 {
     /// <summary>
     /// Serializes/deserialiers a routing data source with CH edges.
     /// </summary>
-    public class CHEdgeFlatfileSerializer : FlatfileSerializerBase<CHEdgeData>
+    public class ContractedFlatfileSerializer : FlatfileSerializerBase<ContractedEdge>
     {
         /// <summary>
         /// Creates the graph to serialize into.
         /// </summary>
         /// <param name="tagsCollectionIndex"></param>
         /// <returns></returns>
-        protected override RouterDataSource<CHEdgeData> CreateGraph(ITagsCollectionIndex tagsCollectionIndex)
+        protected override RouterDataSource<ContractedEdge> CreateGraph(ITagsCollectionIndex tagsCollectionIndex)
         {
-            return new RouterDataSource<CHEdgeData>(new MemoryDirectedGraph<CHEdgeData>(), tagsCollectionIndex);
+            return new RouterDataSource<ContractedEdge>(new MemoryDirectedGraph<ContractedEdge>(), tagsCollectionIndex);
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace OsmSharp.Routing.CH.Serialization
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="graph"></param>
-        protected override void SerializeEdges(LimitedStream stream, RouterDataSource<CHEdgeData> graph)
+        protected override void SerializeEdges(LimitedStream stream, RouterDataSource<ContractedEdge> graph)
         {
             var typeModel = RuntimeTypeModel.Create();
             typeModel.Add(typeof(SerializableEdge), true);
@@ -102,7 +102,7 @@ namespace OsmSharp.Routing.CH.Serialization
         /// <param name="stream"></param>
         /// <param name="size"></param>
         /// <param name="graph"></param>
-        protected override void DeserializeEdges(LimitedStream stream, long size, RouterDataSource<CHEdgeData> graph)
+        protected override void DeserializeEdges(LimitedStream stream, long size, RouterDataSource<ContractedEdge> graph)
         {
             var typeModel = RuntimeTypeModel.Create();
             typeModel.Add(typeof(SerializableEdge), true);
@@ -119,7 +119,7 @@ namespace OsmSharp.Routing.CH.Serialization
                         coordinateCollection = new CoordinateArrayCollection<GeoCoordinateSimple>(serializableEdges[idx].Coordinates);
                     }
                     graph.AddEdge(serializableEdges[idx].FromId, serializableEdges[idx].ToId,
-                        new CHEdgeData(serializableEdges[idx].Value, serializableEdges[idx].Weight, serializableEdges[idx].Meta),
+                        new ContractedEdge(serializableEdges[idx].Value, serializableEdges[idx].Weight, serializableEdges[idx].Meta),
                             coordinateCollection);
                 }
             }

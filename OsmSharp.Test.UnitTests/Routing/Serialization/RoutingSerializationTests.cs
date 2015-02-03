@@ -26,8 +26,8 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Osm.Xml.Streams;
 using OsmSharp.Routing;
-using OsmSharp.Routing.CH.PreProcessing;
-using OsmSharp.Routing.CH.Serialization;
+using OsmSharp.Routing.Contracted.PreProcessing;
+using OsmSharp.Routing.Contracted.Serialization;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Graph.Router.Dykstra;
@@ -525,10 +525,10 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString)), new OsmRoutingInterpreter(), Vehicle.Car);
 
             // serialize network.
-            var routingSerializer = new CHEdgeFlatfileSerializer();
+            var routingSerializer = new ContractedFlatfileSerializer();
             TagsCollectionBase metaData = new TagsCollection();
             metaData.Add("some_key", "some_value");
-            RouterDataSource<CHEdgeData> network;
+            RouterDataSource<ContractedEdge> network;
             byte[] byteArray;
             using (var stream = new MemoryStream())
             {
@@ -537,7 +537,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             }
             using (var stream = new MemoryStream(byteArray))
             {
-                network = routingSerializer.Deserialize(stream, out metaData, false) as RouterDataSource<CHEdgeData>;
+                network = routingSerializer.Deserialize(stream, out metaData, false) as RouterDataSource<ContractedEdge>;
             }
             // compare networks.
             Assert.IsNotNull(network);
@@ -622,7 +622,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString)), new OsmRoutingInterpreter(), Vehicle.Car);
 
             // serialize network.
-            var routingSerializer = new OsmSharp.Routing.CH.Serialization.Sorted.CHEdgeDataDataSourceSerializer(false);
+            var routingSerializer = new OsmSharp.Routing.Contracted.Serialization.Sorted.CHEdgeDataDataSourceSerializer(false);
             // serialize/deserialize.
             TagsCollectionBase metaData = new TagsCollection();
             metaData.Add("some_key", "some_value");

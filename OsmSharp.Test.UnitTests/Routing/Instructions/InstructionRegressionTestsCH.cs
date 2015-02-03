@@ -22,10 +22,10 @@ using OsmSharp.Collections.Tags;
 using OsmSharp.Osm.Streams.Filters;
 using OsmSharp.Osm.Xml.Streams;
 using OsmSharp.Routing;
-using OsmSharp.Routing.CH;
-using OsmSharp.Routing.CH.PreProcessing;
-using OsmSharp.Routing.CH.PreProcessing.Ordering;
-using OsmSharp.Routing.CH.PreProcessing.Witnesses;
+using OsmSharp.Routing.Contracted;
+using OsmSharp.Routing.Contracted.PreProcessing;
+using OsmSharp.Routing.Contracted.PreProcessing.Ordering;
+using OsmSharp.Routing.Contracted.PreProcessing.Witnesses;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
@@ -51,7 +51,7 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
             TagsTableCollectionIndex tagsIndex = new TagsTableCollectionIndex();
 
             // do the data processing.
-            var data = new RouterDataSource<CHEdgeData>(new MemoryDirectedGraph<CHEdgeData>(), tagsIndex);
+            var data = new RouterDataSource<ContractedEdge>(new MemoryDirectedGraph<ContractedEdge>(), tagsIndex);
             var targetData = new CHEdgeGraphOsmStreamTarget(
                 data, interpreter, tagsIndex, Vehicle.Car);
             var dataProcessorSource = new XmlOsmStreamSource(
@@ -63,11 +63,11 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
 
             // do the pre-processing part.
             var witnessCalculator = new DykstraWitnessCalculator();
-            var preProcessor = new CHPreProcessor(data,
+            var preProcessor = new ContractedPreProcessor(data,
                 new EdgeDifferenceContractedSearchSpace(data, witnessCalculator), witnessCalculator);
             preProcessor.Start();
 
-            return Router.CreateCHFrom(data, new CHRouter(), interpreter);
+            return Router.CreateCHFrom(data, new ContractedRouter(), interpreter);
         }
 
         /// <summary>

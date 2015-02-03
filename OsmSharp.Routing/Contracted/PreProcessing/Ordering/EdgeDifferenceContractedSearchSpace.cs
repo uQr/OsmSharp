@@ -23,7 +23,7 @@
 //using OsmSharp.Routing.Graph;
 //using OsmSharp.Routing.Graph.Router;
 
-//namespace OsmSharp.Routing.CH.PreProcessing.Ordering
+//namespace OsmSharp.Routing.Contracted.PreProcessing.Ordering
 //{
 //    /// <summary>
 //    /// The edge difference calculator.

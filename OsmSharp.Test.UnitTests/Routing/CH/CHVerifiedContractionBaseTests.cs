@@ -22,10 +22,10 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Streams.Filters;
 using OsmSharp.Osm.Xml.Streams;
 using OsmSharp.Routing;
-using OsmSharp.Routing.CH;
-using OsmSharp.Routing.CH.PreProcessing;
-using OsmSharp.Routing.CH.PreProcessing.Ordering;
-using OsmSharp.Routing.CH.PreProcessing.Witnesses;
+using OsmSharp.Routing.Contracted;
+using OsmSharp.Routing.Contracted.PreProcessing;
+using OsmSharp.Routing.Contracted.PreProcessing.Ordering;
+using OsmSharp.Routing.Contracted.PreProcessing.Witnesses;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Graph.Router.Dykstra;
@@ -69,7 +69,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         /// <summary>
         /// Holds the data.
         /// </summary>
-        private RouterDataSource<CHEdgeData> _data;
+        private RouterDataSource<ContractedEdge> _data;
 
         /// <summary>
         /// Holds the interpreter.
@@ -134,7 +134,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             var tagsIndex = new TagsTableCollectionIndex();
 
             // do the data processing.
-            _data = new RouterDataSource<CHEdgeData>(new MemoryDirectedGraph<CHEdgeData>(), tagsIndex);
+            _data = new RouterDataSource<ContractedEdge>(new MemoryDirectedGraph<ContractedEdge>(), tagsIndex);
             var targetData = new CHEdgeGraphOsmStreamTarget(
                 _data, _interpreter, tagsIndex, Vehicle.Car);
             var dataProcessorSource = new XmlOsmStreamSource(stream);
@@ -145,10 +145,10 @@ namespace OsmSharp.Test.Unittests.Routing.CH
 
             // do the pre-processing part.
             var witnessCalculator = new DykstraWitnessCalculator();
-            var preProcessor = new CHPreProcessor(_data,
+            var preProcessor = new ContractedPreProcessor(_data,
                 new EdgeDifferenceContractedSearchSpace(_data, witnessCalculator), witnessCalculator);
-            preProcessor.OnBeforeContractionEvent += new CHPreProcessor.VertexDelegate(pre_processor_OnBeforeContractionEvent);
-            preProcessor.OnAfterContractionEvent += new CHPreProcessor.VertexDelegate(pre_processor_OnAfterContractionEvent);
+            preProcessor.OnBeforeContractionEvent += new ContractedPreProcessor.VertexDelegate(pre_processor_OnBeforeContractionEvent);
+            preProcessor.OnAfterContractionEvent += new ContractedPreProcessor.VertexDelegate(pre_processor_OnAfterContractionEvent);
             preProcessor.Start();
         }
 
@@ -179,7 +179,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             var tagsIndex = new TagsTableCollectionIndex();
 
             // do the data processing.
-            _data = new RouterDataSource<CHEdgeData>(tagsIndex);
+            _data = new RouterDataSource<ContractedEdge>(tagsIndex);
             var targetData = new CHEdgeGraphOsmStreamTarget(
                 _data, _interpreter, tagsIndex, Vehicle.Car);
             var dataProcessorSource = new XmlOsmStreamSource(stream);
@@ -190,12 +190,12 @@ namespace OsmSharp.Test.Unittests.Routing.CH
 
             // do the pre-processing part.
             var witnessCalculator = new DykstraWitnessCalculator();
-            var preProcessor = new CHPreProcessor(_data,
+            var preProcessor = new ContractedPreProcessor(_data,
                 new EdgeDifferenceContractedSearchSpace(_data, witnessCalculator), witnessCalculator);
             preProcessor.OnBeforeContractionEvent += 
-                new CHPreProcessor.VertexDelegate(pre_processor_OnBeforeContractionEvent);
+                new ContractedPreProcessor.VertexDelegate(pre_processor_OnBeforeContractionEvent);
             preProcessor.OnAfterContractionEvent += 
-                new CHPreProcessor.VertexDelegate(pre_processor_OnAfterContractionEvent);
+                new ContractedPreProcessor.VertexDelegate(pre_processor_OnAfterContractionEvent);
             preProcessor.Start();
         }
 
@@ -209,13 +209,13 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         /// </summary>
         /// <param name="vertex"></param>
         /// <param name="edges"></param>
-        void pre_processor_OnAfterContractionEvent(uint vertex, List<Edge<CHEdgeData>> edges)
+        void pre_processor_OnAfterContractionEvent(uint vertex, List<Edge<ContractedEdge>> edges)
         {
             // get dictionary for vertex.
             var pathsBeforeContraction = _pathsBeforeContraction[vertex];            
 
             // create a new CHRouter
-            var router = new CHRouter();
+            var router = new ContractedRouter();
 
             // calculate all the routes between the neighbours of the contracted vertex.
             foreach (var from in edges)
@@ -358,10 +358,10 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         /// </summary>
         /// <param name="vertex"></param>
         /// <param name="edges"></param>
-        void pre_processor_OnBeforeContractionEvent(uint vertex, List<Edge<CHEdgeData>> edges)
+        void pre_processor_OnBeforeContractionEvent(uint vertex, List<Edge<ContractedEdge>> edges)
         {
             // create a new CHRouter
-            var router = new CHRouter();
+            var router = new ContractedRouter();
 
             // calculate all the routes between the neighbours of the contracted vertex.
             var pathsBeforeContraction = new Dictionary<uint, Dictionary<uint, PathSegment<long>>>();

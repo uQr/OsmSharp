@@ -20,8 +20,8 @@ using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Osm.PBF.Streams;
 using OsmSharp.Routing;
-using OsmSharp.Routing.CH.PreProcessing;
-using OsmSharp.Routing.CH.Serialization;
+using OsmSharp.Routing.Contracted.PreProcessing;
+using OsmSharp.Routing.Contracted.Serialization;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
@@ -37,7 +37,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
         /// <summary>
         /// Tests the CH serializer.
         /// </summary>
-        public static RouterDataSource<CHEdgeData> Test()
+        public static RouterDataSource<ContractedEdge> Test()
         {
             return CHEdgeGraphFlatFileSerializerTests.TestSerialization("CHSerializerFlatFile", "germany-latest.osm.pbf");
         }
@@ -47,7 +47,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
         /// </summary>
         /// <param name="name"></param>
         /// <param name="pbfFile"></param>
-        public static RouterDataSource<CHEdgeData> TestSerialization(string name, string pbfFile)
+        public static RouterDataSource<ContractedEdge> TestSerialization(string name, string pbfFile)
         {
             var testFile = new FileInfo(string.Format(@".\TestFiles\{0}", pbfFile));
             var stream = testFile.OpenRead();
@@ -67,7 +67,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
 
             var metaData = new TagsCollection();
             metaData.Add("some_key", "some_value");
-            var routingSerializer = new CHEdgeFlatfileSerializer();
+            var routingSerializer = new ContractedFlatfileSerializer();
             routingSerializer.Serialize(writeStream, data, metaData);
 
             stream.Dispose();

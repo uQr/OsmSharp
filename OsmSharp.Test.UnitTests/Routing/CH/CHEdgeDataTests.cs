@@ -17,7 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using NUnit.Framework;
-using OsmSharp.Routing.CH.PreProcessing;
+using OsmSharp.Routing.Contracted.PreProcessing;
 
 namespace OsmSharp.Test.Unittests.Routing.CH
 {
@@ -33,7 +33,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         [Test]
         public void TestUncontracted()
         {
-            var edge = new CHEdgeData(123, true, true, true, 123.45f);
+            var edge = new ContractedEdge(123, true, true, true, 123.45f);
 
             Assert.AreEqual(7, edge.Meta);
             Assert.AreEqual(123.45f, edge.Weight);
@@ -48,7 +48,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             Assert.IsFalse(edge.IsContracted);
             Assert.IsTrue(edge.RepresentsNeighbourRelations);
 
-            edge = new CHEdgeData(123, false, true, true, 123.45f);
+            edge = new ContractedEdge(123, false, true, true, 123.45f);
 
             Assert.AreEqual(3, edge.Meta);
             Assert.AreEqual(123.45f, edge.Weight);
@@ -63,7 +63,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             Assert.IsFalse(edge.IsContracted);
             Assert.IsTrue(edge.RepresentsNeighbourRelations);
 
-            edge = new CHEdgeData(123, true, false, true, 123.45f);
+            edge = new ContractedEdge(123, true, false, true, 123.45f);
 
             Assert.AreEqual(6, edge.Meta);
             Assert.AreEqual(123.45f, edge.Weight);
@@ -78,7 +78,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             Assert.IsFalse(edge.IsContracted);
             Assert.IsTrue(edge.RepresentsNeighbourRelations);
 
-            edge = new CHEdgeData(123, true, true, false, 123.45f);
+            edge = new ContractedEdge(123, true, true, false, 123.45f);
 
             Assert.AreEqual(5, edge.Meta);
             Assert.AreEqual(123.45f, edge.Weight);
@@ -100,7 +100,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         [Test]
         public void TestContracted()
         {
-            var edge = new CHEdgeData(123, true, true, 123.45f);
+            var edge = new ContractedEdge(123, true, true, 123.45f);
 
             Assert.AreEqual(11, edge.Meta);
             Assert.AreEqual(123.45f, edge.Weight);
@@ -115,7 +115,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             Assert.IsTrue(edge.IsContracted);
             Assert.IsFalse(edge.RepresentsNeighbourRelations);
 
-            edge = new CHEdgeData(123, false, true, 123.45f);
+            edge = new ContractedEdge(123, false, true, 123.45f);
 
             Assert.AreEqual(10, edge.Meta);
             Assert.AreEqual(123.45f, edge.Weight);
@@ -130,7 +130,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             Assert.IsTrue(edge.IsContracted);
             Assert.IsFalse(edge.RepresentsNeighbourRelations);
 
-            edge = new CHEdgeData(123, true, false, 123.45f);
+            edge = new ContractedEdge(123, true, false, 123.45f);
 
             Assert.AreEqual(9, edge.Meta);
             Assert.AreEqual(123.45f, edge.Weight);

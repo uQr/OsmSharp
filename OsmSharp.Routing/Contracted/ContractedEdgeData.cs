@@ -16,18 +16,15 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Routing.Graph;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 
-namespace OsmSharp.Routing.CH.PreProcessing
+namespace OsmSharp.Routing.Contracted.PreProcessing
 {
     /// <summary>
     /// Represents the data on a contracted edge.
     /// </summary>
-    public struct CHEdgeData : IEdge
+    public struct ContractedEdge : IEdge
     {
         /// <summary>
         /// Bitmask holding status info [forwardMove(1), backwardMove(2), forwardTags(4), contracted(8)]
@@ -47,7 +44,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <param name="canMoveforward"></param>
         /// <param name="canMoveBackward"></param>
         /// <param name="weight"></param>
-        public CHEdgeData(uint tagsId, bool tagsForward, bool canMoveforward, bool canMoveBackward, float weight)
+        public ContractedEdge(uint tagsId, bool tagsForward, bool canMoveforward, bool canMoveBackward, float weight)
             : this()
         {
             _meta = 0;
@@ -66,7 +63,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <param name="canMoveforward"></param>
         /// <param name="canMoveBackward"></param>
         /// <param name="weight"></param>
-        public CHEdgeData(uint contractedId, bool canMoveforward, bool canMoveBackward, float weight)
+        public ContractedEdge(uint contractedId, bool canMoveforward, bool canMoveBackward, float weight)
             : this()
         {
             _meta = 0;
@@ -83,7 +80,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <param name="value"></param>
         /// <param name="weight"></param>
         /// <param name="meta"></param>
-        public CHEdgeData(uint value, float weight, byte meta)
+        public ContractedEdge(uint value, float weight, byte meta)
             : this()
         {
             _meta = meta;
@@ -257,9 +254,9 @@ namespace OsmSharp.Routing.CH.PreProcessing
         {
             if (this.IsContracted)
             {
-                return new CHEdgeData(this.ContractedId, this.CanMoveBackward, this.CanMoveForward, this.Weight);
+                return new ContractedEdge(this.ContractedId, this.CanMoveBackward, this.CanMoveForward, this.Weight);
             }
-            return new CHEdgeData(this.Tags, !this.Forward,
+            return new ContractedEdge(this.Tags, !this.Forward,
                 this.CanMoveBackward, this.CanMoveForward, this.Weight);
         }
 
@@ -270,7 +267,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <returns></returns>
         public bool Equals(IEdge other)
         {
-            var otherEdge = (CHEdgeData)other;
+            var otherEdge = (ContractedEdge)other;
             return otherEdge._value == this._value &&
                 otherEdge._meta == this._meta &&
                 otherEdge.Weight == this.Weight;
@@ -286,9 +283,9 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// Removes all contracted edges.
         /// </summary>
         /// <param name="edges"></param>
-        public static List<Edge<CHEdgeData>> KeepUncontracted(this List<Edge<CHEdgeData>> edges)
+        public static List<Edge<ContractedEdge>> KeepUncontracted(this List<Edge<ContractedEdge>> edges)
         {
-            var result = new List<Edge<CHEdgeData>>(edges.Count);
+            var result = new List<Edge<ContractedEdge>>(edges.Count);
             foreach (var edge in edges)
             {
                 if (!edge.EdgeData.IsContracted)
