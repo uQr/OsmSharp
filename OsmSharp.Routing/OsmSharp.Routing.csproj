@@ -89,7 +89,7 @@
     <Compile Include="Graph\INeighbourEnumerator.cs" />
     <Compile Include="Graph\MemoryDirectedGraph.cs" />
     <Compile Include="Graph\MemoryGraph.cs" />
-    <Compile Include="Graph\MemoryMappedFileDynamicGraph.cs" />
+    <Compile Include="Graph\MemoryMappedGraph.cs" />
     <Compile Include="Graph\PreProcessor\IPreProcessor.cs" />
     <Compile Include="Graph\Restrictions\GraphRestriction.cs" />
     <Compile Include="Graph\Router\Dykstra\DykstraRoutingBase.cs" />
@@ -143,7 +143,6 @@
     <Compile Include="Osm\Interpreter\Edge\EdgeInterpreter.cs" />
     <Compile Include="Osm\Interpreter\IOsmRoutingInterpreter.cs" />
     <Compile Include="Osm\Interpreter\OsmRoutingInterpreter.cs" />
-    <Compile Include="Osm\IRoutingProgressConsumer.cs" />
     <Compile Include="Osm\Streams\CHEdgeGraphFileStreamTarget.cs" />
     <Compile Include="Osm\Streams\Graphs\CHEdgeGraphOsmStreamTarget.cs" />
     <Compile Include="Osm\Streams\Graphs\DynamicGraphOsmStreamTarget.cs" />
