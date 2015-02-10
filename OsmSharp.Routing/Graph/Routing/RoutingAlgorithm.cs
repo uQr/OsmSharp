@@ -17,29 +17,53 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.Collections.Coordinates.Collections;
-using OsmSharp.Collections.Tags;
-using OsmSharp.Math.Geo;
-using OsmSharp.Math.Primitives;
-using OsmSharp.Routing.Interpreter;
-using OsmSharp.Units.Distance;
+using OsmSharp.Routing.Graph.Routing.Edges;
+using OsmSharp.Routing.Graph.TurnCosts;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace OsmSharp.Routing.Graph.Routing
 {
     /// <summary>
-    /// Contains generic fuctions common to all dykstra routers.
+    /// Abstract a router that works on a dynamic graph.
     /// </summary>
-    public abstract class DykstraBase<TEdgeData>
+    public abstract class RoutingAlgorithm<TEdgeData>
         where TEdgeData : IGraphEdgeData
     {
         /// <summary>
-        /// Creates a new basic dykstra router.
+        /// Holds the graph.
         /// </summary>
-        protected DykstraBase()
-        {
+        protected IGraphReadOnly<TEdgeData> _graph;
 
+        /// <summary>
+        /// Holds the turn costs.
+        /// </summary>
+        protected IGraphReadOnlyTurnCosts _turnCosts;
+
+        /// <summary>
+        /// Holds the edge weight calculator.
+        /// </summary>
+        protected EdgeWeightCalculator<TEdgeData> _edgeWeightCalculator;
+
+        /// <summary>
+        /// Creates a new routing algorithm instance.
+        /// </summary>
+        /// <param name="graph">The graph to use.</param>
+        /// <param name="turnCosts">The turn costs to use.</param>
+        /// <param name="edgeWeightCalculator">The edge weight calculator.</param>
+        protected RoutingAlgorithm(IGraphReadOnly<TEdgeData> graph, IGraphReadOnlyTurnCosts turnCosts, EdgeWeightCalculator<TEdgeData> edgeWeightCalculator)
+        {
+            _graph = graph;
+            _turnCosts = turnCosts;
+            _edgeWeightCalculator = edgeWeightCalculator;
         }
+
+        /// <summary>
+        /// Calculates a shortest path from one of the given source edge visits to one of the given target edge visits.
+        /// </summary>
+        /// <param name="source">The edge visit(s) for the source-location.</param>
+        /// <param name="target">The edge visit(s) for the target location.</param>
+        /// <returns></returns>
+        public virtual List<EdgeVisit> Calculate(IEnumerable<EdgeVisit> source, IEnumerable<EdgeVisit> target);
 
         #region Search Closest
 
@@ -54,7 +78,7 @@ namespace OsmSharp.Routing.Graph.Routing
         /// <param name="pointTags"></param>
         /// <param name="interpreter"></param>
         /// <param name="parameters"></param>
-        public SearchClosestResult<TEdgeData> SearchClosest(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
+        public virtual SearchClosestResult<TEdgeData> SearchClosest(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollectionBase pointTags, Dictionary<string, object> parameters)
         {
             return this.SearchClosest(graph, interpreter, vehicle, coordinate, delta, matcher, pointTags, false, null);
@@ -72,7 +96,7 @@ namespace OsmSharp.Routing.Graph.Routing
         /// <param name="interpreter"></param>
         /// <param name="verticesOnly"></param>
         /// <param name="parameters"></param>
-        public SearchClosestResult<TEdgeData> SearchClosest(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
+        public virtual SearchClosestResult<TEdgeData> SearchClosest(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollectionBase pointTags, bool verticesOnly, Dictionary<string, object> parameters)
         {
             Meter distanceEpsilon = .1; // 10cm is the tolerance to distinguish points.
@@ -93,7 +117,7 @@ namespace OsmSharp.Routing.Graph.Routing
             if (!verticesOnly)
             { // find both closest arcs and vertices.
                 // loop over all.
-                while(arcs.MoveNext())
+                while (arcs.MoveNext())
                 {
                     if (!graph.TagsIndex.Contains(arcs.EdgeData.Tags))
                     { // skip this edge, no valid tags found.
@@ -284,7 +308,7 @@ namespace OsmSharp.Routing.Graph.Routing
                                                 distance, arcs.Vertex1, arcs.Vertex2, position, arcs.EdgeData, coordinatesArray);
                                         }
                                     }
-                                }                               
+                                }
                             }
                         }
                     }
@@ -293,7 +317,7 @@ namespace OsmSharp.Routing.Graph.Routing
             else
             { // only find closest vertices.
                 // loop over all.
-                while(arcs.MoveNext())
+                while (arcs.MoveNext())
                 {
                     float fromLatitude, fromLongitude;
                     float toLatitude, toLongitude;
@@ -346,5 +370,119 @@ namespace OsmSharp.Routing.Graph.Routing
         }
 
         #endregion
+    }
+
+    /// <summary>
+    /// Enumerates the type of weights used by a basis router.
+    /// </summary>
+    public enum RouterWeightType
+    {
+        /// <summary>
+        /// The router weights are time-estimates.
+        /// </summary>
+        Time,
+        /// <summary>
+        /// The router weights are distances.
+        /// </summary>
+        Distance,
+        /// <summary>
+        /// The router-weights are completely custom.
+        /// </summary>
+        Custom
+    }
+
+    /// <summary>
+    /// The result the search closest returns.
+    /// </summary>
+    public struct SearchClosestResult<TEdgeData>
+    {
+        /// <summary>
+        /// The result is located exactly at one vertex.
+        /// </summary>
+        /// <param name="distance"></param>
+        /// <param name="vertex"></param>
+        public SearchClosestResult(double distance, uint vertex)
+            : this()
+        {
+            this.Distance = distance;
+            this.Vertex1 = vertex;
+            this.Position = 0;
+            this.Vertex2 = null;
+        }
+
+        /// <summary>
+        /// The result is located between two other vertices but on an intermediate point.
+        /// </summary>
+        /// <param name="distance"></param>
+        /// <param name="vertex1"></param>
+        /// <param name="vertex2"></param>
+        /// <param name="intermediateIndex"></param>
+        /// <param name="edge"></param>
+        /// <param name="coordinates"></param>
+        public SearchClosestResult(double distance, uint vertex1, uint vertex2, int intermediateIndex, TEdgeData edge, ICoordinate[] coordinates)
+            : this()
+        {
+            this.Distance = distance;
+            this.Vertex1 = vertex1;
+            this.Vertex2 = vertex2;
+            this.IntermediateIndex = intermediateIndex;
+            this.Edge = edge;
+            this.Coordinates = coordinates;
+        }
+
+        /// <summary>
+        /// The result is located between two other vertices.
+        /// </summary>
+        /// <param name="distance"></param>
+        /// <param name="vertex1"></param>
+        /// <param name="vertex2"></param>
+        /// <param name="position"></param>
+        /// <param name="edge"></param>
+        /// <param name="coordinates"></param>
+        public SearchClosestResult(double distance, uint vertex1, uint vertex2, double position, TEdgeData edge, ICoordinate[] coordinates)
+            : this()
+        {
+            this.Distance = distance;
+            this.Vertex1 = vertex1;
+            this.Vertex2 = vertex2;
+            this.Position = position;
+            this.Edge = edge;
+            this.Coordinates = coordinates;
+        }
+
+        /// <summary>
+        /// The first vertex.
+        /// </summary>
+        public uint? Vertex1 { get; private set; }
+
+        /// <summary>
+        /// The second vertex.
+        /// </summary>
+        public uint? Vertex2 { get; private set; }
+
+        /// <summary>
+        /// The intermediate point position.
+        /// </summary>
+        public int? IntermediateIndex { get; private set; }
+
+        /// <summary>
+        /// The position between vertex1 and vertex2 (0=vertex1, 1=vertex2).
+        /// </summary>
+        public double Position { get; private set; }
+
+        /// <summary>
+        /// The distance from the point being resolved.
+        /// </summary>
+        public double Distance { get; private set; }
+
+        /// <summary>
+        /// The edge data.
+        /// </summary>
+        public TEdgeData Edge { get; private set; }
+
+        /// <summary>
+        /// The coordinates.
+        /// </summary>
+        public ICoordinate[] Coordinates { get; set; }
     }
 }

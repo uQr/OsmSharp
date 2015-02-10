@@ -41,6 +41,14 @@ namespace OsmSharp.Routing.Graph
         public abstract void MoveTo(uint vertex1, uint vertex2);
 
         /// <summary>
+        /// Returns the edge id.
+        /// </summary>
+        public abstract long EdgeId
+        {
+            get;
+        }
+
+        /// <summary>
         /// Returns the current neighbour.
         /// </summary>
         public abstract uint Neighbour
