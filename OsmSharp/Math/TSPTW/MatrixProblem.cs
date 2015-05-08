@@ -262,9 +262,10 @@ namespace OsmSharp.Math.TSPTW
         #region Factory Methods
         
         /// <summary>
-        /// Creates a TSP with Time Window problem that routes along all customers in the shortest possible way.
+        /// Creates a TSP with time windows problem that routes along all customers in the shortest possible way.
         /// </summary>
         /// <param name="weights"></param>
+        /// <param name="windows"></param>
         /// <returns></returns>
         public static MatrixProblem CreateATSPOpen(double[][] weights, TimeWindow[] windows)
         {

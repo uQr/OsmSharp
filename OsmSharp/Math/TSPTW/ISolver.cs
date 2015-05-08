@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -19,10 +19,10 @@
 using OsmSharp.Math.TSP.Problems;
 using OsmSharp.Math.VRP.Core.Routes;
 
-namespace OsmSharp.Math.TSP
+namespace OsmSharp.Math.TSPTW
 {
     /// <summary>
-    /// Interface representing a solver for the TSP.
+    /// Interface representing a solver for the TSP with Time Window.
     /// </summary>
     public interface ISolver
     {
@@ -35,16 +35,18 @@ namespace OsmSharp.Math.TSP
         }
 
         /// <summary>
-        /// Solves the TSP.
+        /// Solves the given problem.
         /// </summary>
+        /// <param name="problem">The problem to solve.</param>
+        /// <param name="fitness">The fitness of the solution found.</param>
         /// <returns></returns>
-        IRoute Solve(IProblem problem);
+        IRoute Solve(IProblem problem, out double fitness);
 
         /// <summary>
         /// Stops the executing of the solving process.
         /// </summary>
         void Stop();
-        
+
         /// <summary>
         /// Raised when an intermidiate result is available.
         /// </summary>

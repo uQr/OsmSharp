@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,18 +16,18 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using OsmSharp.Math.TSP.Problems;
+using OsmSharp.Math.VRP.Core;
 using OsmSharp.Math.VRP.Core.Routes;
 
-namespace OsmSharp.Math.TSP
+namespace OsmSharp.Math.TSPTW
 {
     /// <summary>
-    /// Interface representing a solver for the TSP.
+    /// Represents an improvement heuristic/solver.
     /// </summary>
-    public interface ISolver
+    public interface IImprovement
     {
         /// <summary>
-        /// Returns the name of this solver.
+        /// Returns the name of the improvement.
         /// </summary>
         string Name
         {
@@ -35,31 +35,12 @@ namespace OsmSharp.Math.TSP
         }
 
         /// <summary>
-        /// Solves the TSP.
+        /// Returns true if there was an improvement.
         /// </summary>
+        /// <param name="problem"></param>
+        /// <param name="route"></param>
+        /// <param name="difference"></param>
         /// <returns></returns>
-        IRoute Solve(IProblem problem);
-
-        /// <summary>
-        /// Stops the executing of the solving process.
-        /// </summary>
-        void Stop();
-        
-        /// <summary>
-        /// Raised when an intermidiate result is available.
-        /// </summary>
-        event SolverDelegates.IntermidiateDelegate IntermidiateResult;
-    }
-
-    /// <summary>
-    /// Contains solver delegates.
-    /// </summary>
-    public static class SolverDelegates
-    {
-        /// <summary>
-        /// Delegate to pass on an intermidiate solution.
-        /// </summary>
-        /// <param name="result"></param>
-        public delegate void IntermidiateDelegate(int[] result);
+        bool Improve(IProblem problem, IRoute route, out double difference);
     }
 }

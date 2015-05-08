@@ -1,10 +1,26 @@
-﻿using System;
+﻿// OsmSharp - OpenStreetMap (OSM) SDK
+// Copyright (C) 2013 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// OsmSharp is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// OsmSharp is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
+using OsmSharp.Math.TSP.Problems;
+using OsmSharp.Math.VRP.Core.Routes;
+using OsmSharp.Math.VRP.Core.Routes.ASymmetric;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using OsmSharp.Math.VRP.Core.Routes;
-using OsmSharp.Math.TSP.Problems;
-using OsmSharp.Math.VRP.Core.Routes.ASymmetric;
 
 namespace OsmSharp.Math.TSP
 {
@@ -28,27 +44,27 @@ namespace OsmSharp.Math.TSP
         /// <returns></returns>
         public IRoute Solve(IProblem problem)
         {
-            IProblem converted_problem = problem;
+            var convertedProblem = problem;
 
-            bool first = problem.First.HasValue;
-            bool last = problem.Last.HasValue;
+            var first = problem.First.HasValue;
+            var last = problem.Last.HasValue;
 
             // convert the problem if needed.
             if (!first && !last)
             { // add a virtual customer with distance zero to all existing customers.
-                double[][] new_weights = new double[problem.WeightMatrix.Length + 1][];
-                new_weights[0] = new double[problem.WeightMatrix.Length + 1];
+                var newWeights = new double[problem.WeightMatrix.Length + 1][];
+                newWeights[0] = new double[problem.WeightMatrix.Length + 1];
                 for (int idx = 0; idx < problem.WeightMatrix.Length + 1; idx++)
                 {
-                    new_weights[0][idx] = 0;
+                    newWeights[0][idx] = 0;
                 }
                 for(int idx = 0; idx < problem.WeightMatrix.Length; idx++)
                 {
-                    new_weights[idx+1] = new double[problem.WeightMatrix.Length + 1];
-                    new_weights[idx+1][0] = 0;
-                    problem.WeightMatrix[idx].CopyTo(new_weights[idx+1], 1);
+                    newWeights[idx+1] = new double[problem.WeightMatrix.Length + 1];
+                    newWeights[idx+1][0] = 0;
+                    problem.WeightMatrix[idx].CopyTo(newWeights[idx+1], 1);
                 }
-                converted_problem = MatrixProblem.CreateATSP(new_weights, 0);
+                convertedProblem = MatrixProblem.CreateATSP(newWeights, 0);
             }
             else if (!last)
             { // set all weights to the first customer to zero.
@@ -56,28 +72,28 @@ namespace OsmSharp.Math.TSP
                 {
                     problem.WeightMatrix[idx][problem.First.Value] = 0;
                 }
-                converted_problem = MatrixProblem.CreateATSP(problem.WeightMatrix, problem.First.Value);
+                convertedProblem = MatrixProblem.CreateATSP(problem.WeightMatrix, problem.First.Value);
             }
 
             // execute the solver on the converted problem.
-            IRoute converted_route = this.DoSolve(converted_problem);
+            var convertedRoute = this.DoSolve(convertedProblem);
 
             // convert the route back.
             if (!first && !last)
             { // when a virtual customer was added the route needs converting.
-                List<int> customers_list = converted_route.ToList<int>();
-                customers_list.RemoveAt(0);
-                for (int idx = 0; idx < customers_list.Count; idx++)
+                var customersList = convertedRoute.ToList<int>();
+                customersList.RemoveAt(0);
+                for (int idx = 0; idx < customersList.Count; idx++)
                 {
-                    customers_list[idx] = customers_list[idx] - 1;
+                    customersList[idx] = customersList[idx] - 1;
                 }
-                converted_route = DynamicAsymmetricRoute.CreateFrom(customers_list, false);
+                convertedRoute = DynamicAsymmetricRoute.CreateFrom(customersList, false);
             }
             else if (!last)
             { // the returned route will return to customer zero; convert the route.
-                converted_route = DynamicAsymmetricRoute.CreateFrom(converted_route, false);
+                convertedRoute = DynamicAsymmetricRoute.CreateFrom(convertedRoute, false);
             }
-            return converted_route;
+            return convertedRoute;
         }
 
         /// <summary>
