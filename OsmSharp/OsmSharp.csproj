@@ -253,6 +253,8 @@
     <Compile Include="Math\Structures\LocatedObjectIndexList.cs" />
     <Compile Include="Math\Structures\QTree\QuadTree.cs" />
     <Compile Include="Math\Structures\StringTrees\StringTreeDictionary.cs" />
+    <Compile Include="Math\TSPTW\IProblem.cs" />
+    <Compile Include="Math\TSPTW\MatrixProblem.cs" />
     <Compile Include="Math\TSP\ArbitraryInsertion\ArbitraryInsertionSolver.cs" />
     <Compile Include="Math\TSP\BruteForce\BruteForceSolver.cs" />
     <Compile Include="Math\TSP\CheapestInsertion\CheapestInsertionSolver.cs" />
@@ -301,6 +303,7 @@
     <Compile Include="Math\VRP\Core\BestPlacement\InsertionCosts\IInsertionCosts.cs" />
     <Compile Include="Math\VRP\Core\BestPlacement\SeedCustomers\ISeedCustomerSelector.cs" />
     <Compile Include="Math\VRP\Core\BestPlacement\SeedCustomers\SimpleSeeds.cs" />
+    <Compile Include="Math\VRP\Core\IProblemTimeWindows.cs" />
     <Compile Include="Math\VRP\Core\IProblemWeights.cs" />
     <Compile Include="Math\VRP\Core\LocalSearch\RePlace1OptHelper.cs" />
     <Compile Include="Math\VRP\Core\LocalSearch\RePlace2OptHelper.cs" />

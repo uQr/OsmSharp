@@ -16,42 +16,45 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-namespace OsmSharp.Math.VRP.Core
+using OsmSharp.Math.VRP.Core;
+
+namespace OsmSharp.Math.TSPTW
 {
     /// <summary>
-    /// The definition of the problem weights.
+    /// Interface representing a generic TSP-problem with time windows.
     /// </summary>
-    public interface IProblemWeights
+    public interface IProblem : IProblemWeights, IProblemTimeWindows
     {
         /// <summary>
-        /// Returns the weight matrix if any, else returns null.
+        /// Returns the first customer.
         /// </summary>
-        double[][] WeightMatrix
+        int? First
         {
             get;
         }
 
         /// <summary>
-        /// Returns the weight between two customers.
+        /// Returns the last customer.
         /// </summary>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
-        /// <returns></returns>
-        double Weight(int from, int to);
-
-        /// <summary>
-        /// Returns the size.
-        /// </summary>
-        int Size
+        int? Last
         {
             get;
         }
 
         /// <summary>
-        /// Returns the 10 nearest neighbours of the given customer.
+        /// Returns true if the problem is symmetric.
         /// </summary>
-        /// <param name="customer"></param>
-        /// <returns></returns>
-        NearestNeighbours10 Get10NearestNeighbours(int customer);
+        bool Symmetric
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Returns true if the problem is euclidean.
+        /// </summary>
+        bool Euclidean
+        {
+            get;
+        }
     }
 }

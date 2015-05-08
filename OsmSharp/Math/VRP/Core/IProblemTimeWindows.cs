@@ -19,25 +19,17 @@
 namespace OsmSharp.Math.VRP.Core
 {
     /// <summary>
-    /// The definition of the problem weights.
+    /// Represents timewindows for a number of customers.
     /// </summary>
-    public interface IProblemWeights
+    public interface IProblemTimeWindows
     {
         /// <summary>
-        /// Returns the weight matrix if any, else returns null.
+        /// Returns the timewindows.
         /// </summary>
-        double[][] WeightMatrix
+        TimeWindow[] Windows
         {
             get;
         }
-
-        /// <summary>
-        /// Returns the weight between two customers.
-        /// </summary>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
-        /// <returns></returns>
-        double Weight(int from, int to);
 
         /// <summary>
         /// Returns the size.
@@ -46,12 +38,21 @@ namespace OsmSharp.Math.VRP.Core
         {
             get;
         }
+    }
+
+    /// <summary>
+    /// Represents a timewindow.
+    /// </summary>
+    public struct TimeWindow
+    {
+        /// <summary>
+        /// The minimum time in seconds.
+        /// </summary>
+        public int Min { get; set; }
 
         /// <summary>
-        /// Returns the 10 nearest neighbours of the given customer.
+        /// The maximum time in seconds.
         /// </summary>
-        /// <param name="customer"></param>
-        /// <returns></returns>
-        NearestNeighbours10 Get10NearestNeighbours(int customer);
+        public int Max { get; set; }
     }
 }
