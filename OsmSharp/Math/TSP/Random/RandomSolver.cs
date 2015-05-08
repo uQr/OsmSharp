@@ -1,4 +1,5 @@
-﻿// OsmSharp - OpenStreetMap (OSM) SDK
+﻿
+// OsmSharp - OpenStreetMap (OSM) SDK
 // Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
@@ -15,13 +16,11 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-using System;
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using OsmSharp.Math.TSP;
-using OsmSharp.Math.VRP.Core.Routes;
 using OsmSharp.Math.TSP.Problems;
+using OsmSharp.Math.VRP.Core.Routes;
 using OsmSharp.Math.VRP.Core.Routes.ASymmetric;
 
 namespace OsmSharp.Math.TravellingSalesman.Random
@@ -31,16 +30,6 @@ namespace OsmSharp.Math.TravellingSalesman.Random
     /// </summary>
     public class RandomSolver : SolverBase
     {
-        ///// <summary>
-        ///// Boolean to stop execution.
-        ///// </summary>
-        //private bool _stopped = false;
-
-        ///// <summary>
-        ///// The route this solver was initialized with.
-        ///// </summary>
-        //private IRoute _route;
-
         /// <summary>
         /// Retuns the name of this solver.
         /// </summary>
@@ -68,7 +57,7 @@ namespace OsmSharp.Math.TravellingSalesman.Random
         /// <returns></returns>
         public static IRoute DoSolveStatic(IProblem problem)
         {
-            List<int> customers = new List<int>();
+            var customers = new List<int>();
             for (int customer = 0; customer < problem.Size; customer++)
             {
                 customers.Add(customer);

@@ -30,14 +30,6 @@ namespace OsmSharp.Math.VRP.Core
         {
             get;
         }
-
-        /// <summary>
-        /// Returns the size.
-        /// </summary>
-        int Size
-        {
-            get;
-        }
     }
 
     /// <summary>

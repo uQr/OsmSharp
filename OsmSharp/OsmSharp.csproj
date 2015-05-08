@@ -261,6 +261,7 @@
     <Compile Include="Math\TSPTW\LocalSearch\Local1Shift.cs" />
     <Compile Include="Math\TSPTW\LocalSearch\Local2Opt.cs" />
     <Compile Include="Math\TSPTW\MatrixProblem.cs" />
+    <Compile Include="Math\TSPTW\Random\RandomSolver.cs" />
     <Compile Include="Math\TSP\ArbitraryInsertion\ArbitraryInsertionSolver.cs" />
     <Compile Include="Math\TSP\BruteForce\BruteForceSolver.cs" />
     <Compile Include="Math\TSP\CheapestInsertion\CheapestInsertionSolver.cs" />
