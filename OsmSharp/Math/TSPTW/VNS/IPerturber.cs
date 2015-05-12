@@ -16,31 +16,23 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using OsmSharp.Math.VRP.Core;
 using OsmSharp.Math.VRP.Core.Routes;
 
-namespace OsmSharp.Math.TSPTW
+namespace OsmSharp.Math.TSPTW.VNS
 {
     /// <summary>
-    /// Represents an improvement heuristic/solver.
+    /// An operator on the current solution that makes sure the neighbourhood varies.
     /// </summary>
-    public interface IImprovement
+    public interface IPerturber : IOperator
     {
         /// <summary>
-        /// Returns the name of the improvement.
+        /// Returns true if there was an improvement, false otherwise.
         /// </summary>
-        string Name
-        {
-            get;
-        }
-
-        /// <summary>
-        /// Returns true if there was an improvement.
-        /// </summary>
-        /// <param name="problem"></param>
-        /// <param name="route"></param>
-        /// <param name="difference"></param>
+        /// <param name="problem">The problem.</param>
+        /// <param name="route">The route.</param>
+        /// <param name="level">The level.</param>
+        /// <param name="difference">The difference in fitness.</param>
         /// <returns></returns>
-        bool Improve(IProblem problem, IRoute route, out double difference);
+        bool Apply(IProblem problem, IRoute route, int level, out double difference);
     }
 }

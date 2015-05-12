@@ -22,9 +22,9 @@ using System.Linq;
 namespace OsmSharp.Math.TSPTW.IterativeImprovement
 {
     /// <summary>
-    /// A solver that let's another solver try n-number of times and then returns the best solution.
+    /// A solver that lets another solver try n-number of times and then returns the best solution.
     /// </summary>
-    public class InterativeImprovementSolver : ISolver
+    public class IterativeImprovementSolver : ISolver
     {
         /// <summary>
         /// The number of times to try.
@@ -37,14 +37,41 @@ namespace OsmSharp.Math.TSPTW.IterativeImprovement
         private ISolver _solver;
 
         /// <summary>
+        /// A delegate for the stop condition.
+        /// </summary>
+        /// <param name="iteration">The iteration count.</param>
+        /// <param name="problem">The problem.</param>
+        /// <param name="route">The route.</param>
+        /// <returns></returns>
+        public delegate bool StopConditionDelegate(int iteration, IProblem problem, IRoute route);
+
+        /// <summary>
+        /// Holds the stop condition.
+        /// </summary>
+        private StopConditionDelegate _stopCondition;
+
+        /// <summary>
         /// Creates a new iterative improvement solver.
         /// </summary>
         /// <param name="solver"></param>
         /// <param name="n"></param>
-        public InterativeImprovementSolver(ISolver solver, int n)
+        public IterativeImprovementSolver(ISolver solver, int n)
         {
             _solver = solver;
             _n = n;
+        }
+
+        /// <summary>
+        /// Creates a new iterative improvement solver.
+        /// </summary>
+        /// <param name="solver"></param>
+        /// <param name="n"></param>
+        /// <param name="stopCondition"></param>
+        public IterativeImprovementSolver(ISolver solver, int n, StopConditionDelegate stopCondition)
+        {
+            _solver = solver;
+            _n = n;
+            _stopCondition = stopCondition;
         }
 
         /// <summary>
@@ -66,7 +93,8 @@ namespace OsmSharp.Math.TSPTW.IterativeImprovement
             var i = 0;
             IRoute best = null;
             fitness = double.MaxValue;
-            while(i < _n)
+            while(i < _n && 
+                (_stopCondition == null || !_stopCondition.Invoke(i, problem, best)))
             {
                 var nextFitness = double.MaxValue;
                 var nextRoute = _solver.Solve(problem, out nextFitness);
@@ -87,7 +115,7 @@ namespace OsmSharp.Math.TSPTW.IterativeImprovement
         /// </summary>
         public void Stop()
         {
-            throw new System.NotImplementedException();
+
         }
 
         /// <summary>
