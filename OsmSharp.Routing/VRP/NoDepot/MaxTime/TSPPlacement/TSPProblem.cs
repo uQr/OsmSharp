@@ -17,7 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.Collections;
-using OsmSharp.Math.VRP.Core;
+using OsmSharp.Math.VRP;
 using System.Collections.Generic;
 
 namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.TSPPlacement

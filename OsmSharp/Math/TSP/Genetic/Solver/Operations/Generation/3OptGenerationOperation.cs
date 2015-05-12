@@ -23,7 +23,7 @@ using OsmSharp.Math.AI.Genetic;
 using OsmSharp.Math.AI.Genetic.Operations;
 using OsmSharp.Math.AI.Genetic.Solvers;
 using OsmSharp.Math.TSP.LocalSearch.HillClimbing3Opt;
-using OsmSharp.Math.VRP.Core.Routes;
+using OsmSharp.Math.VRP.Routes;
 
 namespace OsmSharp.Math.TSP.Genetic.Solver.Operations.Generation
 {

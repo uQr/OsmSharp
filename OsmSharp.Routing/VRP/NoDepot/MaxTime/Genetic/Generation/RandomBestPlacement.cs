@@ -20,8 +20,8 @@ using System.Collections.Generic;
 using OsmSharp.Math.AI.Genetic.Operations;
 using OsmSharp.Math.AI.Genetic;
 using OsmSharp.Math.AI.Genetic.Solvers;
-using OsmSharp.Math.VRP.Core.BestPlacement;
-using OsmSharp.Math.VRP.Core.Routes;
+using OsmSharp.Math.VRP.BestPlacement;
+using OsmSharp.Math.VRP.Routes;
 
 namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.Genetic.Generation
 {

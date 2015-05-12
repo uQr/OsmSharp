@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Math.TSP.Problems;
 using OsmSharp.Math.TSP;
-using OsmSharp.Math.VRP.Core.Routes;
+using OsmSharp.Math.VRP.Routes;
 using OsmSharp.Routing;
 using OsmSharp.Math.Geo;
 

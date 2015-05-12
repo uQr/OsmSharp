@@ -147,6 +147,7 @@
     <Compile Include="..\SharedAssemblyVersion.cs">
       <Link>Properties\SharedAssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="Assert.cs" />
     <Compile Include="Collections\Arrays\MemoryMappedHugeArrayTests.cs" />
     <Compile Include="Collections\Cache\LRUCacheTests.cs" />
     <Compile Include="Collections\Arrays\HugeArrayTests.cs" />
@@ -181,13 +182,13 @@
     <Compile Include="Osm\Streams\Filters\OsmStreamFilterSortTest.cs" />
     <Compile Include="Osm\Streams\Filters\OsmStreamFilterTagsFilterTest.cs" />
     <Compile Include="Osm\TagParsingTests.cs" />
-    <Compile Include="Routes\DepotRouteTests.cs" />
+    <Compile Include="Math\VRP\Routes\DepotRouteTests.cs" />
     <Compile Include="API\APITests.cs" />
-    <Compile Include="Routes\DynamicAsymmetricMultiRouteTests.cs" />
-    <Compile Include="Routes\DynamicAsymmetricRouteTests.cs" />
-    <Compile Include="Routes\MultiRouteTest.cs" />
-    <Compile Include="Routes\RouteTest.cs" />
-    <Compile Include="Routes\SimpleAsymmetricRouteTests.cs" />
+    <Compile Include="Math\VRP\Routes\DynamicAsymmetricMultiRouteTests.cs" />
+    <Compile Include="Math\VRP\Routes\DynamicAsymmetricRouteTests.cs" />
+    <Compile Include="Math\VRP\Routes\MultiRouteTest.cs" />
+    <Compile Include="Math\VRP\Routes\RouteTest.cs" />
+    <Compile Include="Math\VRP\Routes\SimpleAsymmetricRouteTests.cs" />
     <Compile Include="Routing\CH\CHEdgeDataTests.cs" />
     <Compile Include="Routing\CH\CHEdgeDifferenceComparisonTests.cs" />
     <Compile Include="Routing\CH\CHVerifiedContractionBaseTests.cs" />

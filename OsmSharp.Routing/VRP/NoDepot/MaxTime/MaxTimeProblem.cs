@@ -18,8 +18,8 @@
 
 using OsmSharp.Collections;
 using OsmSharp.Math.Geo;
-using OsmSharp.Math.VRP.Core;
-using OsmSharp.Math.VRP.Core.Routes;
+using OsmSharp.Math.VRP;
+using OsmSharp.Math.VRP.Routes;
 using OsmSharp.Units.Time;
 using System.Collections.Generic;
 

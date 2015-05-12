@@ -23,9 +23,9 @@ using OsmSharp.Math.TSP.LK.SparseSets;
 using OsmSharp.Math.TSP.Problems;
 using System.Diagnostics;
 using OsmSharp.Math.TSP.ArbitraryInsertion;
-using OsmSharp.Math.VRP.Core.Routes.Symmetric;
-using OsmSharp.Math.VRP.Core.Routes;
-using OsmSharp.Math.VRP.Core.Routes.ASymmetric;
+using OsmSharp.Math.VRP.Routes.Symmetric;
+using OsmSharp.Math.VRP.Routes;
+using OsmSharp.Math.VRP.Routes.ASymmetric;
 using OsmSharp.Collections;
 
 namespace OsmSharp.Math.TSP.LK

@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -15,15 +15,14 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
+using OsmSharp.Math.TSP.Problems;
+using OsmSharp.Math.VRP.BestPlacement;
+using OsmSharp.Math.VRP.Routes;
+using OsmSharp.Math.VRP.Routes.ASymmetric;
+using OsmSharp.Math.VRP.Routes.Symmetric;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OsmSharp.Math.TSP.Problems;
-using OsmSharp.Math.VRP.Core.Routes;
-using OsmSharp.Math.VRP.Core.Routes.Symmetric;
-using OsmSharp.Math.VRP.Core.Routes.ASymmetric;
-using OsmSharp.Math.VRP.Core.BestPlacement;
 
 namespace OsmSharp.Math.TSP.CheapestInsertion
 {
@@ -176,8 +175,7 @@ namespace OsmSharp.Math.TSP.CheapestInsertion
             while (customers.Count > 0 && !_stopped)
             { // keep placing customer 0 until all customers are placed.
                 // calculate placement.
-                CheapestInsertionResult result =
-                    CheapestInsertionHelper.CalculateBestPlacement(problem, route, customers);
+                var result = CheapestInsertionHelper.CalculateBestPlacement(problem, route, customers);
 
                 // place the customer.
                 if (result.CustomerAfter >= 0 && result.CustomerBefore >= 0)

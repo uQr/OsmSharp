@@ -7,7 +7,7 @@ using OsmSharp.Units.Time;
 using OsmSharp.Math.TSP.LocalSearch.HillClimbing3Opt;
 using OsmSharp.Routing.VRP.WithDepot.MaxTime.InterImprovements;
 using OsmSharp.Routing.VRP.WithDepot.MaxTime.CheapestInsertion;
-using OsmSharp.Math.VRP.Core.Routes;
+using OsmSharp.Math.VRP.Routes;
 using OsmSharp.Logging;
 
 namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.VNS
@@ -260,7 +260,7 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.VNS
         /// <param name="problem"></param>
         /// <param name="route"></param>
         /// <param name="currentWeight"></param>
-        private double ImproveIntraRoute(OsmSharp.Math.VRP.Core.IProblemWeights problem, IRoute route, 
+        private double ImproveIntraRoute(OsmSharp.Math.VRP.IProblemWeights problem, IRoute route, 
             double currentWeight)
         {
             bool improvement = true;

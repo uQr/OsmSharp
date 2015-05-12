@@ -25,7 +25,7 @@ using OsmSharp.Units.Time;
 using OsmSharp.Math.AI.Genetic.Solvers;
 using OsmSharp.Math.AI.Genetic.Selectors;
 using OsmSharp.Math.AI.Genetic;
-using OsmSharp.Math.VRP.Core.Routes;
+using OsmSharp.Math.VRP.Routes;
 using OsmSharp.Math.Random;
 using System.Globalization;
 using OsmSharp.Routing.VRP.NoDepot.MaxTime.Genetic.Mutation;
@@ -138,7 +138,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.Genetic
         {
 //            _customers = problem.Customers;
 
-            //float[] solutions = OsmSharp.Math.VRP.Core.BestPlacement.CheapestInsertionHelper.CalculateBestValues(
+            //float[] solutions = OsmSharp.Math.VRP.BestPlacement.CheapestInsertionHelper.CalculateBestValues(
             //    problem, _customers);
 
             generations = 0;

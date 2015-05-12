@@ -16,8 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using OsmSharp.Math.VRP.Core;
-using OsmSharp.Math.VRP.Core.Routes;
+using OsmSharp.Math.VRP;
+using OsmSharp.Math.VRP.Routes;
 
 namespace OsmSharp.Math.TSPTW
 {

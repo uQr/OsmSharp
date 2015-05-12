@@ -5,7 +5,7 @@ using System.Text;
 using OsmSharp.Routing.Routers;
 using OsmSharp.Math.TSP;
 using OsmSharp.Math.Geo;
-using OsmSharp.Math.VRP.Core.Routes;
+using OsmSharp.Math.VRP.Routes;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Metrics.Time;
 

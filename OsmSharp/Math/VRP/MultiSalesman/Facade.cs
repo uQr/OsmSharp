@@ -40,9 +40,9 @@ namespace OsmSharp.Math.VRP.MultiSalesman
     {
         private class LocalProblem : Problem
         {
-            private OsmSharp.Math.VRP.Core.IProblemWeights _problem;
+            private OsmSharp.Math.VRP.IProblemWeights _problem;
 
-            public LocalProblem(OsmSharp.Math.VRP.Core.IProblemWeights problem,
+            public LocalProblem(OsmSharp.Math.VRP.IProblemWeights problem,
                 Second min, Second max)
                 :base(problem.Size, min, max)
             {
@@ -62,7 +62,7 @@ namespace OsmSharp.Math.VRP.MultiSalesman
         /// <param name="min"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        public static int[][] Calculate(OsmSharp.Math.VRP.Core.IProblemWeights problem,
+        public static int[][] Calculate(OsmSharp.Math.VRP.IProblemWeights problem,
             Second min, Second max)
         {
             Problem local_problem = new LocalProblem(problem, min, max);

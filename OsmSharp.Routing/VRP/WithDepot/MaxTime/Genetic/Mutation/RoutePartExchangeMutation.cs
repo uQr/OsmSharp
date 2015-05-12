@@ -22,8 +22,8 @@ using System.Linq;
 using OsmSharp.Math.AI.Genetic.Operations;
 using OsmSharp.Math.AI.Genetic;
 using OsmSharp.Math.AI.Genetic.Solvers;
-using OsmSharp.Math.VRP.Core.Routes;
-using OsmSharp.Math.VRP.Core.BestPlacement;
+using OsmSharp.Math.VRP.Routes;
+using OsmSharp.Math.VRP.BestPlacement;
 using OsmSharp.Routing.VRP.WithDepot.MinimaxTime.Genetic;
 
 namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.Genetic.Mutation

@@ -20,10 +20,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Math.TSP;
-using OsmSharp.Math.VRP.Core.Routes;
+using OsmSharp.Math.VRP.Routes;
 using OsmSharp.Math.TSP.Problems;
 using OsmSharp.Math.TSP.ArbitraryInsertion;
-using OsmSharp.Math.VRP.Core;
+using OsmSharp.Math.VRP;
 
 namespace OsmSharp.Math.TSP.LocalSearch.HillClimbing3Opt
 {

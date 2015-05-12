@@ -21,10 +21,10 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Units.Time;
 using OsmSharp.Math.TSP.Problems;
-using OsmSharp.Math.VRP.Core;
-using OsmSharp.Math.VRP.Core.Routes;
-using OsmSharp.Math.VRP.Core.BestPlacement;
-using OsmSharp.Math.VRP.Core.Routes.ASymmetric;
+using OsmSharp.Math.VRP;
+using OsmSharp.Math.VRP.Routes;
+using OsmSharp.Math.VRP.BestPlacement;
+using OsmSharp.Math.VRP.Routes.ASymmetric;
 using OsmSharp.Routing;
 
 namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.CheapestInsertion

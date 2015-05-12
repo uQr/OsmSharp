@@ -21,11 +21,11 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Math.AI.Genetic.Operations;
 using OsmSharp.Math.TSP.Problems;
-using OsmSharp.Math.VRP.Core.Routes;
+using OsmSharp.Math.VRP.Routes;
 using OsmSharp.Math.AI.Genetic;
 using OsmSharp.Math.TSP.Genetic.Solver;
 using OsmSharp.Math.AI.Genetic.Solvers;
-using OsmSharp.Math.VRP.Core.Routes.ASymmetric;
+using OsmSharp.Math.VRP.Routes.ASymmetric;
 
 namespace OsmSharp.Math.TSP.EdgeAssemblyGenetic
 {

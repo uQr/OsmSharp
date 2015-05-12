@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Math.VRP.Core.Routes;
-using OsmSharp.Math.VRP.Core;
+using OsmSharp.Math.VRP.Routes;
+using OsmSharp.Math.VRP;
 
 namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.InterImprovements
 {

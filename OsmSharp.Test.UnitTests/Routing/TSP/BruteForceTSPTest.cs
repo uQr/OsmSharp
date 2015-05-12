@@ -7,7 +7,7 @@
 //using System.Reflection;
 //using System.IO;
 //using OsmSharp.Math.TSP.BruteForce;
-//using OsmSharp.Math.VRP.Core.Routes;
+//using OsmSharp.Math.VRP.Routes;
 
 //namespace OsmSharp.Test.Unittests.TSP
 //{

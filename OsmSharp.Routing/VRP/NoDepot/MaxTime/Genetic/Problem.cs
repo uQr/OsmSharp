@@ -22,7 +22,7 @@ using System.Text;
 //using OsmSharp.Math.VRP.MultiSalesman.Problems;
 using OsmSharp.Units.Time;
 using OsmSharp.Math.TSP.Problems;
-using OsmSharp.Math.VRP.Core;
+using OsmSharp.Math.VRP;
 
 namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.Genetic
 {

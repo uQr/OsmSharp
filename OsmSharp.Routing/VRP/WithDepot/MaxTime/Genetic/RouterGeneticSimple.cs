@@ -21,11 +21,11 @@
 //using System.Text;
 //using OsmSharp.Units.Time;
 //using OsmSharp.Math.AI.Genetic.Solvers;
-//using OsmSharp.Math.VRP.Core;
-//using OsmSharp.Math.VRP.Core.Routes.ASymmetric;
+//using OsmSharp.Math.VRP;
+//using OsmSharp.Math.VRP.Routes.ASymmetric;
 //using OsmSharp.Math.AI.Genetic.Selectors;
 //using OsmSharp.Math.AI.Genetic;
-//using OsmSharp.Math.VRP.Core.Routes;
+//using OsmSharp.Math.VRP.Routes;
 //using OsmSharp.Math.AI.Genetic.Operations.Mutations;
 //using OsmSharp.Math.Random;
 //using System.IO;
