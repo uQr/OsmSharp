@@ -169,6 +169,8 @@
     <Compile Include="Math\Algorithms\HilbertCurveTests.cs" />
     <Compile Include="Math\Primitives\Line2DTests.cs" />
     <Compile Include="Math\Primitives\RectangleF2DTests.cs" />
+    <Compile Include="Math\TSPTW\LocalSearch\Local1ShiftTests.cs" />
+    <Compile Include="Math\TSPTW\ProblemStub.cs" />
     <Compile Include="Math\VRP\Routes\PairEnumerableTests.cs" />
     <Compile Include="Math\VRP\Routes\RouteStub.cs" />
     <Compile Include="Math\VRP\Routes\TripleEnumerableTests.cs" />

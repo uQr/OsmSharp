@@ -382,7 +382,8 @@ namespace OsmSharp.Test.Unittests.Math.VRP.Routes
         /// <returns></returns>
         public bool ShiftAfter(int customer, int before)
         {
-            throw new NotImplementedException();
+            int oldBefore, oldAfter, newAfter;
+            return this.ShiftAfter(customer, before, out oldBefore, out oldAfter, out newAfter);
         }
 
         /// <summary>
@@ -396,7 +397,24 @@ namespace OsmSharp.Test.Unittests.Math.VRP.Routes
         /// <returns></returns>
         public bool ShiftAfter(int customer, int before, out int oldBefore, out int oldAfter, out int newAfter)
         {
-            throw new NotImplementedException();
+            // remove.
+            int indexOf = _customers.IndexOf(customer);
+            oldBefore = _customers[indexOf - 1];
+            oldAfter = _customers[indexOf + 1];
+            _customers.RemoveAt(indexOf);
+
+            // insert.
+            indexOf = _customers.IndexOf(before);
+            if(indexOf + 1 < _customers.Count)
+            {
+                newAfter = _customers[indexOf + 1];
+            }
+            else
+            {
+                newAfter = _customers[0];
+            }
+            _customers.Insert(indexOf + 1, customer);
+            return true;
         }
     }
 }

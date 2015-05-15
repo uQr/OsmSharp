@@ -18,6 +18,7 @@
 
 using OsmSharp.Math.VRP.Routes;
 using System;
+
 namespace OsmSharp.Math.TSPTW.LocalSearch
 {
     /// <summary>
@@ -43,21 +44,47 @@ namespace OsmSharp.Math.TSPTW.LocalSearch
         /// <returns></returns>
         public bool Apply(IProblem problem, IRoute route, out double delta)
         {
-            var currentDelta = 0;
-            do
-            { // try to place each customer.
-                var enumerator = route.GetEnumerator();
-                enumerator.MoveNext();
-                var previous = enumerator.Current;
-                while(enumerator.MoveNext())
-                {
-                    foreach (var edge in route.Pairs())
-                    {
+            delta = 0;
+            var success = false;
+            var weights = problem.WeightMatrix;
 
+            var bestDelta = 0.0;
+            do
+            {
+                bestDelta = 0.0;
+
+                // search the entire route for a customer that can be moved to improve it.
+                var bestTriple = new Triple();
+                var bestPair = new Pair();
+                foreach(var triple in route.Triples())
+                { // the middle customer of each triple is a candidate for re-insertion.
+                    foreach(var pair in route.Pairs())
+                    { // each pair is a candidate to recieve the candidate customers.
+                        if(pair.From != triple.Along && 
+                            pair.To != triple.Along)
+                        { // this candidate may fit here.
+                            var localDelta = weights[triple.From][triple.To] - weights[triple.From][triple.Along] - weights[triple.Along][triple.To] +
+                                weights[pair.From][triple.Along] + weights[triple.Along][triple.To] - weights[pair.From][pair.To];
+                            if (localDelta < bestDelta)
+                            { // this means a (better) improvement.
+                                bestDelta = localDelta;
+                                bestTriple = triple;
+                                bestPair = pair;
+                            }
+                        }
                     }
                 }
-            } while (currentDelta > 0);
-            throw new NotImplementedException();
+
+                if(bestDelta < 0)
+                { // if an improvement was found, then apply it.
+                    // make the changes.
+                    route.ShiftAfter(bestTriple.Along, bestPair.From);
+                    // store the delta.
+                    delta = delta + bestDelta;
+                    success = true;
+                }
+            } while (bestDelta < 0);
+            return success;
         }
     }
 }
