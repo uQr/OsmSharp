@@ -32,7 +32,7 @@ namespace OsmSharp.Math.TSPTW.LocalSearch
         /// </summary>
         public string Name
         {
-            get { return "LOCAL_1SHFT"; }
+            get { return "LCL_1SHFT"; }
         }
 
         /// <summary>
