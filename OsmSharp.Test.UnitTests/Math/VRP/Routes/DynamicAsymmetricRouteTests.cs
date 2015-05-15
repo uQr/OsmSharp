@@ -102,15 +102,6 @@ namespace OsmSharp.Test.Unittests.Math.VRP.Routes
         }
 
         /// <summary>
-        /// Tests a dynamic asymetric route's enumeration functionality.
-        /// </summary>
-        [Test]
-        public void TestDynamicAsymmetricEnumeratePairs()
-        {
-            this.DoTestEnumeratePairs();
-        }
-
-        /// <summary>
         /// Tests a dynamic asymetric route's shift functionality.
         /// </summary>
         [Test]

@@ -506,12 +506,21 @@ namespace OsmSharp.Math.VRP.Routes.ASymmetric
         }
 
         /// <summary>
-        /// Enumerates all the edges.
+        /// Returns an enumerable that enumerates all customer pairs that occur in the route as 1->2. If the route is a round the pair that contains last->first is also included.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Edge> Edges()
+        public IEnumerable<Pair> Pairs()
         {
-            return new EdgeEnumerable(this);
+            return new PairEnumerable(this);
+        }
+
+        /// <summary>
+        /// Returns an enumerable that enumerates all customer triples that occur in the route as 1->2-3. If the route is a round the tuples that contain last->first are also included.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Triple> Triples()
+        {
+            return new TripleEnumerable(this);
         }
 
         #endregion

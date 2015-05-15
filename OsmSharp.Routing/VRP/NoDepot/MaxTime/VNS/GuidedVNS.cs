@@ -118,7 +118,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.VNS
                         if (this.Overlaps(problem, originalSolution.Route(roundX), originalSolution.Route(roundY)))
                         { // only check routes that overlap.
                             double tau = double.MinValue;
-                            var penalizations = new Dictionary<Edge, int>();
+                            var penalizations = new Dictionary<Pair, int>();
 
                             //bool improvement = true;
                             //while (improvement)
@@ -135,7 +135,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.VNS
                                 var solution = (originalSolution.Clone() as MaxTimeSolution);
 
                                 // apply penalties.
-                                foreach (KeyValuePair<Edge, int> penalty in penalizations)
+                                foreach (KeyValuePair<Pair, int> penalty in penalizations)
                                 {
                                     problem.Penalize(penalty.Key, (double)penalty.Value * lambda);
                                 }
@@ -195,9 +195,9 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.VNS
                                 IRoute route1 = originalSolution.Route(roundX);
                                 IRoute route2 = originalSolution.Route(roundY);
                                 double u = double.MinValue;
-                                var penalizingEdge = new Edge();
+                                var penalizingEdge = new Pair();
                                 double totalP = 0;
-                                foreach (Edge edge in route1.Edges())
+                                foreach (Pair edge in route1.Pairs())
                                 {
                                     int edgeP;
                                     if (!penalizations.TryGetValue(edge, out edgeP))
@@ -213,7 +213,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.VNS
                                         u = edgeU;
                                     }
                                 }
-                                foreach (Edge edge in route2.Edges())
+                                foreach (Pair edge in route2.Pairs())
                                 {
                                     int edgeP;
                                     if (!penalizations.TryGetValue(edge, out edgeP))

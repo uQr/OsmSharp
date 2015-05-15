@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using System;
 using System.Collections.Generic;
 
 namespace OsmSharp.Math.VRP.Routes
@@ -190,10 +191,16 @@ namespace OsmSharp.Math.VRP.Routes
         IEnumerable<int> Between(int from, int to);
 
         /// <summary>
-        /// Returns a enumerable that enumerates all edges in this route.
+        /// Returns an enumerable that enumerates all customer pairs that occur in the route as 1->2. If the route is a round the pair that contains last->first is also included.
         /// </summary>
         /// <returns></returns>
-        IEnumerable<Edge> Edges();
+        IEnumerable<Pair> Pairs();
+
+        /// <summary>
+        /// Returns an enumerable that enumerates all customer triples that occur in the route as 1->2-3. If the route is a round the tuples that contain last->first are also included.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<Triple> Triples();
 
         /// <summary>
         /// Removes all customers in this route.

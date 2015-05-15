@@ -1,42 +1,60 @@
-﻿using System;
+﻿// OsmSharp - OpenStreetMap (OSM) SDK
+// Copyright (C) 2015 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// OsmSharp is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// OsmSharp is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace OsmSharp.Math.VRP.Routes
 {
     /// <summary>
-    /// Enumerates all edges in an IRoute.
+    /// Enumerates all pairs in an IRoute.
     /// </summary>
-    internal class EdgeEnumerable : IEnumerable<Edge>
+    public class PairEnumerable : IEnumerable<Pair>
     {
+        /// <summary>
+        /// Holds the route being enumerated.
+        /// </summary>
         private IRoute _route;
 
         /// <summary>
         /// Creates a new edge enumerable.
         /// </summary>
         /// <param name="route"></param>
-        public EdgeEnumerable(IRoute route)
+        public PairEnumerable(IRoute route)
         {
             _route = route;
         }
 
-        private class EdgeEnumerator : IEnumerator<Edge>
+        private class PairEnumerator : IEnumerator<Pair>
         {
-            private Edge _current;
+            private Pair _current;
 
             private int _first;
 
             private IEnumerator<int> _enumerator;
 
-            public EdgeEnumerator(IEnumerator<int> enumerator, int first)
+            public PairEnumerator(IEnumerator<int> enumerator, int first)
             {
-                _current = new Edge(-1, -1);
+                _current = new Pair(-1, -1);
                 _enumerator = enumerator;
                 _first = first;
             }
 
-            public Edge Current
+            public Pair Current
             {
                 get
                 {
@@ -104,7 +122,7 @@ namespace OsmSharp.Math.VRP.Routes
             public void Reset()
             {
                 _enumerator.Reset();
-                _current = new Edge(-1, -1);
+                _current = new Pair(-1, -1);
             }
         }
 
@@ -112,13 +130,13 @@ namespace OsmSharp.Math.VRP.Routes
         /// Returns an enumerator.
         /// </summary>
         /// <returns></returns>
-        public IEnumerator<Edge> GetEnumerator()
+        public IEnumerator<Pair> GetEnumerator()
         {
             if (_route.IsRound)
             {
-                return new EdgeEnumerator(_route.GetEnumerator(), _route.First);
+                return new PairEnumerator(_route.GetEnumerator(), _route.First);
             }
-            return new EdgeEnumerator(_route.GetEnumerator(), -1);
+            return new PairEnumerator(_route.GetEnumerator(), -1);
         }
 
         /// <summary>
@@ -132,16 +150,16 @@ namespace OsmSharp.Math.VRP.Routes
     }
 
     /// <summary>
-    /// Represents an edge.
+    /// Represents a pair (or a connection between two adjacent customers).
     /// </summary>
-    public struct Edge
+    public struct Pair
     {
         /// <summary>
-        /// Creates a new edge.
+        /// Creates a new pair.
         /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>
-        public Edge(int from, int to)
+        public Pair(int from, int to)
             :this()
         {
             this.From = from;
@@ -184,10 +202,10 @@ namespace OsmSharp.Math.VRP.Routes
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            if (obj is Edge)
+            if (obj is Pair)
             {
-                return ((Edge)obj).From == this.From &&
-                    ((Edge)obj).To == this.To;
+                return ((Pair)obj).From == this.From &&
+                    ((Pair)obj).To == this.To;
             }
             return false;
         }

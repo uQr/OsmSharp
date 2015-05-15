@@ -38,9 +38,9 @@ namespace OsmSharp.Math.TSPTW.LocalSearch
         /// </summary>
         /// <param name="problem">The problem.</param>
         /// <param name="route">The route.</param>
-        /// <param name="difference">The difference in fitness.</param>
+        /// <param name="delta">The difference in fitness.</param>
         /// <returns></returns>
-        public bool Apply(IProblem problem, IRoute route, out double difference)
+        public bool Apply(IProblem problem, IRoute route, out double delta)
         {
             throw new System.NotImplementedException();
         }

@@ -327,13 +327,14 @@
     <Compile Include="Math\VRP\Routes\ASymmetric\SimpleAsymmetricRoute.cs" />
     <Compile Include="Math\VRP\Routes\BetweenEnumerator.cs" />
     <Compile Include="Math\VRP\Routes\DepotRoute.cs" />
-    <Compile Include="Math\VRP\Routes\EdgeEnumerator.cs" />
+    <Compile Include="Math\VRP\Routes\PairEnumerable.cs" />
     <Compile Include="Math\VRP\Routes\IMultiRoute.cs" />
     <Compile Include="Math\VRP\Routes\IRoute.cs" />
     <Compile Include="Math\VRP\Routes\RouteExtensions.cs" />
     <Compile Include="Math\VRP\Routes\Symmetric\DynamicSymmetricRoute.cs" />
     <Compile Include="Math\VRP\Routes\Symmetric\FixedSymmetricRoute.cs" />
     <Compile Include="Math\VRP\Routes\Symmetric\ISymmetricRoute.cs" />
+    <Compile Include="Math\VRP\Routes\TripleEnumerable.cs" />
     <Compile Include="Math\VRP\TwoOpt\TwoOptHelper.cs" />
     <Compile Include="Math\VRP\TwoOpt\TwoOptResult.cs" />
     <Compile Include="Math\VRP\MultiSalesman\Facade.cs" />

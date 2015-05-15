@@ -169,6 +169,9 @@
     <Compile Include="Math\Algorithms\HilbertCurveTests.cs" />
     <Compile Include="Math\Primitives\Line2DTests.cs" />
     <Compile Include="Math\Primitives\RectangleF2DTests.cs" />
+    <Compile Include="Math\VRP\Routes\PairEnumerableTests.cs" />
+    <Compile Include="Math\VRP\Routes\RouteStub.cs" />
+    <Compile Include="Math\VRP\Routes\TripleEnumerableTests.cs" />
     <Compile Include="Osm\Cache\OsmDataCacheDiskTests.cs" />
     <Compile Include="Osm\Cache\OsmDataCacheMemoryTests.cs" />
     <Compile Include="Osm\Cache\OsmDataCacheTestsBase.cs" />

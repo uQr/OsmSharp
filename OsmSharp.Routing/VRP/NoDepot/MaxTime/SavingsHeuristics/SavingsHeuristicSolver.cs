@@ -192,7 +192,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.SavingsHeuristics
                 }
             }
 
-            foreach (Edge route1_edge in route1.Edges())
+            foreach (Pair route1_edge in route1.Pairs())
             { // loop over all route1 edges.
                 // calculate weight of the current edge.
                 double route1_edge_weight = problem.WeightMatrix[route1_edge.From][route1_edge.To];
@@ -231,7 +231,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.SavingsHeuristics
                 }
                 else
                 { // there is at least one edge.
-                    foreach (Edge route2_edge in route2.Edges())
+                    foreach (Pair route2_edge in route2.Pairs())
                     { // loop over all route2 edges.
                         // calculate weight of the current edge.
                         double route2_edge_weight = problem.WeightMatrix[route2_edge.From][route2_edge.To];

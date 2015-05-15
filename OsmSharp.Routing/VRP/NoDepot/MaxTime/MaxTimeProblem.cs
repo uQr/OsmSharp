@@ -188,18 +188,18 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime
         /// <summary>
         /// Holds al penalizations.
         /// </summary>
-        private Dictionary<Edge, double> _penalizations;
+        private Dictionary<Pair, double> _penalizations;
 
         /// <summary>
         /// Penalizes an edge.
         /// </summary>
         /// <param name="edge"></param>
         /// <param name="delta"></param>
-        public void Penalize(Edge edge, double delta)
+        public void Penalize(Pair edge, double delta)
         {
             if (_penalizations == null)
             {
-                _penalizations = new Dictionary<Edge, double>();
+                _penalizations = new Dictionary<Pair, double>();
             }
             double total_delta;
             if (!_penalizations.TryGetValue(edge, out total_delta))
@@ -221,7 +221,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime
         {
             if (_penalizations != null)
             {
-                foreach (KeyValuePair<Edge, double> pair in _penalizations)
+                foreach (KeyValuePair<Pair, double> pair in _penalizations)
                 {
                     this.WeightMatrix[pair.Key.From][pair.Key.To] = 
                         this.WeightMatrix[pair.Key.From][pair.Key.To] - pair.Value;
@@ -320,7 +320,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime
         public double Time(IRoute route)
         {
             double time = 0;
-            foreach(Edge edge in route.Edges())
+            foreach(Pair edge in route.Pairs())
             {
                 time = time + this.WeightMatrix[edge.From][edge.To];
             }

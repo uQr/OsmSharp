@@ -898,9 +898,14 @@ namespace OsmSharp.Math.VRP.Routes.ASymmetric
                 return new DynamicAsymmetricBetweenEnumerable(_parent._next_array, from, to, _first);
             }
 
-            public IEnumerable<Edge> Edges()
+            public IEnumerable<Pair> Pairs()
             {
-                return new EdgeEnumerable(this);
+                return new PairEnumerable(this);
+            }
+
+            public IEnumerable<Triple> Triples()
+            {
+                return new TripleEnumerable(this);
             }
 
             #endregion

@@ -19,8 +19,6 @@
 using OsmSharp.Math.TSPTW.VNS;
 using OsmSharp.Math.VRP.Routes;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace OsmSharp.Math.TSPTW.Random
 {

@@ -31,8 +31,8 @@ namespace OsmSharp.Math.TSPTW.VNS
         /// <param name="problem">The problem.</param>
         /// <param name="route">The route.</param>
         /// <param name="level">The level.</param>
-        /// <param name="difference">The difference in fitness.</param>
+        /// <param name="delta">The difference in fitness.</param>
         /// <returns></returns>
-        bool Apply(IProblem problem, IRoute route, int level, out double difference);
+        bool Apply(IProblem problem, IRoute route, int level, out double delta);
     }
 }

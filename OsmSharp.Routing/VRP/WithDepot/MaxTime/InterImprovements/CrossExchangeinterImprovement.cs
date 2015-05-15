@@ -74,25 +74,25 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.InterImprovements
             double[] route2_cumul = problem.TimeCumul(route2);
 
             // build all edge weights.
-            List<Edge> route1_edges = new List<Edge>(route1.Edges());
-            List<Edge> route2_edges = new List<Edge>(route2.Edges());
+            List<Pair> route1_edges = new List<Pair>(route1.Pairs());
+            List<Pair> route2_edges = new List<Pair>(route2.Pairs());
             double[] route1_weights = new double[route1_edges.Count];
             for (int idx = 0; idx < route1_edges.Count; idx++)
             {
-                Edge edge = route1_edges[idx];
+                Pair edge = route1_edges[idx];
                 route1_weights[idx] = problem.WeightMatrix[edge.From][edge.To];
             }
             double[] route2_weights = new double[route2_edges.Count];
             for (int idx = 0; idx < route2_edges.Count; idx++)
             {
-                Edge edge = route2_edges[idx];
+                Pair edge = route2_edges[idx];
                 route2_weights[idx] = problem.WeightMatrix[edge.From][edge.To];
             }
 
             List<EdgePair> route2_pairs = new List<EdgePair>();
             for (int i_idx = 0; i_idx < route2_edges.Count - 2; i_idx++)
             {
-                Edge i = route2_edges[i_idx];
+                Pair i = route2_edges[i_idx];
                 double i_weight = route2_weights[i_idx];
                 double weight_before_i = route2_cumul[i_idx];
 
@@ -103,7 +103,7 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.InterImprovements
                 }
                 for (int k_idx = i_idx + 2; k_idx < k_idx_max; k_idx++)
                 {
-                    Edge k = route2_edges[k_idx];
+                    Pair k = route2_edges[k_idx];
                     double k_weight = route2_weights[k_idx];
                     double weight_after_k = route2_cumul[route2_cumul.Length - 1] - route2_cumul[k_idx + 1];
                     double weight_between_route = route2_cumul[k_idx] - route2_cumul[i_idx + 1];
@@ -127,7 +127,7 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.InterImprovements
             // build all edge pairs.
             for (int i_idx = 0; i_idx < route1_edges.Count - 2; i_idx++)
             {
-                Edge i = route1_edges[i_idx];
+                Pair i = route1_edges[i_idx];
                 double i_weight = route1_weights[i_idx];
                 double weight_before_i = route1_cumul[i_idx];
 
@@ -138,7 +138,7 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.InterImprovements
                 }
                 for (int k_idx = i_idx + 2; k_idx < k_idx_max; k_idx++)
                 {
-                    Edge k = route1_edges[k_idx];
+                    Pair k = route1_edges[k_idx];
                     double k_weight = route1_weights[k_idx];
                     double weight_after_k = route1_cumul[route1_cumul.Length - 1] - route1_cumul[k_idx + 1];
                     double weight_between_route = route1_cumul[k_idx] - route1_cumul[i_idx + 1];
@@ -242,11 +242,11 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.InterImprovements
 
         private class EdgePair
         {
-            public Edge First { get; set; }
+            public Pair First { get; set; }
 
             public double FirstWeight { get; set; }
 
-            public Edge Second { get; set; }
+            public Pair Second { get; set; }
 
             public double SecondWeight { get; set; }
 

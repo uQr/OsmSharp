@@ -1,6 +1,23 @@
-﻿using System;
+﻿// OsmSharp - OpenStreetMap (OSM) SDK
+// Copyright (C) 2015 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// OsmSharp is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// OsmSharp is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace OsmSharp.Math.VRP.Routes
@@ -217,16 +234,29 @@ namespace OsmSharp.Math.VRP.Routes
         }
 
         /// <summary>
-        /// Returns an edge enumerator.
+        /// Returns an enumerable that enumerates all customer pairs that occur in the route as 1->2. If the route is a round the pair that contains last->first is also included.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Edge> Edges()
+        public IEnumerable<Pair> Pairs()
         {
             if (_route == null)
             {
-                return (new List<Edge>());
+                return (new List<Pair>());
             }
-            return new EdgeEnumerable(this);
+            return new PairEnumerable(this);
+        }
+
+        /// <summary>
+        /// Returns an enumerable that enumerates all customer triples that occur in the route as 1->2-3. If the route is a round the tuples that contain last->first are also included.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Triple> Triples()
+        {
+            if (_route == null)
+            {
+                return (new List<Triple>());
+            }
+            return new TripleEnumerable(this);
         }
 
         /// <summary>

@@ -93,7 +93,7 @@ namespace OsmSharp.Routing.TSP
 
             // calculate weight
             double weight = 0;
-            foreach (Edge edge in tspSolution.Edges())
+            foreach (Pair edge in tspSolution.Pairs())
             {
                 weight = weight + weights[edge.From][edge.To];
             }
@@ -127,7 +127,7 @@ namespace OsmSharp.Routing.TSP
 
             // calculate weight
             double weight = 0;
-            foreach (Edge edge in tspSolution.Edges())
+            foreach (Pair edge in tspSolution.Pairs())
             {
                 weight = weight + weights[edge.From][edge.To];
             }
@@ -160,7 +160,7 @@ namespace OsmSharp.Routing.TSP
 
             // calculate weight
             double weight = 0;
-            foreach (Edge edge in tspSolution.Edges())
+            foreach (Pair edge in tspSolution.Pairs())
             {
                 weight = weight + weights[edge.From][edge.To];
             }

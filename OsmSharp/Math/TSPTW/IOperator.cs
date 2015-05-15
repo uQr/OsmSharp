@@ -39,8 +39,8 @@ namespace OsmSharp.Math.TSPTW
         /// </summary>
         /// <param name="problem">The problem.</param>
         /// <param name="route">The route.</param>
-        /// <param name="difference">The difference in fitness.</param>
+        /// <param name="delta">The difference in fitness.</param>
         /// <returns></returns>
-        bool Apply(IProblem problem, IRoute route, out double difference);
+        bool Apply(IProblem problem, IRoute route, out double delta);
     }
 }

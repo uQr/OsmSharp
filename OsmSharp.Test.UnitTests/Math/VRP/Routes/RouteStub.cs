@@ -16,28 +16,48 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Math.VRP.Routes;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
-namespace OsmSharp.Math.VRP.Routes.ASymmetric
+namespace OsmSharp.Test.Unittests.Math.VRP.Routes
 {
     /// <summary>
-    /// A simple asymmetric route represented by a list.
+    /// A simple route stub.
     /// </summary>
-    public class SimpleAsymmetricRoute : IRoute
+    public class RouteStub : IRoute
     {
+        /// <summary>
+        /// Holds the list of customers.
+        /// </summary>
         private List<int> _customers;
 
+        /// <summary>
+        /// Holds the is round flag.
+        /// </summary>
         private bool _isRound;
 
         /// <summary>
-        /// Creates a new simple asymmetric route.
+        /// Creates a new route.
         /// </summary>
         /// <param name="customers"></param>
         /// <param name="is_round"></param>
-        public SimpleAsymmetricRoute(List<int> customers, bool is_round)
+        public RouteStub(List<int> customers, bool is_round)
         {
             _customers = customers;
+            _isRound = is_round;
+        }
+
+        /// <summary>
+        /// Creates a new route.
+        /// </summary>
+        /// <param name="customers"></param>
+        /// <param name="is_round"></param>
+        public RouteStub(int[] customers, bool is_round)
+        {
+            _customers = new List<int>(customers);
             _isRound = is_round;
         }
 
@@ -360,13 +380,6 @@ namespace OsmSharp.Math.VRP.Routes.ASymmetric
         /// <param name="customer">The customer to shift.</param>
         /// <param name="before">The new customer that will come right before.</param>
         /// <returns></returns>
-        /// <remarks>example:
-        /// route: 1->2->3->4->5->6
-        ///     customer:   2
-        ///     before:     4
-        ///     
-        /// new route: 1->3->4->2->5->6
-        /// </remarks>
         public bool ShiftAfter(int customer, int before)
         {
             throw new NotImplementedException();
@@ -381,16 +394,6 @@ namespace OsmSharp.Math.VRP.Routes.ASymmetric
         /// <param name="oldAfter">The customer that used to exist after.</param>
         /// <param name="newAfter">The customer that new exists after.</param>
         /// <returns></returns>
-        /// <remarks>example:
-        /// route: 1->2->3->4->5->6
-        ///     customer:   2
-        ///     before:     4
-        ///     
-        /// new route: 1->3->4->2->5->6
-        ///     oldBefore:  1
-        ///     oldAfter:   3
-        ///     newAfter:   5
-        /// </remarks>
         public bool ShiftAfter(int customer, int before, out int oldBefore, out int oldAfter, out int newAfter)
         {
             throw new NotImplementedException();
