@@ -16,10 +16,9 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using OsmSharp.WinForms.UI.IO.MemoryMappedFiles;
+using OsmSharp.WinForms.UI.IO.Web;
 using OsmSharp.WinForms.UI.Renderer.Images;
 using System.IO;
-using System.IO.MemoryMappedFiles;
 
 namespace OsmSharp.WinForms.UI
 {
@@ -39,23 +38,12 @@ namespace OsmSharp.WinForms.UI
                 {
                     return new NativeImageCache();
                 });
-            OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.SetDelegates(
-                (path, capacity) =>
+
+            // register the native http webrequest.
+            OsmSharp.IO.Web.HttpWebRequest.CreateNativeWebRequest = (url) =>
                 {
-                    var file = new FileInfo(path);
-                    var fs = file.Open(FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
-                    return new MemoryMappedFileWrapper(
-                        MemoryMappedFile.CreateFromFile(fs, file.Name, capacity, MemoryMappedFileAccess.ReadWrite, null, HandleInheritability.Inheritable, false),
-                        file.FullName);
-                },
-                (mapName, capacity) =>
-                {
-                    return new MemoryMappedFileWrapper(MemoryMappedFile.CreateNew(mapName, capacity));
-                },
-                (type) =>
-                {
-                    return System.Runtime.InteropServices.Marshal.SizeOf(type);
-                });
+                    return new NativeHttpWebRequest(url);
+                };
         }
     }
 }

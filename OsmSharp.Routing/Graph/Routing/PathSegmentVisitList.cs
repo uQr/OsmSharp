@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
+using OsmSharp.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -47,6 +47,25 @@ namespace OsmSharp.Routing.Graph.Routing
 
             this.Neighbour1 = -1;
             this.Neighbour2 = -1;
+        }
+
+        /// <summary>
+        /// Creates a new visit list.
+        /// </summary>
+        public PathSegmentVisitList(PathSegment<long> route)
+            : this()
+        {
+            this.UpdateVertex(route);
+        }
+
+        /// <summary>
+        /// Creates a new visit list with just one vertex.
+        /// </summary>
+        /// <param name="vertex"></param>
+        public PathSegmentVisitList(long vertex)
+            : this(new PathSegment<long>(vertex))
+        {
+
         }
 
         /// <summary>

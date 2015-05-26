@@ -19,7 +19,7 @@
 using NUnit.Framework;
 using OsmSharp.Math.VRP.Routes;
 using OsmSharp.Math.VRP.Routes.ASymmetric;
-using OsmSharp.Routing.VRP.WithDepot.MaxTime;
+using OsmSharp.Routing.Optimization.VRP.WithDepot.MaxTime;
 using System.Collections.Generic;
 
 namespace OsmSharp.Test.Unittests.Math.VRP.Routes

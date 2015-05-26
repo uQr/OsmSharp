@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace OsmSharp
@@ -457,6 +458,18 @@ namespace OsmSharp
         }
 
         /// <summary>
+        /// Remove whitespaces.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static string RemoveWhitespace(this string input)
+        {
+            return new string(input.ToCharArray()
+                .Where(c => !Char.IsWhiteSpace(c))
+                .ToArray());
+        }
+
+        /// <summary>
         /// Converts an array of double to long using a factor value.
         /// </summary>
         /// <param name="doubleArray">The double array.</param>
@@ -696,6 +709,73 @@ namespace OsmSharp
             return obj is IConvertible ? ((IConvertible)obj).ToString(CultureInfo.InvariantCulture)
                 : obj is IFormattable ? ((IFormattable)obj).ToString(null, CultureInfo.InvariantCulture)
                 : obj.ToString();
+        }
+    }
+
+    /// <summary>
+    /// An implementation of the EqualityComparer that allows the use of delegates.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public class DelegateEqualityComparer<T> : IEqualityComparer<T>
+    {
+        /// <summary>
+        /// A delegate to calculate the hashcode.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public delegate int GetHashCodeDelegate(T obj);
+
+        /// <summary>
+        /// A delegate to compare two objects.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public delegate bool EqualsDelegate(T x, T y);
+
+        /// <summary>
+        /// Creates a new equality comparer.
+        /// </summary>
+        /// <param name="hashCodeDelegate"></param>
+        /// <param name="equalsDelegate"></param>
+        public DelegateEqualityComparer(GetHashCodeDelegate hashCodeDelegate, EqualsDelegate equalsDelegate)
+        {
+            if (hashCodeDelegate == null) { throw new ArgumentNullException("hashCodeDelegate"); }
+            if (equalsDelegate == null) { throw new ArgumentNullException("equalsDelegate"); }
+
+            _equalsDelegate = equalsDelegate;
+            _hashCodeDelegate = hashCodeDelegate;
+        }
+
+        /// <summary>
+        /// Holds the equals delegate.
+        /// </summary>
+        private EqualsDelegate _equalsDelegate;
+
+        /// <summary>
+        /// Returns true if the two given objects are considered equal.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public bool Equals(T x, T y)
+        {
+            return _equalsDelegate.Invoke(x, y);
+        }
+
+        /// <summary>
+        /// Holds the hashcode delegate.
+        /// </summary>
+        private GetHashCodeDelegate _hashCodeDelegate;
+
+        /// <summary>
+        /// Calculates the hashcode for the given object.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public int GetHashCode(T obj)
+        {
+            return _hashCodeDelegate.Invoke(obj);
         }
     }
 }

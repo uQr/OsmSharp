@@ -12,7 +12,9 @@
     <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
     <AssemblyName>OsmSharp.Android.UI</AssemblyName>
-    <TargetFrameworkVersion>v3.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.2</TargetFrameworkVersion>
+    <AndroidUseLatestPlatformSdk>
+    </AndroidUseLatestPlatformSdk>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -54,6 +56,8 @@
     <Compile Include="Data\SQLite\SQLiteConnection.cs" />
     <Compile Include="Images\NinePatchHelpers\Div.cs" />
     <Compile Include="Images\NinePatchHelpers\NinePatchChunk.cs" />
+    <Compile Include="IO\Web\NativeHttpWebRequest.cs" />
+    <Compile Include="IO\Web\NativeHttpWebResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Gestures\TapGestureDetector.cs" />
     <Compile Include="Log\LogTraceListener.cs" />
@@ -62,15 +66,12 @@
     <Compile Include="Renderer\Images\NativeImageCache.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Renderer\CanvasRenderer2D.cs" />
-    <Compile Include="Renderer\OpenGLRenderer2D.cs" />
-    <Compile Include="Renderer\OpenGLTarget2D.cs" />
     <Compile Include="MapView.cs" />
     <Compile Include="Gestures\BaseGestureDetector.cs" />
     <Compile Include="Gestures\TwoFingerGestureDetector.cs" />
     <Compile Include="Gestures\MoveGestureDetector.cs" />
     <Compile Include="Gestures\RotateGestureDetector.cs" />
     <Compile Include="Surfaces\MapViewSurface.cs" />
-    <Compile Include="Surfaces\MapViewGLSurface.cs" />
     <Compile Include="Surfaces\IMapViewSurface.cs" />
     <Compile Include="MapViewEvents.cs" />
     <Compile Include="Markers\MapMarker.cs" />

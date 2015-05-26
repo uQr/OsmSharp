@@ -23,7 +23,7 @@ namespace OsmSharp.Collections.Arrays
     /// <summary>
     /// An array working around the pre .NET 4.5 memory limitations for one object.
     /// </summary>
-    public class HugeArray<T> : IHugeArray<T>
+    public class HugeArray<T> : HugeArrayBase<T>
     {
         /// <summary>
         /// Holds the arrays.
@@ -68,7 +68,7 @@ namespace OsmSharp.Collections.Arrays
         /// </summary>
         /// <param name="idx"></param>
         /// <returns></returns>
-        public T this[long idx]
+        public override T this[long idx]
         {
             get
             {
@@ -88,8 +88,10 @@ namespace OsmSharp.Collections.Arrays
         /// Resizes this array.
         /// </summary>
         /// <param name="size"></param>
-        public void Resize(long size)
+        public override void Resize(long size)
         {
+            if (size <= 0) { throw new ArgumentOutOfRangeException("Cannot resize a huge array to a size of zero or smaller."); }
+
             _size = size;
 
             long arrayCount = (long)System.Math.Ceiling((double)size / _arraySize);
@@ -126,7 +128,7 @@ namespace OsmSharp.Collections.Arrays
         /// <summary>
         /// Returns the length of this array.
         /// </summary>
-        public long Length
+        public override long Length
         {
             get
             {
@@ -137,7 +139,7 @@ namespace OsmSharp.Collections.Arrays
         /// <summary>
         /// Diposes of all associated native resources held by this object.
         /// </summary>
-        public void Dispose()
+        public override void Dispose()
         {
 
         }
