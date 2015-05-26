@@ -109,7 +109,7 @@ namespace OsmSharp.Math.TSPTW.VNS
             }
 
             var i = 0;
-            var level = 0;
+            var level = 1;
             while(_stopCondition == null || _stopCondition.Invoke(i, problem, globalBest))
             {
                 // copy current solution.

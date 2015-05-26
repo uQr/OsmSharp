@@ -29,25 +29,11 @@ namespace OsmSharp.Math.TSPTW.Random
     public class RandomSolver : ISolver
     {
         /// <summary>
-        /// A delegate to calculate fitness.
-        /// </summary>
-        /// <param name="problem"></param>
-        /// <param name="route"></param>
-        /// <returns></returns>
-        public delegate double FitnessCalculationDelegate(IProblem problem, IRoute route);
-
-        /// <summary>
-        /// Calculates fitness.
-        /// </summary>
-        private FitnessCalculationDelegate _calculateFitness;
-
-        /// <summary>
         /// Creates a random solver.
         /// </summary>
-        /// <param name="calculateFitness"></param>
-        public RandomSolver(FitnessCalculationDelegate calculateFitness)
+        public RandomSolver()
         {
-            _calculateFitness = calculateFitness;
+
         }
 
         /// <summary>
@@ -70,7 +56,14 @@ namespace OsmSharp.Math.TSPTW.Random
         public IRoute Solve(IProblem problem, out double fitness)
         {
             var route = RandomSolver.DoSolveStatic(problem);
-            fitness = _calculateFitness.Invoke(problem, route);
+
+            // calculate fitness.
+            fitness = 0;
+            foreach(var pair in route.Pairs())
+            {
+                fitness = fitness + problem.Weight(pair.From, pair.To);
+            }
+
             return route;
         }
 

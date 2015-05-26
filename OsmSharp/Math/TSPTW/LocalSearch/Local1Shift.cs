@@ -64,7 +64,7 @@ namespace OsmSharp.Math.TSPTW.LocalSearch
                             pair.To != triple.Along)
                         { // this candidate may fit here.
                             var localDelta = weights[triple.From][triple.To] - weights[triple.From][triple.Along] - weights[triple.Along][triple.To] +
-                                weights[pair.From][triple.Along] + weights[triple.Along][triple.To] - weights[pair.From][pair.To];
+                                weights[pair.From][triple.Along] + weights[triple.Along][pair.To] - weights[pair.From][pair.To];
                             if (localDelta < bestDelta)
                             { // this means a (better) improvement.
                                 bestDelta = localDelta;

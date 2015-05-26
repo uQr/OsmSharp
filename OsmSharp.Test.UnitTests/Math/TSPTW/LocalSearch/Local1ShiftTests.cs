@@ -52,7 +52,7 @@ namespace OsmSharp.Test.Unittests.Math.TSPTW.LocalSearch
             localSearch.Apply(problem, route, out delta);
 
             // test result.
-            Assert.AreEqual(-18, delta);
+            Assert.AreEqual(-27, delta);
             Assert.AreEqual(new int[] { 0, 1, 2, 3, 4 },  route.ToArray());
         }
 
@@ -79,7 +79,7 @@ namespace OsmSharp.Test.Unittests.Math.TSPTW.LocalSearch
             localSearch.Apply(problem, route, out delta);
 
             // test result.
-            Assert.AreEqual(-27, delta);
+            Assert.AreEqual(-45, delta);
             Assert.AreEqual(new int[] { 0, 1, 2, 3, 4 }, route.ToArray());
         }
     }
